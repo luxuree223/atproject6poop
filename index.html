@@ -3859,12 +3859,12 @@ async function cloudSignOut(){
   updateCloudSignInAlert(null);
 }
 function currentCloudCareerId(){
-  // V35: fixed per-account library. This can never be blank.
-  return DEFAULT_CLOUD_LIBRARY_ID;
+  // V36: literal fixed library ID. Never depends on saved prefs or UI.
+  return "career-library";
 }
 function cloudDocRef(idOverride){
   if(!cloudReady()) throw new Error("Sign in to cloud sync first.");
-  const id=(idOverride||currentCloudCareerId()).trim();
+  const id=(idOverride||"career-library").trim();
   return cloudDb.collection("users").doc(cloudUser.uid).collection("careers").doc(id);
 }
 function legacyCloudCareerId(){
@@ -3890,8 +3890,7 @@ function withTimeout(promise,ms,label){
 async function cloudConnectionTest(){
   try{
     if(!cloudReady()){alert("Cloud sync is not signed in yet.");return}
-    const id=currentCloudCareerId();
-    if(!id){alert("Cloud library is unavailable.");return}
+    const id="career-library";
     cloudDebug("Testing a small Firestore write…","warnState");
     setCloudStatus("Testing Firestore connection…","warnState");
     const ref=cloudDb.collection("users").doc(cloudUser.uid).collection("careers").doc(id+"_connection_test");
@@ -3951,11 +3950,7 @@ async function cloudPushDatabase(silent=false){
       if(!silent)alert("Cloud sync is not signed in yet.");
       return;
     }
-    const id=currentCloudCareerId();
-    if(!id){
-      if(!silent)alert("Cloud library is unavailable.");
-      return;
-    }
+    const id="career-library";
     saveCloudPrefs();
     if(btn){btn.disabled=true;btn.textContent="Pushing ALL slots…";}
     setCloudStatus(`Pushing full career library "${id}"…`,"warnState");
@@ -3991,8 +3986,7 @@ async function cloudPullDatabase(){
   const btn=document.getElementById("cloudPullBtn");
   try{
     if(!cloudReady()){alert("Cloud sync is not signed in yet.");return}
-    const id=currentCloudCareerId();
-    if(!id){alert("Cloud library is unavailable.");return}
+    const id="career-library";
     if(btn){btn.disabled=true;btn.textContent="Pulling ALL slots…";}
     setCloudStatus(`Pulling full career library "${id}"…`,"warnState");
     cloudDebug(`Reading full Career Slots database for "${id}"…`,"warnState");
@@ -4061,12 +4055,7 @@ async function cloudPushNow(silent=false){
       if(!silent)alert("Cloud sync is not signed in yet.");
       return;
     }
-    const id=currentCloudCareerId();
-    if(!id){
-      cloudDebug("Push stopped: cloud library is unavailable.","badState");
-      if(!silent)alert("Cloud library is unavailable.");
-      return;
-    }
+    const id="career-library";
     saveCloudPrefs();
     if(btn){btn.disabled=true;btn.textContent="Pushing…";}
     setCloudStatus(`Pushing "${id}" to Firestore…`,"warnState");
@@ -4107,8 +4096,7 @@ async function cloudPushNow(silent=false){
 async function cloudPullNow(){
   try{
     if(!cloudReady()){alert("Cloud sync is not signed in yet.");return}
-    const id=currentCloudCareerId();
-    if(!id){alert("Cloud library is unavailable.");return}
+    const id="career-library";
     setCloudStatus(`Pulling "${id}" from Firestore…`,"warnState");
     cloudDebug(`Started pull for "${id}".`,"warnState");
     const snap=await withTimeout(cloudDocRef().get(),12000,"Career pull");
@@ -4135,7 +4123,7 @@ async function cloudPullNow(){
 }
 function scheduleCloudPush(){
   const p=readJsonLocal(CLOUD_PREFS_KEY,{autoSync:"on"});
-  if(p.autoSync!=="on"||!cloudReady()||!currentCloudCareerId())return;
+  if(p.autoSync!=="on"||!cloudReady())return;
   clearTimeout(cloudPushTimer);
   cloudPushTimer=setTimeout(()=>cloudPushDatabase(true),1000);
 }
