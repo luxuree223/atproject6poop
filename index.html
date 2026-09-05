@@ -966,6 +966,7 @@ body:not(.career-home) #k11Hub{display:none!important}
       <button class="primary" onclick="cloudSignIn()">Sign In</button>
       <button class="secondary" onclick="cloudSignOut()">Sign Out</button>
     </div>
+    <div id="cloudSignInAlert" class="note warnState" style="margin-top:10px;font-weight:900">NOT SIGNED IN</div>
 
     <h3 style="margin-top:20px">3. Sync Career</h3>
     <div class="grid">
@@ -3721,6 +3722,17 @@ function setCloudStatus(text,kind=""){
   el.className="note "+(kind||"");
   el.innerHTML="<b>Status:</b> "+text;
 }
+function updateCloudSignInAlert(user){
+  const el=document.getElementById("cloudSignInAlert");
+  if(!el)return;
+  if(user){
+    el.className="note goodState";
+    el.innerHTML="<b>✓ SIGNED IN:</b> "+(user.email||"Cloud account connected");
+  }else{
+    el.className="note warnState";
+    el.innerHTML="<b>NOT SIGNED IN</b> — Create an account or sign in before using cloud sync.";
+  }
+}
 function loadCloudFields(){
   const c=readJsonLocal(CLOUD_CONFIG_KEY,null);
   if(c && document.getElementById("fbApiKey")){
@@ -3813,6 +3825,7 @@ function initCloud(showAlert=false){
     cloudDb=firebase.firestore();
     cloudAuth.onAuthStateChanged(user=>{
       cloudUser=user||null;
+      updateCloudSignInAlert(cloudUser);
       if(user) setCloudStatus(`Signed in as ${user.email}. Cloud sync ready.`,"goodState");
       else setCloudStatus("Cloud ready. Sign in or create an account to sync.","warnState");
     });
@@ -3829,6 +3842,7 @@ async function cloudCreateAccount(){
     if(!email||pw.length<6){alert("Enter an email and a password of at least 6 characters.");return}
     const cred=await cloudAuth.createUserWithEmailAndPassword(email,pw);
     cloudUser=cred.user||cloudAuth.currentUser||null;
+    updateCloudSignInAlert(cloudUser);
     if(document.getElementById("cloudAutoSync")) cloudAutoSync.value="on";
     saveCloudPrefs();
     setCloudStatus(`Account created and signed in as ${email}. Saving your career library…`,"warnState");
@@ -3842,11 +3856,14 @@ async function cloudSignIn(){
   try{
     const cred=await cloudAuth.signInWithEmailAndPassword(cloudEmail.value.trim(),cloudPassword.value);
     cloudUser=cred.user||cloudAuth.currentUser||null;
+    updateCloudSignInAlert(cloudUser);
     setCloudStatus(`Signed in as ${cloudUser?.email||cloudEmail.value.trim()}. Future saves will Auto Sync. If this is a new device, pull your cloud slots first.`,"goodState");
   }catch(e){alert(e.message)}
 }
 async function cloudSignOut(){
   if(cloudAuth) await cloudAuth.signOut();
+  cloudUser=null;
+  updateCloudSignInAlert(null);
 }
 function currentCloudCareerId(){
   const field=document.getElementById("cloudCareerId");
