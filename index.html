@@ -931,9 +931,8 @@ body:not(.career-home) #k11Hub{display:none!important}
       <div class="obj"><div>1.</div><div>Press <b>AUTO FILL CLOUD CONFIG</b> — all Firebase boxes will fill automatically.</div></div>
       <div class="obj"><div>2.</div><div>Press <b>SAVE CLOUD CONFIG</b>.</div></div>
       <div class="obj"><div>3.</div><div><b>CREATE ACCOUNT</b> the first time, or <b>SIGN IN</b> if you already have one.</div></div>
-      <div class="obj"><div>4.</div><div>Enter a <b>CLOUD ID</b> in Sync Career and press <b>SAVE SYNC SETTINGS</b>. Use the same Cloud ID on every device.</div></div>
-      <div class="obj"><div>5.</div><div><b>TO SAVE/BACK UP YOUR CAREER:</b> press <b>PUSH ALL CAREER SLOTS</b>. Push sends the careers on <u>this device</u> up to the cloud.</div></div>
-      <div class="obj"><div>6.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>down to this device</u>.</div></div>
+      <div class="obj"><div>4.</div><div><b>TO SAVE/BACK UP YOUR CAREER:</b> press <b>PUSH ALL CAREER SLOTS</b>. Push sends the careers on <u>this device</u> up to your account's private cloud library.</div></div>
+      <div class="obj"><div>5.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>down to this device</u>.</div></div>
       <div style="margin-top:12px;font-weight:900;font-size:16px">PUSH = SAVE THIS DEVICE TO CLOUD &nbsp; • &nbsp; PULL = LOAD CLOUD SAVE TO THIS DEVICE</div>
     </div>
 
@@ -969,8 +968,8 @@ body:not(.career-home) #k11Hub{display:none!important}
     <div id="cloudSignInAlert" class="note warnState" style="margin-top:10px;font-weight:900">NOT SIGNED IN</div>
 
     <h3 style="margin-top:20px">3. Sync Career</h3>
+    <p class="small"><b>No Cloud ID needed.</b> Your signed-in account automatically uses its own private career library.</p>
     <div class="grid">
-      <div><label>Cloud ID</label><input id="cloudCareerId" autocomplete="off" placeholder="Enter a Cloud ID"></div>
       <div><label>Auto Sync</label><select id="cloudAutoSync"><option value="on">On</option><option value="off">Off</option></select></div>
     </div>
     <div class="row" style="margin-top:12px">
@@ -3747,9 +3746,6 @@ function loadCloudFields(){
   if(document.getElementById("cloudAutoSync")){
     cloudAutoSync.value=p.autoSync||"on";
   }
-  if(document.getElementById("cloudCareerId")){
-    cloudCareerId.value=p.careerId||"";
-  }
 }
 function autoFillCloudConfig(){
   const values={
@@ -3794,12 +3790,9 @@ function clearFirebaseConfig(){
   setCloudStatus("Not configured. Press Auto Fill Cloud Config, then press Save Cloud Config.","warnState");
 }
 function saveCloudPrefs(){
-  const rawId=(document.getElementById("cloudCareerId")?.value||"").trim();
-  const careerId=rawId.replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
-  if(rawId && careerId!==rawId){
-    document.getElementById("cloudCareerId").value=careerId;
-  }
-  const p={autoSync:document.getElementById("cloudAutoSync")?.value||"on",careerId};
+  // V35: every signed-in account uses one fixed private library. Retain any old manual ID only for one-time migration.
+  const old=readJsonLocal(CLOUD_PREFS_KEY,{careerId:""});
+  const p={autoSync:document.getElementById("cloudAutoSync")?.value||"on",careerId:old.careerId||""};
   localStorage.setItem(CLOUD_PREFS_KEY,JSON.stringify(p));
   setCloudStatus(cloudUser?`Signed in as ${cloudUser.email}. Sync settings saved.`:"Sync settings saved. Sign in to use cloud sync.",cloudUser?"goodState":"warnState");
 }
@@ -3866,15 +3859,18 @@ async function cloudSignOut(){
   updateCloudSignInAlert(null);
 }
 function currentCloudCareerId(){
-  const field=document.getElementById("cloudCareerId");
-  const raw=(field?.value||readJsonLocal(CLOUD_PREFS_KEY,{careerId:""}).careerId||"").trim();
-  return raw.replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
+  // V35: fixed per-account library. This can never be blank.
+  return DEFAULT_CLOUD_LIBRARY_ID;
 }
-function cloudDocRef(){
+function cloudDocRef(idOverride){
   if(!cloudReady()) throw new Error("Sign in to cloud sync first.");
-  const id=currentCloudCareerId();
-  if(!id) throw new Error("Cloud library is unavailable.");
+  const id=(idOverride||currentCloudCareerId()).trim();
   return cloudDb.collection("users").doc(cloudUser.uid).collection("careers").doc(id);
+}
+function legacyCloudCareerId(){
+  const old=(readJsonLocal(CLOUD_PREFS_KEY,{careerId:""}).careerId||"").trim();
+  const clean=old.replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
+  return clean && clean!==DEFAULT_CLOUD_LIBRARY_ID ? clean : "";
 }
 
 function cloudDebug(msg,kind=""){
@@ -4000,8 +3996,21 @@ async function cloudPullDatabase(){
     if(btn){btn.disabled=true;btn.textContent="Pulling ALL slots…";}
     setCloudStatus(`Pulling full career library "${id}"…`,"warnState");
     cloudDebug(`Reading full Career Slots database for "${id}"…`,"warnState");
-    const snap=await withTimeout(cloudDocRef().get(),12000,"Career library pull");
-    if(!snap.exists){alert("No cloud career library exists with that ID yet. Push from the device with your careers first.");return}
+    let snap=await withTimeout(cloudDocRef().get(),12000,"Career library pull");
+    // V35 migration: if this device previously used a manual Cloud ID, recover that library once and copy it to the fixed account library.
+    if(!snap.exists){
+      const legacyId=legacyCloudCareerId();
+      if(legacyId){
+        const legacySnap=await withTimeout(cloudDocRef(legacyId).get(),12000,"Legacy career library pull");
+        if(legacySnap.exists){
+          const legacyPkg=legacySnap.data();
+          await withTimeout(cloudDocRef().set({...legacyPkg,careerId:DEFAULT_CLOUD_LIBRARY_ID,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAtClient:new Date().toISOString()},{merge:false}),12000,"Career library migration");
+          snap=await withTimeout(cloudDocRef().get(),12000,"Migrated career library pull");
+          cloudDebug(`Recovered old cloud library "${legacyId}" and moved it to your automatic account library.`,"goodState");
+        }
+      }
+    }
+    if(!snap.exists){alert("No cloud career library exists for this account yet. On the device that has your careers, sign in and press Push ALL Career Slots first.");return}
     const pkg=snap.data();
     if(!pkg.library || !pkg.library.slots){
       alert("This cloud record is from an older V17 current-career sync. Push ALL Career Slots from V18 on the source device first.");
