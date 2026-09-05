@@ -928,9 +928,34 @@ body:not(.career-home) #k11Hub{display:none!important}
     <p class="small">This is the phone ↔ PC system. Cloud Sync stores your entire Career Slots library — every player career plus which slot is active — under your signed-in account.</p>
     <div id="cloudStatus" class="note" style="margin-bottom:12px"><b>Status:</b> Cloud ready. Sign in or create an account.</div>
 
-    <div class="note" style="margin-bottom:14px"><b>Cloud setup is built in.</b> You do not need to enter Firebase settings or a Cloud Career ID. Create an account or sign in with the same account on your phone and PC.</div>
+    <div class="note" style="margin-bottom:16px;border:2px solid var(--accent,#f2c94c);padding:14px">
+      <div style="font-size:18px;font-weight:900;margin-bottom:10px">STEPS TO SAVE TO THE CLOUD</div>
+      <div class="obj"><div>1.</div><div>Press <b>AUTO FILL CLOUD CONFIG</b> — all Firebase boxes will fill automatically.</div></div>
+      <div class="obj"><div>2.</div><div>Press <b>SAVE CLOUD CONFIG</b>.</div></div>
+      <div class="obj"><div>3.</div><div><b>CREATE ACCOUNT</b> the first time, or <b>SIGN IN</b> if you already have one.</div></div>
+      <div class="obj"><div>4.</div><div><b>TO SAVE/BACK UP YOUR CAREER:</b> press <b>PUSH ALL CAREER SLOTS</b>. Push sends the careers on <u>this device</u> up to the cloud.</div></div>
+      <div class="obj"><div>5.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>down to this device</u>.</div></div>
+      <div style="margin-top:12px;font-weight:900;font-size:16px">PUSH = SAVE THIS DEVICE TO CLOUD &nbsp; • &nbsp; PULL = LOAD CLOUD SAVE TO THIS DEVICE</div>
+    </div>
 
-    <h3 style="margin-top:20px">1. Sign In</h3>
+    <h3 style="margin-top:20px">1. Firebase Project</h3>
+    <div class="row" style="margin-bottom:12px">
+      <button class="primary" type="button" id="autoFillCloudConfigBtn" onclick="(function(){var v={fbApiKey:'AIzaSyCSKbdhZFp6_M75AoGMt8N2fNXrJYzbaxw',fbAuthDomain:'nba2k27-mycareer.firebaseapp.com',fbProjectId:'nba2k27-mycareer',fbStorageBucket:'nba2k27-mycareer.firebasestorage.app',fbMessagingSenderId:'396378700271',fbAppId:'1:396378700271:web:7aff56a117dcd7b0e29e1a'};Object.keys(v).forEach(function(id){var el=document.getElementById(id);if(el)el.value=v[id];});var st=document.getElementById('cloudStatus');if(st){st.className='note warnState';st.innerHTML='<b>Status:</b> Cloud config filled in. Press Save Cloud Config, then sign in.';}})()">Auto Fill Cloud Config</button>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div><label>API Key</label><input id="fbApiKey" autocomplete="off" readonly></div>
+      <div><label>Auth Domain</label><input id="fbAuthDomain" autocomplete="off" readonly></div>
+      <div><label>Project ID</label><input id="fbProjectId" autocomplete="off" readonly></div>
+      <div><label>Storage Bucket</label><input id="fbStorageBucket" autocomplete="off" readonly></div>
+      <div><label>Messaging Sender ID</label><input id="fbMessagingSenderId" autocomplete="off" readonly></div>
+      <div><label>App ID</label><input id="fbAppId" autocomplete="off" readonly></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="primary" type="button" onclick="saveFirebaseConfig()">Save Cloud Config</button>
+      <button class="secondary" type="button" onclick="clearFirebaseConfig()">Clear Config</button>
+    </div>
+
+    <h3 style="margin-top:20px">2. Sign In</h3>
     <div class="grid">
       <div><label>Email</label><input id="cloudEmail" type="email" autocomplete="username"></div>
       <div><label>Password</label><input id="cloudPassword" type="password" autocomplete="current-password"></div>
@@ -941,7 +966,7 @@ body:not(.career-home) #k11Hub{display:none!important}
       <button class="secondary" onclick="cloudSignOut()">Sign Out</button>
     </div>
 
-    <h3 style="margin-top:20px">2. Sync Career</h3>
+    <h3 style="margin-top:20px">3. Sync Career</h3>
     <div class="grid">
       <div><label>Auto Sync</label><select id="cloudAutoSync"><option value="on">On</option><option value="off">Off</option></select></div>
     </div>
@@ -956,13 +981,6 @@ body:not(.career-home) #k11Hub{display:none!important}
     <div id="cloudLastSync" class="note" style="margin-top:8px"><b>Last successful sync:</b> None on this device.</div>
   </div>
 
-  <div class="card">
-    <h2>How Cloud Sync Works</h2>
-    <div class="obj"><div>1.</div><div>Create an account once, or sign into an existing account.</div></div>
-    <div class="obj"><div>2.</div><div>Keep <b>Auto Sync</b> on and normal career saves will be pushed to your account automatically.</div></div>
-    <div class="obj"><div>3.</div><div>On another device, sign into the same account and choose <b>Pull ALL Career Slots</b>.</div></div>
-    <div class="obj"><div>4.</div><div>Cloud pulls are still manual so an older cloud copy cannot silently overwrite newer local progress.</div></div>
-  </div>
 </section>
 
 </main>
@@ -3696,21 +3714,61 @@ function setCloudStatus(text,kind=""){
   el.innerHTML="<b>Status:</b> "+text;
 }
 function loadCloudFields(){
+  const c=readJsonLocal(CLOUD_CONFIG_KEY,null);
+  if(c && document.getElementById("fbApiKey")){
+    fbApiKey.value=c.apiKey||"";
+    fbAuthDomain.value=c.authDomain||"";
+    fbProjectId.value=c.projectId||"";
+    fbStorageBucket.value=c.storageBucket||"";
+    fbMessagingSenderId.value=c.messagingSenderId||"";
+    fbAppId.value=c.appId||"";
+  }
   const p=readJsonLocal(CLOUD_PREFS_KEY,{autoSync:"on"});
   if(document.getElementById("cloudAutoSync")){
     cloudAutoSync.value=p.autoSync||"on";
   }
 }
+function autoFillCloudConfig(){
+  const values={
+    fbApiKey:"AIzaSyCSKbdhZFp6_M75AoGMt8N2fNXrJYzbaxw",
+    fbAuthDomain:"nba2k27-mycareer.firebaseapp.com",
+    fbProjectId:"nba2k27-mycareer",
+    fbStorageBucket:"nba2k27-mycareer.firebasestorage.app",
+    fbMessagingSenderId:"396378700271",
+    fbAppId:"1:396378700271:web:7aff56a117dcd7b0e29e1a"
+  };
+  Object.keys(values).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value=values[id];
+  });
+  setCloudStatus("Cloud config filled in. Press Save Cloud Config, then sign in.","warnState");
+}
+
 function getFirebaseConfigFromFields(){
-  return Object.assign({},BUILT_IN_FIREBASE_CONFIG);
+  return {
+    apiKey:(document.getElementById("fbApiKey")?.value||"").trim(),
+    authDomain:(document.getElementById("fbAuthDomain")?.value||"").trim(),
+    projectId:(document.getElementById("fbProjectId")?.value||"").trim(),
+    storageBucket:(document.getElementById("fbStorageBucket")?.value||"").trim(),
+    messagingSenderId:(document.getElementById("fbMessagingSenderId")?.value||"").trim(),
+    appId:(document.getElementById("fbAppId")?.value||"").trim()
+  };
 }
 function saveFirebaseConfig(){
-  // Kept only for backwards compatibility with older builds. Cloud config is now built in.
+  const c=getFirebaseConfigFromFields();
+  if(!c.apiKey||!c.authDomain||!c.projectId||!c.appId){
+    alert("Press Auto Fill Cloud Config first, then save the cloud config.");
+    return;
+  }
+  localStorage.setItem(CLOUD_CONFIG_KEY,JSON.stringify(c));
   initCloud(true);
 }
 function clearFirebaseConfig(){
+  if(!confirm("Clear this device's Firebase config? Your career data is not deleted."))return;
   localStorage.removeItem(CLOUD_CONFIG_KEY);
-  initCloud(false);
+  ["fbApiKey","fbAuthDomain","fbProjectId","fbStorageBucket","fbMessagingSenderId","fbAppId"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  cloudApp=null; cloudAuth=null; cloudDb=null; cloudUser=null;
+  setCloudStatus("Not configured. Press Auto Fill Cloud Config, then press Save Cloud Config.","warnState");
 }
 function saveCloudPrefs(){
   const p={autoSync:document.getElementById("cloudAutoSync")?.value||"on"};
@@ -3720,7 +3778,11 @@ function saveCloudPrefs(){
 function cloudReady(){return !!(cloudDb&&cloudAuth&&cloudUser)}
 function initCloud(showAlert=false){
   loadCloudFields();
-  const c=Object.assign({},BUILT_IN_FIREBASE_CONFIG);
+  const c=readJsonLocal(CLOUD_CONFIG_KEY,null);
+  if(!c||!c.apiKey||!c.projectId){
+    setCloudStatus("Not configured. Press Auto Fill Cloud Config, then press Save Cloud Config.","warnState");
+    return;
+  }
   if(typeof firebase==="undefined"){
     setCloudStatus("Firebase scripts did not load. Check your internet connection.","badState");
     return;
@@ -3738,7 +3800,7 @@ function initCloud(showAlert=false){
       if(user) setCloudStatus(`Signed in as ${user.email}. Cloud sync ready.`,"goodState");
       else setCloudStatus("Cloud ready. Sign in or create an account to sync.","warnState");
     });
-    if(showAlert) alert("Cloud connection is built in and ready.");
+    if(showAlert) alert("Cloud config saved and ready.");
   }catch(e){
     setCloudStatus("Cloud config error: "+e.message,"badState");
     if(showAlert) alert("Firebase config error: "+e.message);
@@ -4034,7 +4096,11 @@ function scheduleCloudPush(){
   cloudPushTimer=setTimeout(()=>cloudPushDatabase(true),1000);
 }
 window.addEventListener("online",()=>scheduleCloudPush());
-window.addEventListener("DOMContentLoaded",()=>{loadCloudFields();initCloud();renderLastCloudSync();});
+window.addEventListener("DOMContentLoaded",()=>{
+  loadCloudFields();
+  initCloud();
+  renderLastCloudSync();
+});
 
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
   window.addEventListener("load",()=>{
@@ -4220,7 +4286,7 @@ function jumpCareerSection(id){
     contracts:{title:'Contracts Menu',items:[['Contracts','Contracts'],['Contract History','Contract History']]},
     milestones:{title:'Milestones Menu',items:[['Career Milestones','Career Milestones'],['Manual Accomplishments','Manual Career Accomplishments'],['Accomplishment Log','Career Accomplishment Log']]},
     history:{title:'History Menu',items:[['Game History','Game History'],['Upgrade History','Upgrade History']]},
-    cloud:{title:'Cloud Sync Menu',items:[['Cloud Sync','Cloud Sync'],['Account Sign In','1. Sign In'],['Sync Career','2. Sync Career']]}
+    cloud:{title:'Cloud Sync Menu',items:[['Cloud Sync','Cloud Sync'],['Firebase Project','1. Firebase Project'],['Account Sign In','2. Sign In'],['Sync Career','3. Sync Career']]}
   };
   function slug(tab,i){return 'side_'+tab+'_'+i;}
   function findTarget(section,label){
