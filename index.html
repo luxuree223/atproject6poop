@@ -931,8 +931,9 @@ body:not(.career-home) #k11Hub{display:none!important}
       <div class="obj"><div>1.</div><div>Press <b>AUTO FILL CLOUD CONFIG</b> — all Firebase boxes will fill automatically.</div></div>
       <div class="obj"><div>2.</div><div>Press <b>SAVE CLOUD CONFIG</b>.</div></div>
       <div class="obj"><div>3.</div><div><b>CREATE ACCOUNT</b> the first time, or <b>SIGN IN</b> if you already have one.</div></div>
-      <div class="obj"><div>4.</div><div><b>TO SAVE/BACK UP YOUR CAREER:</b> press <b>PUSH ALL CAREER SLOTS</b>. Push sends the careers on <u>this device</u> up to the cloud.</div></div>
-      <div class="obj"><div>5.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>down to this device</u>.</div></div>
+      <div class="obj"><div>4.</div><div>Enter a <b>CLOUD ID</b> in Sync Career and press <b>SAVE SYNC SETTINGS</b>. Use the same Cloud ID on every device.</div></div>
+      <div class="obj"><div>5.</div><div><b>TO SAVE/BACK UP YOUR CAREER:</b> press <b>PUSH ALL CAREER SLOTS</b>. Push sends the careers on <u>this device</u> up to the cloud.</div></div>
+      <div class="obj"><div>6.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>down to this device</u>.</div></div>
       <div style="margin-top:12px;font-weight:900;font-size:16px">PUSH = SAVE THIS DEVICE TO CLOUD &nbsp; • &nbsp; PULL = LOAD CLOUD SAVE TO THIS DEVICE</div>
     </div>
 
@@ -968,11 +969,18 @@ body:not(.career-home) #k11Hub{display:none!important}
 
     <h3 style="margin-top:20px">3. Sync Career</h3>
     <div class="grid">
+      <div><label>Cloud ID</label><input id="cloudCareerId" autocomplete="off" placeholder="Enter a Cloud ID"></div>
       <div><label>Auto Sync</label><select id="cloudAutoSync"><option value="on">On</option><option value="off">Off</option></select></div>
     </div>
     <div class="row" style="margin-top:12px">
-      <button class="primary" id="cloudPushBtn" type="button" onclick="cloudPushDatabase()">Push ALL Career Slots</button>
-      <button class="primary" id="cloudPullBtn" type="button" onclick="cloudPullDatabase()">Pull ALL Career Slots</button>
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+        <button class="primary" id="cloudPushBtn" type="button" onclick="cloudPushDatabase()">Push ALL Career Slots</button>
+        <div class="small" style="font-weight:900;text-align:center;text-transform:uppercase">SAVE TO CLOUD</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;min-width:0">
+        <button class="primary" id="cloudPullBtn" type="button" onclick="cloudPullDatabase()">Pull ALL Career Slots</button>
+        <div class="small" style="font-weight:900;text-align:center;text-transform:uppercase">RETRIEVE CAREER SAVE</div>
+      </div>
       <button class="secondary" type="button" onclick="saveCloudPrefs()">Save Sync Settings</button>
       <button class="secondary" type="button" onclick="cloudConnectionTest()">Test Cloud Connection</button>
     </div>
@@ -3723,9 +3731,12 @@ function loadCloudFields(){
     fbMessagingSenderId.value=c.messagingSenderId||"";
     fbAppId.value=c.appId||"";
   }
-  const p=readJsonLocal(CLOUD_PREFS_KEY,{autoSync:"on"});
+  const p=readJsonLocal(CLOUD_PREFS_KEY,{autoSync:"on",careerId:""});
   if(document.getElementById("cloudAutoSync")){
     cloudAutoSync.value=p.autoSync||"on";
+  }
+  if(document.getElementById("cloudCareerId")){
+    cloudCareerId.value=p.careerId||"";
   }
 }
 function autoFillCloudConfig(){
@@ -3771,7 +3782,12 @@ function clearFirebaseConfig(){
   setCloudStatus("Not configured. Press Auto Fill Cloud Config, then press Save Cloud Config.","warnState");
 }
 function saveCloudPrefs(){
-  const p={autoSync:document.getElementById("cloudAutoSync")?.value||"on"};
+  const rawId=(document.getElementById("cloudCareerId")?.value||"").trim();
+  const careerId=rawId.replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
+  if(rawId && careerId!==rawId){
+    document.getElementById("cloudCareerId").value=careerId;
+  }
+  const p={autoSync:document.getElementById("cloudAutoSync")?.value||"on",careerId};
   localStorage.setItem(CLOUD_PREFS_KEY,JSON.stringify(p));
   setCloudStatus(cloudUser?`Signed in as ${cloudUser.email}. Sync settings saved.`:"Sync settings saved. Sign in to use cloud sync.",cloudUser?"goodState":"warnState");
 }
@@ -3833,7 +3849,9 @@ async function cloudSignOut(){
   if(cloudAuth) await cloudAuth.signOut();
 }
 function currentCloudCareerId(){
-  return DEFAULT_CLOUD_LIBRARY_ID;
+  const field=document.getElementById("cloudCareerId");
+  const raw=(field?.value||readJsonLocal(CLOUD_PREFS_KEY,{careerId:""}).careerId||"").trim();
+  return raw.replace(/[^A-Za-z0-9_-]/g,"").slice(0,80);
 }
 function cloudDocRef(){
   if(!cloudReady()) throw new Error("Sign in to cloud sync first.");
