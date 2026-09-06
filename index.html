@@ -3011,6 +3011,56 @@ function summerStatsForm(s){
 }
 
 function freshGLeague(){return {team:"",games:[],interest:0,status:"Development Prospect",offer:null,lastAlertTier:0};}
+function gLeagueDevelopmentGoals(g){
+  const pos=(state.player?.position||"SF").toUpperCase();
+  const pools={
+    PG:[
+      {t:"Create for others: record 5+ assists",f:x=>x.ast>=5},
+      {t:"Protect the ball: finish with 2 or fewer turnovers",f:x=>x.to<=2},
+      {t:"Pressure the ball: record 2+ steals",f:x=>x.stl>=2},
+      {t:"Score efficiently: 12+ points on 45%+ FG (5+ FGA)",f:x=>x.pts>=12&&x.fga>=5&&x.fgm/x.fga>=.45},
+      {t:"Control the game: reach 18+ PTS/AST combined",f:x=>x.pts+x.ast>=18},
+      {t:"Make winning plays: win and record 4+ assists",f:x=>x.result==="W"&&x.ast>=4}
+    ],
+    SG:[
+      {t:"Prove your scoring: score 15+ points",f:x=>x.pts>=15},
+      {t:"Stretch the floor: make 2+ threes",f:x=>x.tpm>=2},
+      {t:"Show shot discipline: shoot 45%+ FG (6+ FGA)",f:x=>x.fga>=6&&x.fgm/x.fga>=.45},
+      {t:"Impact both ends: record 2+ steals or blocks",f:x=>x.stl+x.blk>=2},
+      {t:"Expand your game: finish with 4+ assists",f:x=>x.ast>=4},
+      {t:"Make winning plays: win and score 12+ points",f:x=>x.result==="W"&&x.pts>=12}
+    ],
+    SF:[
+      {t:"Be a two-way wing: record 2+ steals or blocks",f:x=>x.stl+x.blk>=2},
+      {t:"Finish possessions: grab 6+ rebounds",f:x=>x.reb>=6},
+      {t:"Show versatility: reach 22+ PTS/REB/AST combined",f:x=>x.pts+x.reb+x.ast>=22},
+      {t:"Score efficiently: 14+ points on 45%+ FG (6+ FGA)",f:x=>x.pts>=14&&x.fga>=6&&x.fgm/x.fga>=.45},
+      {t:"Make the extra play: record 4+ assists",f:x=>x.ast>=4},
+      {t:"Make winning plays: win and grab 5+ rebounds",f:x=>x.result==="W"&&x.reb>=5}
+    ],
+    PF:[
+      {t:"Own the glass: grab 8+ rebounds",f:x=>x.reb>=8},
+      {t:"Protect the rim: record 2+ blocks",f:x=>x.blk>=2},
+      {t:"Play through contact: score 14+ points",f:x=>x.pts>=14},
+      {t:"Finish efficiently: shoot 50%+ FG (6+ FGA)",f:x=>x.fga>=6&&x.fgm/x.fga>=.50},
+      {t:"Show versatility: reach 22+ PTS/REB/AST combined",f:x=>x.pts+x.reb+x.ast>=22},
+      {t:"Make winning plays: win and grab 7+ rebounds",f:x=>x.result==="W"&&x.reb>=7}
+    ],
+    C:[
+      {t:"Control the paint: grab 9+ rebounds",f:x=>x.reb>=9},
+      {t:"Protect the rim: record 2+ blocks",f:x=>x.blk>=2},
+      {t:"Finish inside: shoot 55%+ FG (6+ FGA)",f:x=>x.fga>=6&&x.fgm/x.fga>=.55},
+      {t:"Produce inside: score 12+ points",f:x=>x.pts>=12},
+      {t:"Put together a double-double",f:x=>[x.pts,x.reb,x.ast,x.stl,x.blk].filter(v=>v>=10).length>=2},
+      {t:"Make winning plays: win and record 8+ rebounds",f:x=>x.result==="W"&&x.reb>=8}
+    ]
+  };
+  const pool=pools[pos]||pools.SF;
+  const gameNo=(g?.games?.length||0)+1;
+  const seed=(gameNo-1)%pool.length;
+  return [pool[seed],pool[(seed+2)%pool.length],pool[(seed+4)%pool.length]];
+}
+function gLeagueGoalResults(g,st){return gLeagueDevelopmentGoals(g).map(o=>({text:o.t,passed:!!o.f(st)}));}
 function ensureGLeague(){
   state.preNBA=state.preNBA||{};
   let g=state.preNBA.gLeague;
@@ -3047,14 +3097,16 @@ function submitGLeagueGame(){
   const num=id=>+(document.getElementById(id)?.value||0);
   const st={result:document.getElementById("glResult")?.value||"W",min:num("glMin"),pts:num("glPts"),reb:num("glReb"),ast:num("glAst"),stl:num("glStl"),blk:num("glBlk"),to:num("glTo"),pf:num("glPf"),fgm:num("glFgm"),fga:num("glFga"),tpm:num("gl3pm"),tpa:num("gl3pa"),ftm:num("glFtm"),fta:num("glFta")};
   if(st.fgm>st.fga||st.tpm>st.tpa||st.ftm>st.fta){alert("Check your shooting totals: makes cannot exceed attempts.");return;}
-  const score=summerBaseScore(st),g=ensureGLeague();
-  g.games.push({stats:st,score,date:new Date().toISOString()});
+  const g=ensureGLeague();
+  const goalResults=gLeagueGoalResults(g,st), goalsPassed=goalResults.filter(x=>x.passed).length;
+  const rawScore=summerBaseScore(st), score=Math.min(100,rawScore+(goalsPassed*2));
+  g.games.push({stats:st,score,rawScore,developmentGoals:goalResults,goalsPassed,date:new Date().toISOString()});
   const glMilestones=awardPreNBAMilestones(["gl_first_game",...(st.result==="W"?["gl_first_win"]:[])]);
   const oldTier=g.lastAlertTier||0, e=gLeagueInterestSummary(); g.interest=e.score;g.status=e.status;
-  let entry={id:"gleague_game_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:"G League",headline:`G League Game ${g.games.length}: ${summerGameLabel(score)}`,body:`${state.player?.name||"Your player"}: ${st.pts} PTS, ${st.reb} REB, ${st.ast} AST, ${st.stl} STL, ${st.blk} BLK. NBA Interest: ${e.score}/100 — ${e.status}.`,read:false};
+  let entry={id:"gleague_game_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:"G League",headline:`G League Game ${g.games.length}: ${summerGameLabel(score)}`,body:`${state.player?.name||"Your player"}: ${st.pts} PTS, ${st.reb} REB, ${st.ast} AST, ${st.stl} STL, ${st.blk} BLK. Development Goals ${goalsPassed}/3. NBA Interest: ${e.score}/100 — ${e.status}.`,read:false};
   if(e.tier>oldTier){
     const msg=e.tier===1?"Your name has started showing up on NBA scouting reports.":e.tier===2?"NBA scouts are actively tracking your G League run.":e.tier===3?"You are officially on call-up watch. Keep stacking strong games.":e.tier===4?"Your play has generated legitimate two-way contract interest.":"You have earned enough NBA interest for a call-up opportunity.";
-    entry.headline=e.status;entry.body=`${msg} Current NBA Interest: ${e.score}/100 after ${e.n} G League games.`;g.lastAlertTier=e.tier;
+    entry.headline=e.status;entry.body=`${msg} You completed ${goalsPassed}/3 development goals in Game ${g.games.length}. Current NBA Interest: ${e.score}/100 after ${e.n} G League games.`;g.lastAlertTier=e.tier;
   }
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();
   // Keep the Stats tab in sync immediately after a G League game is finalized.
@@ -3071,7 +3123,7 @@ function acceptGLeagueOpportunity(kind){
   const entry={id:"gl_offer_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:kind==="nba"?"NBA Call-Up":"Two-Way Contract",headline:kind==="nba"?"THE WAIT IS OVER — YOU'RE HEADED TO THE NBA":"THE DOOR JUST OPENED",body:kind==="nba"?`You earned this. The G League work turned into the opportunity you were chasing, and the NBA call has finally come. +1,000 SP milestone earned. Enjoy the moment — then get ready. Making it to the league was the goal, but the job is not done. Move your player to the NBA roster and continue the career from there.`:`The work is starting to pay off. An NBA organization is willing to put a two-way contract on the table, and that is a real step forward. +500 SP milestone earned. You remain in the G League and keep logging games with your NBA Interest intact. You have a foot in the door now — the full call-up is the next thing to earn.`,read:false};
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();renderInsider();showInsiderPopup(entry);
 }
-function gLeagueStatsForm(){return `<div class="combineStats"><h3>Enter G League Game</h3><div class="small" style="margin-bottom:10px">Each game updates your NBA Interest. One huge night creates buzz; sustained production earns contracts and call-ups.</div><div class="grid4">
+function gLeagueStatsForm(){const g=ensureGLeague(),goals=gLeagueDevelopmentGoals(g),gameNo=(g.games?.length||0)+1;return `<div class="combineStats"><h3>Enter G League Game ${gameNo}</h3><div class="small" style="margin-bottom:10px">The G League is a developmental system. Each game gives you three development goals tailored to your position. Goals are graded automatically from your box score and give a small boost to that game's NBA Interest evaluation — they do not award SP.</div><div class="objectives" style="margin-bottom:12px">${goals.map((o,i)=>`<div class="obj"><div>○</div><div><b>Development Goal ${i+1}</b><div class="small">${o.t}</div></div></div>`).join("")}</div><div class="grid4">
 <label>Result<select id="glResult"><option value="W">Win</option><option value="L">Loss</option></select></label>
 <label>MIN<input id="glMin" type="number" min="0" inputmode="numeric"></label><label>PTS<input id="glPts" type="number" min="0" inputmode="numeric"></label><label>REB<input id="glReb" type="number" min="0" inputmode="numeric"></label>
 <label>AST<input id="glAst" type="number" min="0" inputmode="numeric"></label><label>STL<input id="glStl" type="number" min="0" inputmode="numeric"></label><label>BLK<input id="glBlk" type="number" min="0" inputmode="numeric"></label><label>TO<input id="glTo" type="number" min="0" inputmode="numeric"></label>
