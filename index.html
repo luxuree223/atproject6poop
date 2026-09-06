@@ -3010,63 +3010,137 @@ function summerStatsForm(s){
   </div><div class="row" style="margin-top:12px"><button class="primary" onclick="submitSummerGame()">Evaluate ${summerCurrentTitle(s)}</button></div>${r?`<div class="combineResult"><b>${r.label} • ${r.baseScore}/100</b><div class="small">Objectives: ${r.objectivesPassed||0}/3 • Evaluation weight: ${r.multiplier.toFixed(2)}×. Finalize when ready.</div></div><div class="row" style="margin-top:12px"><button class="primary" onclick="finalizeSummerGame()">Finalize ${summerCurrentTitle(s)}</button></div>`:""}</div>`;
 }
 
-function freshGLeague(){return {team:"",games:[],interest:0,status:"Development Prospect",offer:null,lastAlertTier:0};}
-function gLeagueDevelopmentGoals(g){
+function freshGLeague(){return {team:"",games:[],interest:0,status:"Development Prospect",offer:null,lastAlertTier:0,currentGoalIds:[]};}
+function gLeagueGoalCatalog(){
   const pos=(state.player?.position||"SF").toUpperCase();
-  const pools={
-    PG:[
-      {t:"Create for others: record 5+ assists",f:x=>x.ast>=5},
-      {t:"Protect the ball: finish with 2 or fewer turnovers",f:x=>x.to<=2},
-      {t:"Pressure the ball: record 2+ steals",f:x=>x.stl>=2},
-      {t:"Score efficiently: 12+ points on 45%+ FG (5+ FGA)",f:x=>x.pts>=12&&x.fga>=5&&x.fgm/x.fga>=.45},
-      {t:"Control the game: reach 18+ PTS/AST combined",f:x=>x.pts+x.ast>=18},
-      {t:"Make winning plays: win and record 4+ assists",f:x=>x.result==="W"&&x.ast>=4}
-    ],
-    SG:[
-      {t:"Prove your scoring: score 15+ points",f:x=>x.pts>=15},
-      {t:"Stretch the floor: make 2+ threes",f:x=>x.tpm>=2},
-      {t:"Show shot discipline: shoot 45%+ FG (6+ FGA)",f:x=>x.fga>=6&&x.fgm/x.fga>=.45},
-      {t:"Impact both ends: record 2+ steals or blocks",f:x=>x.stl+x.blk>=2},
-      {t:"Expand your game: finish with 4+ assists",f:x=>x.ast>=4},
-      {t:"Make winning plays: win and score 12+ points",f:x=>x.result==="W"&&x.pts>=12}
-    ],
-    SF:[
-      {t:"Be a two-way wing: record 2+ steals or blocks",f:x=>x.stl+x.blk>=2},
-      {t:"Finish possessions: grab 6+ rebounds",f:x=>x.reb>=6},
-      {t:"Show versatility: reach 22+ PTS/REB/AST combined",f:x=>x.pts+x.reb+x.ast>=22},
-      {t:"Score efficiently: 14+ points on 45%+ FG (6+ FGA)",f:x=>x.pts>=14&&x.fga>=6&&x.fgm/x.fga>=.45},
-      {t:"Make the extra play: record 4+ assists",f:x=>x.ast>=4},
-      {t:"Make winning plays: win and grab 5+ rebounds",f:x=>x.result==="W"&&x.reb>=5}
-    ],
-    PF:[
-      {t:"Own the glass: grab 8+ rebounds",f:x=>x.reb>=8},
-      {t:"Protect the rim: record 2+ blocks",f:x=>x.blk>=2},
-      {t:"Play through contact: score 14+ points",f:x=>x.pts>=14},
-      {t:"Finish efficiently: shoot 50%+ FG (6+ FGA)",f:x=>x.fga>=6&&x.fgm/x.fga>=.50},
-      {t:"Show versatility: reach 22+ PTS/REB/AST combined",f:x=>x.pts+x.reb+x.ast>=22},
-      {t:"Make winning plays: win and grab 7+ rebounds",f:x=>x.result==="W"&&x.reb>=7}
-    ],
-    C:[
-      {t:"Control the paint: grab 9+ rebounds",f:x=>x.reb>=9},
-      {t:"Protect the rim: record 2+ blocks",f:x=>x.blk>=2},
-      {t:"Finish inside: shoot 55%+ FG (6+ FGA)",f:x=>x.fga>=6&&x.fgm/x.fga>=.55},
-      {t:"Produce inside: score 12+ points",f:x=>x.pts>=12},
-      {t:"Put together a double-double",f:x=>[x.pts,x.reb,x.ast,x.stl,x.blk].filter(v=>v>=10).length>=2},
-      {t:"Make winning plays: win and record 8+ rebounds",f:x=>x.result==="W"&&x.reb>=8}
-    ]
+  const all={
+    PG:{
+      easy:[
+        {id:"pg_e_ast4",t:"Set the table: record 4+ assists",sp:75,f:x=>x.ast>=4},
+        {id:"pg_e_to3",t:"Take care of the ball: finish with 3 or fewer turnovers",sp:75,f:x=>x.to<=3},
+        {id:"pg_e_pts10",t:"Give them scoring punch: score 10+ points",sp:75,f:x=>x.pts>=10},
+        {id:"pg_e_win_ast3",t:"Steady the offense: win and record 3+ assists",sp:75,f:x=>x.result==="W"&&x.ast>=3}
+      ],
+      standard:[
+        {id:"pg_m_ast6",t:"Create for others: record 6+ assists",sp:100,f:x=>x.ast>=6},
+        {id:"pg_m_stl2",t:"Pressure the ball: record 2+ steals",sp:100,f:x=>x.stl>=2},
+        {id:"pg_m_combo20",t:"Control the game: reach 20+ PTS/AST combined",sp:100,f:x=>x.pts+x.ast>=20},
+        {id:"pg_m_eff",t:"Score efficiently: 14+ points on 45%+ FG (6+ FGA)",sp:100,f:x=>x.pts>=14&&x.fga>=6&&x.fgm/x.fga>=.45}
+      ],
+      hard:[
+        {id:"pg_h_ast9",t:"Run the show: record 9+ assists",sp:150,f:x=>x.ast>=9},
+        {id:"pg_h_20_7",t:"NBA-ready lead guard: 20+ points and 7+ assists",sp:150,f:x=>x.pts>=20&&x.ast>=7},
+        {id:"pg_h_win_eff",t:"Take over efficiently: win, score 18+ and shoot 50%+ FG (8+ FGA)",sp:150,f:x=>x.result==="W"&&x.pts>=18&&x.fga>=8&&x.fgm/x.fga>=.50},
+        {id:"pg_h_stl_ast",t:"Dominate both ends: 7+ assists and 3+ steals",sp:150,f:x=>x.ast>=7&&x.stl>=3}
+      ]
+    },
+    SG:{
+      easy:[
+        {id:"sg_e_pts10",t:"Find your offense: score 10+ points",sp:75,f:x=>x.pts>=10},
+        {id:"sg_e_3pm1",t:"Space the floor: make 1+ three",sp:75,f:x=>x.tpm>=1},
+        {id:"sg_e_ast3",t:"Make the extra pass: record 3+ assists",sp:75,f:x=>x.ast>=3},
+        {id:"sg_e_win_pts8",t:"Contribute to a win: win and score 8+ points",sp:75,f:x=>x.result==="W"&&x.pts>=8}
+      ],
+      standard:[
+        {id:"sg_m_pts15",t:"Prove your scoring: score 15+ points",sp:100,f:x=>x.pts>=15},
+        {id:"sg_m_3pm2",t:"Stretch the floor: make 2+ threes",sp:100,f:x=>x.tpm>=2},
+        {id:"sg_m_stocks2",t:"Impact both ends: record 2+ steals or blocks",sp:100,f:x=>x.stl+x.blk>=2},
+        {id:"sg_m_eff",t:"Show shot discipline: 14+ points on 45%+ FG (6+ FGA)",sp:100,f:x=>x.pts>=14&&x.fga>=6&&x.fgm/x.fga>=.45}
+      ],
+      hard:[
+        {id:"sg_h_pts22",t:"Show NBA scoring: score 22+ points",sp:150,f:x=>x.pts>=22},
+        {id:"sg_h_3pm4",t:"Catch fire from deep: make 4+ threes",sp:150,f:x=>x.tpm>=4},
+        {id:"sg_h_20_eff",t:"Efficient takeover: 20+ points on 50%+ FG (10+ FGA)",sp:150,f:x=>x.pts>=20&&x.fga>=10&&x.fgm/x.fga>=.50},
+        {id:"sg_h_win_two_way",t:"Two-way statement: win, score 18+ and record 2+ steals",sp:150,f:x=>x.result==="W"&&x.pts>=18&&x.stl>=2}
+      ]
+    },
+    SF:{
+      easy:[
+        {id:"sf_e_reb4",t:"Help on the glass: grab 4+ rebounds",sp:75,f:x=>x.reb>=4},
+        {id:"sf_e_pts10",t:"Give them scoring: score 10+ points",sp:75,f:x=>x.pts>=10},
+        {id:"sf_e_ast3",t:"Keep the ball moving: record 3+ assists",sp:75,f:x=>x.ast>=3},
+        {id:"sf_e_combo16",t:"Fill the box score: reach 16+ PTS/REB/AST combined",sp:75,f:x=>x.pts+x.reb+x.ast>=16}
+      ],
+      standard:[
+        {id:"sf_m_stocks2",t:"Be a two-way wing: record 2+ steals or blocks",sp:100,f:x=>x.stl+x.blk>=2},
+        {id:"sf_m_reb6",t:"Finish possessions: grab 6+ rebounds",sp:100,f:x=>x.reb>=6},
+        {id:"sf_m_combo22",t:"Show versatility: reach 22+ PTS/REB/AST combined",sp:100,f:x=>x.pts+x.reb+x.ast>=22},
+        {id:"sf_m_eff",t:"Score efficiently: 14+ points on 45%+ FG (6+ FGA)",sp:100,f:x=>x.pts>=14&&x.fga>=6&&x.fgm/x.fga>=.45}
+      ],
+      hard:[
+        {id:"sf_h_20_7",t:"Look like an NBA wing: score 20+ points and grab 7+ rebounds",sp:150,f:x=>x.pts>=20&&x.reb>=7},
+        {id:"sf_h_combo30",t:"Stuff the stat sheet: reach 30+ PTS/REB/AST combined",sp:150,f:x=>x.pts+x.reb+x.ast>=30},
+        {id:"sf_h_two_way",t:"Two-way statement: 18+ points and 3+ steals or blocks",sp:150,f:x=>x.pts>=18&&x.stl+x.blk>=3},
+        {id:"sf_h_win_eff",t:"Take over efficiently: win, score 20+ and shoot 50%+ FG (8+ FGA)",sp:150,f:x=>x.result==="W"&&x.pts>=20&&x.fga>=8&&x.fgm/x.fga>=.50}
+      ]
+    },
+    PF:{
+      easy:[
+        {id:"pf_e_reb6",t:"Work the glass: grab 6+ rebounds",sp:75,f:x=>x.reb>=6},
+        {id:"pf_e_pts10",t:"Produce inside: score 10+ points",sp:75,f:x=>x.pts>=10},
+        {id:"pf_e_blk1",t:"Protect the paint: record 1+ block",sp:75,f:x=>x.blk>=1},
+        {id:"pf_e_combo17",t:"Stay active: reach 17+ PTS/REB combined",sp:75,f:x=>x.pts+x.reb>=17}
+      ],
+      standard:[
+        {id:"pf_m_reb8",t:"Own the glass: grab 8+ rebounds",sp:100,f:x=>x.reb>=8},
+        {id:"pf_m_blk2",t:"Protect the rim: record 2+ blocks",sp:100,f:x=>x.blk>=2},
+        {id:"pf_m_pts14",t:"Play through contact: score 14+ points",sp:100,f:x=>x.pts>=14},
+        {id:"pf_m_eff",t:"Finish efficiently: shoot 50%+ FG (6+ FGA)",sp:100,f:x=>x.fga>=6&&x.fgm/x.fga>=.50}
+      ],
+      hard:[
+        {id:"pf_h_dd",t:"Control the frontcourt: record a double-double",sp:150,f:x=>[x.pts,x.reb,x.ast,x.stl,x.blk].filter(v=>v>=10).length>=2},
+        {id:"pf_h_18_10",t:"NBA frontcourt production: 18+ points and 10+ rebounds",sp:150,f:x=>x.pts>=18&&x.reb>=10},
+        {id:"pf_h_rim",t:"Own the paint: 10+ rebounds and 3+ blocks",sp:150,f:x=>x.reb>=10&&x.blk>=3},
+        {id:"pf_h_win_eff",t:"Winning efficiency: win, score 16+ and shoot 55%+ FG (8+ FGA)",sp:150,f:x=>x.result==="W"&&x.pts>=16&&x.fga>=8&&x.fgm/x.fga>=.55}
+      ]
+    },
+    C:{
+      easy:[
+        {id:"c_e_reb7",t:"Clean the glass: grab 7+ rebounds",sp:75,f:x=>x.reb>=7},
+        {id:"c_e_pts8",t:"Finish inside: score 8+ points",sp:75,f:x=>x.pts>=8},
+        {id:"c_e_blk1",t:"Protect the rim: record 1+ block",sp:75,f:x=>x.blk>=1},
+        {id:"c_e_win_reb6",t:"Anchor a win: win and grab 6+ rebounds",sp:75,f:x=>x.result==="W"&&x.reb>=6}
+      ],
+      standard:[
+        {id:"c_m_reb9",t:"Control the paint: grab 9+ rebounds",sp:100,f:x=>x.reb>=9},
+        {id:"c_m_blk2",t:"Protect the rim: record 2+ blocks",sp:100,f:x=>x.blk>=2},
+        {id:"c_m_pts12",t:"Produce inside: score 12+ points",sp:100,f:x=>x.pts>=12},
+        {id:"c_m_eff",t:"Finish inside: shoot 55%+ FG (6+ FGA)",sp:100,f:x=>x.fga>=6&&x.fgm/x.fga>=.55}
+      ],
+      hard:[
+        {id:"c_h_dd",t:"Put together a double-double",sp:150,f:x=>[x.pts,x.reb,x.ast,x.stl,x.blk].filter(v=>v>=10).length>=2},
+        {id:"c_h_16_12",t:"Dominate inside: 16+ points and 12+ rebounds",sp:150,f:x=>x.pts>=16&&x.reb>=12},
+        {id:"c_h_rim",t:"Own the paint: 12+ rebounds and 3+ blocks",sp:150,f:x=>x.reb>=12&&x.blk>=3},
+        {id:"c_h_win_eff",t:"Winning interior force: win, score 14+ and shoot 60%+ FG (8+ FGA)",sp:150,f:x=>x.result==="W"&&x.pts>=14&&x.fga>=8&&x.fgm/x.fga>=.60}
+      ]
+    }
   };
-  const pool=pools[pos]||pools.SF;
-  const gameNo=(g?.games?.length||0)+1;
-  const seed=(gameNo-1)%pool.length;
-  return [pool[seed],pool[(seed+2)%pool.length],pool[(seed+4)%pool.length]];
+  return all[pos]||all.SF;
 }
-function gLeagueGoalResults(g,st){return gLeagueDevelopmentGoals(g).map(o=>({text:o.t,passed:!!o.f(st)}));}
+function randomGLeagueGoalIds(){
+  const c=gLeagueGoalCatalog();
+  return [random(c.easy).id,random(c.standard).id,random(c.hard).id];
+}
+function gLeagueDevelopmentGoals(g){
+  const c=gLeagueGoalCatalog(), all=[...c.easy,...c.standard,...c.hard];
+  if(!Array.isArray(g.currentGoalIds)||g.currentGoalIds.length!==3) g.currentGoalIds=randomGLeagueGoalIds();
+  let goals=g.currentGoalIds.map(id=>all.find(o=>o.id===id)).filter(Boolean);
+  if(goals.length!==3){g.currentGoalIds=randomGLeagueGoalIds();goals=g.currentGoalIds.map(id=>all.find(o=>o.id===id)).filter(Boolean);}
+  return goals;
+}
+function randomizeGLeagueGoals(){
+  const g=ensureGLeague();
+  g.currentGoalIds=randomGLeagueGoalIds();
+  persist();renderInsider();
+}
+function gLeagueGoalResults(g,st){return gLeagueDevelopmentGoals(g).map(o=>({id:o.id,text:o.t,sp:o.sp,passed:!!o.f(st)}));}
 function ensureGLeague(){
   state.preNBA=state.preNBA||{};
   let g=state.preNBA.gLeague;
   if(!g){g=freshGLeague();state.preNBA.gLeague=g;}
   if(!Array.isArray(g.games)) g.games=[];
   if(g.lastAlertTier===undefined) g.lastAlertTier=0;
+  if(!Array.isArray(g.currentGoalIds)) g.currentGoalIds=[];
   return g;
 }
 function setGLeagueTeam(){
@@ -3099,18 +3173,22 @@ function submitGLeagueGame(){
   if(st.fgm>st.fga||st.tpm>st.tpa||st.ftm>st.fta){alert("Check your shooting totals: makes cannot exceed attempts.");return;}
   const g=ensureGLeague();
   const goalResults=gLeagueGoalResults(g,st), goalsPassed=goalResults.filter(x=>x.passed).length;
+  const goalSP=goalResults.filter(x=>x.passed).reduce((sum,x)=>sum+(x.sp||0),0);
   const rawScore=summerBaseScore(st), score=Math.min(100,rawScore+(goalsPassed*2));
-  g.games.push({stats:st,score,rawScore,developmentGoals:goalResults,goalsPassed,date:new Date().toISOString()});
+  g.games.push({stats:st,score,rawScore,developmentGoals:goalResults,goalsPassed,goalSP,date:new Date().toISOString()});
+  state.sp=(state.sp||0)+goalSP;
+  g.currentGoalIds=[];
   const glMilestones=awardPreNBAMilestones(["gl_first_game",...(st.result==="W"?["gl_first_win"]:[])]);
   const oldTier=g.lastAlertTier||0, e=gLeagueInterestSummary(); g.interest=e.score;g.status=e.status;
-  let entry={id:"gleague_game_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:"G League",headline:`G League Game ${g.games.length}: ${summerGameLabel(score)}`,body:`${state.player?.name||"Your player"}: ${st.pts} PTS, ${st.reb} REB, ${st.ast} AST, ${st.stl} STL, ${st.blk} BLK. Development Goals ${goalsPassed}/3. NBA Interest: ${e.score}/100 — ${e.status}.`,read:false};
+  let entry={id:"gleague_game_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:"G League",headline:`G League Game ${g.games.length}: ${summerGameLabel(score)}`,body:`${state.player?.name||"Your player"}: ${st.pts} PTS, ${st.reb} REB, ${st.ast} AST, ${st.stl} STL, ${st.blk} BLK. Development Goals ${goalsPassed}/3 (+${goalSP} SP). NBA Interest: ${e.score}/100 — ${e.status}.`,read:false};
   if(e.tier>oldTier){
     const msg=e.tier===1?"Your name has started showing up on NBA scouting reports.":e.tier===2?"NBA scouts are actively tracking your G League run.":e.tier===3?"You are officially on call-up watch. Keep stacking strong games.":e.tier===4?"Your play has generated legitimate two-way contract interest.":"You have earned enough NBA interest for a call-up opportunity.";
-    entry.headline=e.status;entry.body=`${msg} You completed ${goalsPassed}/3 development goals in Game ${g.games.length}. Current NBA Interest: ${e.score}/100 after ${e.n} G League games.`;g.lastAlertTier=e.tier;
+    entry.headline=e.status;entry.body=`${msg} You completed ${goalsPassed}/3 development goals (+${goalSP} SP) in Game ${g.games.length}. Current NBA Interest: ${e.score}/100 after ${e.n} G League games.`;g.lastAlertTier=e.tier;
   }
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();
   // Keep the Stats tab in sync immediately after a G League game is finalized.
   if(typeof renderStats==="function") renderStats();
+  if(typeof renderHeader==="function") renderHeader();
   renderInsider();showInsiderPopup(entry);
 }
 function acceptGLeagueOpportunity(kind){
@@ -3123,7 +3201,7 @@ function acceptGLeagueOpportunity(kind){
   const entry={id:"gl_offer_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:kind==="nba"?"NBA Call-Up":"Two-Way Contract",headline:kind==="nba"?"THE WAIT IS OVER — YOU'RE HEADED TO THE NBA":"THE DOOR JUST OPENED",body:kind==="nba"?`You earned this. The G League work turned into the opportunity you were chasing, and the NBA call has finally come. +1,000 SP milestone earned. Enjoy the moment — then get ready. Making it to the league was the goal, but the job is not done. Move your player to the NBA roster and continue the career from there.`:`The work is starting to pay off. An NBA organization is willing to put a two-way contract on the table, and that is a real step forward. +500 SP milestone earned. You remain in the G League and keep logging games with your NBA Interest intact. You have a foot in the door now — the full call-up is the next thing to earn.`,read:false};
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();renderInsider();showInsiderPopup(entry);
 }
-function gLeagueStatsForm(){const g=ensureGLeague(),goals=gLeagueDevelopmentGoals(g),gameNo=(g.games?.length||0)+1;return `<div class="combineStats"><h3>Enter G League Game ${gameNo}</h3><div class="small" style="margin-bottom:10px">The G League is a developmental system. Each game gives you three development goals tailored to your position. Goals are graded automatically from your box score and give a small boost to that game's NBA Interest evaluation — they do not award SP.</div><div class="objectives" style="margin-bottom:12px">${goals.map((o,i)=>`<div class="obj"><div>○</div><div><b>Development Goal ${i+1}</b><div class="small">${o.t}</div></div></div>`).join("")}</div><div class="grid4">
+function gLeagueStatsForm(){const g=ensureGLeague(),goals=gLeagueDevelopmentGoals(g),gameNo=(g.games?.length||0)+1;return `<div class="combineStats"><h3>Enter G League Game ${gameNo}</h3><div class="small" style="margin-bottom:10px">Generate your three pregame development objectives before you play. Each set mixes an easier target, a standard target, and a tougher challenge. Complete them for SP; harder goals pay more. Every completed goal also gives the same small boost to that game's NBA Interest evaluation.</div><div class="objectives" style="margin-bottom:12px">${goals.map((o,i)=>`<div class="obj"><div>○</div><div><b>Development Goal ${i+1}</b><div class="small">${o.t}</div><div class="small"><b>+${o.sp} SP</b> • ${o.sp>=150?"Challenge":o.sp>=100?"Standard":"Easier"}</div></div></div>`).join("")}</div><div class="row" style="margin:0 0 14px"><button class="secondary" type="button" onclick="randomizeGLeagueGoals()">Randomize Objectives</button></div><div class="grid4">
 <label>Result<select id="glResult"><option value="W">Win</option><option value="L">Loss</option></select></label>
 <label>MIN<input id="glMin" type="number" min="0" inputmode="numeric"></label><label>PTS<input id="glPts" type="number" min="0" inputmode="numeric"></label><label>REB<input id="glReb" type="number" min="0" inputmode="numeric"></label>
 <label>AST<input id="glAst" type="number" min="0" inputmode="numeric"></label><label>STL<input id="glStl" type="number" min="0" inputmode="numeric"></label><label>BLK<input id="glBlk" type="number" min="0" inputmode="numeric"></label><label>TO<input id="glTo" type="number" min="0" inputmode="numeric"></label>
