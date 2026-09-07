@@ -755,6 +755,16 @@ body:not(.career-home) #k11Hub{display:none!important}
       <div><label>Teammate Grade</label>
         <input id="gGrade" value="Auto-calculated from box score" disabled>
       </div>
+      <div><label>Matchup Performance</label>
+        <select id="gMatchupPerformance">
+          <option value="1">1 — I locked my opponent up</option>
+          <option value="2">2 — I won the matchup</option>
+          <option value="3" selected>3 — Even / average matchup</option>
+          <option value="4">4 — My opponent had a good game</option>
+          <option value="5">5 — My opponent had a great game</option>
+        </select>
+        <div class="small">Affects your calculated teammate grade. Lower is better.</div>
+      </div>
       <div><label>Result</label><select id="gResult"><option value="W">Win</option><option value="L">Loss</option></select></div>
       <div><label>Highlight Plays</label><input id="gHighlights" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div id="matchupPtsWrap" style="display:none"><label>Matchup Points</label><input id="gMatchupPts" type="number" inputmode="numeric" min="0" placeholder="0"><div class="small">Used for matchup-based Key Game objectives.</div></div>
@@ -1056,6 +1066,13 @@ function calculatePerformanceGrade(s,pos){
 
   // Winning matters, but does not overwhelm individual performance.
   score += s.result==="W"?5:-2;
+
+  // Matchup performance: 1 means you locked your assignment up; 5 means your
+  // opponent had a great game. This is intentionally meaningful without being
+  // strong enough to erase the rest of the box score.
+  const matchup=Math.max(1,Math.min(5,+(s.matchupPerformance||3)));
+  const matchupAdjust={1:8,2:4,3:0,4:-6,5:-12};
+  score += matchupAdjust[matchup]||0;
 
   // Minutes adjustment: reward strong production in limited minutes; avoid automatic
   // punishment for a bench role.
@@ -2248,6 +2265,8 @@ function clearPostgameStatInputs(){
     const el=document.getElementById(id);
     if(el) el.value="";
   });
+  if(document.getElementById("gMatchupPerformance")) gMatchupPerformance.value="3";
+  previewPerformanceGrade();
 }
 function statSP(s){
   const missedFG=Math.max(0,s.fga-s.fgm), missedFT=Math.max(0,s.fta-s.ftm);
@@ -2299,6 +2318,20 @@ function createCareerWithPath(path){
 
 function gameIdentity(g){return `${g.season||1}-${g.gameNo||0}`}
 
+function previewPerformanceGrade(){
+  const el=document.getElementById("gGrade");
+  if(!el) return;
+  const n=id=>+(document.getElementById(id)?.value||0);
+  const st={
+    min:n("gMin"),pts:n("gPts"),reb:n("gReb"),ast:n("gAst"),stl:n("gStl"),blk:n("gBlk"),
+    fgm:n("gFGM"),fga:n("gFGA"),t3m:n("g3M"),t3a:n("g3A"),ftm:n("gFTM"),fta:n("gFTA"),
+    to:n("gTO"),pf:n("gPF"),result:document.getElementById("gResult")?.value||"W",
+    matchupPerformance:+(document.getElementById("gMatchupPerformance")?.value||3)
+  };
+  const g=calculatePerformanceGrade(st,state.player?.position||"SF");
+  el.value=`${g.grade} • ${g.score}/100`;
+}
+
 function editMostRecentGame(){
   if(!state.games.length){alert("There is no logged game to edit yet.");return}
   const g=state.games[0], s=g.stats||{};
@@ -2308,6 +2341,7 @@ function editMostRecentGame(){
   gStl.value=s.stl??0; gBlk.value=s.blk??0; gFGM.value=s.fgm??0; gFGA.value=s.fga??0;
   g3M.value=s.t3m??0; g3A.value=s.t3a??0; gFTM.value=s.ftm??0; gFTA.value=s.fta??0;
   gTO.value=s.to??0; gPF.value=s.pf??0; gHighlights.value=s.highlights??0; if(document.getElementById("gMatchupPts")) gMatchupPts.value=s.matchupPts??0;
+  if(document.getElementById("gMatchupPerformance")) gMatchupPerformance.value=String(s.matchupPerformance||3);
   gResult.value=s.result||"W"; gOpponent.value=g.opponent||"";
   if(g.date){gMonth.value=g.date.month;gYear.value=g.date.year;gDay.value=g.date.day;}
 
@@ -2422,7 +2456,9 @@ function calculateAndPostGame(){
   const s={
     min:num("gMin"),pts:num("gPts"),reb:num("gReb"),ast:num("gAst"),stl:num("gStl"),blk:num("gBlk"),
     fgm:num("gFGM"),fga:num("gFGA"),t3m:num("g3M"),t3a:num("g3A"),ftm:num("gFTM"),fta:num("gFTA"),
-    to:num("gTO"),pf:num("gPF"),grade:"",result:gResult.value,highlights:num("gHighlights"),matchupPts:(document.getElementById("gMatchupPts")?.value===""?null:num("gMatchupPts"))
+    to:num("gTO"),pf:num("gPF"),grade:"",result:gResult.value,highlights:num("gHighlights"),
+    matchupPerformance:+(document.getElementById("gMatchupPerformance")?.value||3),
+    matchupPts:(document.getElementById("gMatchupPts")?.value===""?null:num("gMatchupPts"))
   };
   const autoGrade=calculatePerformanceGrade(s,state.player.position||"SF");
   s.grade=autoGrade.grade;
@@ -2856,7 +2892,7 @@ function resetFirstPreNBAStatEntryTop(){
 
 function readSummerStats(){
   const num=id=>+(document.getElementById(id)?.value||0);
-  return {result:document.getElementById("slResult")?.value||"W",min:num("slMin"),pts:num("slPts"),reb:num("slReb"),ast:num("slAst"),stl:num("slStl"),blk:num("slBlk"),to:num("slTo"),pf:num("slPf"),fgm:num("slFgm"),fga:num("slFga"),tpm:num("sl3pm"),tpa:num("sl3pa"),ftm:num("slFtm"),fta:num("slFta")};
+  return {result:document.getElementById("slResult")?.value||"W",min:num("slMin"),pts:num("slPts"),reb:num("slReb"),ast:num("slAst"),stl:num("slStl"),blk:num("slBlk"),to:num("slTo"),pf:num("slPf"),fgm:num("slFgm"),fga:num("slFga"),tpm:num("sl3pm"),tpa:num("sl3pa"),ftm:num("slFtm"),fta:num("slFta"),matchupPerformance:+(document.getElementById("slMatchupPerformance")?.value||3)};
 }
 function summerGameLabel(score){
   if(score>=88) return "DOMINANT / ROSTER-CHANGING";
@@ -2915,8 +2951,10 @@ function submitSummerGame(){
   const s=ensureSummerLeague(), st=readSummerStats();
   if(st.fgm>st.fga||st.tpm>st.tpa||st.ftm>st.fta){alert("Check your shooting totals: makes cannot exceed attempts.");return;}
   const objResults=summerObjectiveResults(s,st), objPassed=objResults.filter(x=>x.passed).length;
+  const autoGrade=calculatePerformanceGrade({...st,t3m:st.tpm,t3a:st.tpa},state.player?.position||"SF");
+  st.grade=autoGrade.grade;
   const rawBase=summerBaseScore(st), base=Math.min(100,rawBase+(objPassed*3)), mult=summerMultiplier(s), weighted=base*mult;
-  s.currentResult={phase:s.phase,round:s.round||null,game:s.game||null,title:summerCurrentTitle(s),stats:st,baseScore:base,rawBaseScore:rawBase,objectives:objResults,objectivesPassed:objPassed,multiplier:mult,weightedScore:weighted,label:summerGameLabel(base),submittedAt:new Date().toISOString()};
+  s.currentResult={phase:s.phase,round:s.round||null,game:s.game||null,title:summerCurrentTitle(s),stats:st,teammateGrade:autoGrade.grade,teammateGradeScore:autoGrade.score,baseScore:base,rawBaseScore:rawBase,objectives:objResults,objectivesPassed:objPassed,multiplier:mult,weightedScore:weighted,label:summerGameLabel(base),submittedAt:new Date().toISOString()};
   persist(); renderInsider();
 }
 function startSummerTournament(){
@@ -2951,7 +2989,7 @@ function finalizeSummerGame(){
   }else if(s.phase==="consolation"){
     s.consolationGame=JSON.parse(JSON.stringify(r)); s.currentResult=null; finishSummerLeague(false); return;
   }
-  const entry={id:"summer_game_"+Date.now(),season:1,gameNo:0,date:null,stage:`Summer League • ${r.title}`,headline:`${r.title}: ${r.label}`,body:`${name}: ${r.stats.pts} PTS, ${r.stats.reb} REB, ${r.stats.ast} AST, ${r.stats.stl} STL, ${r.stats.blk} BLK. Objectives ${r.objectivesPassed||0}/3. Evaluation ${r.baseScore}/100${r.multiplier>1?` with ${r.multiplier.toFixed(2)}× tournament weight`:""}.${stageMilestones.length?` Milestone: ${stageMilestones.map(m=>m.name).join(", ")}.`:""}`,read:false};
+  const entry={id:"summer_game_"+Date.now(),season:1,gameNo:0,date:null,stage:`Summer League • ${r.title}`,headline:`${r.title}: ${r.label}`,body:`${name}: ${r.stats.pts} PTS, ${r.stats.reb} REB, ${r.stats.ast} AST, ${r.stats.stl} STL, ${r.stats.blk} BLK. Teammate Grade ${r.teammateGrade||r.stats?.grade||"—"}. Objectives ${r.objectivesPassed||0}/3. Evaluation ${r.baseScore}/100${r.multiplier>1?` with ${r.multiplier.toFixed(2)}× tournament weight`:""}.${stageMilestones.length?` Milestone: ${stageMilestones.map(m=>m.name).join(", ")}.`:""}`,read:false};
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();renderInsider();showInsiderPopup(entry);
 }
 function chooseConsolation(hasGame){
@@ -3007,7 +3045,8 @@ function summerStatsForm(s){
   <label>AST<input id="slAst" type="number" min="0" inputmode="numeric" value="${v("ast")}"></label><label>STL<input id="slStl" type="number" min="0" inputmode="numeric" value="${v("stl")}"></label><label>BLK<input id="slBlk" type="number" min="0" inputmode="numeric" value="${v("blk")}"></label><label>TO<input id="slTo" type="number" min="0" inputmode="numeric" value="${v("to")}"></label>
   <label>PF<input id="slPf" type="number" min="0" inputmode="numeric" value="${v("pf")}"></label><label>FGM<input id="slFgm" type="number" min="0" inputmode="numeric" value="${v("fgm")}"></label><label>FGA<input id="slFga" type="number" min="0" inputmode="numeric" value="${v("fga")}"></label><label>3PM<input id="sl3pm" type="number" min="0" inputmode="numeric" value="${v("tpm")}"></label>
   <label>3PA<input id="sl3pa" type="number" min="0" inputmode="numeric" value="${v("tpa")}"></label><label>FTM<input id="slFtm" type="number" min="0" inputmode="numeric" value="${v("ftm")}"></label><label>FTA<input id="slFta" type="number" min="0" inputmode="numeric" value="${v("fta")}"></label>
-  </div><div class="row" style="margin-top:12px"><button class="primary" onclick="submitSummerGame()">Evaluate ${summerCurrentTitle(s)}</button></div>${r?`<div class="combineResult"><b>${r.label} • ${r.baseScore}/100</b><div class="small">Objectives: ${r.objectivesPassed||0}/3 • Evaluation weight: ${r.multiplier.toFixed(2)}×. Finalize when ready.</div></div><div class="row" style="margin-top:12px"><button class="primary" onclick="finalizeSummerGame()">Finalize ${summerCurrentTitle(s)}</button></div>`:""}</div>`;
+  <label>Matchup Performance<select id="slMatchupPerformance"><option value="1" ${v("matchupPerformance")==1?"selected":""}>1 — I locked my opponent up</option><option value="2" ${v("matchupPerformance")==2?"selected":""}>2 — I won the matchup</option><option value="3" ${!v("matchupPerformance")||v("matchupPerformance")==3?"selected":""}>3 — Even / average</option><option value="4" ${v("matchupPerformance")==4?"selected":""}>4 — Opponent had a good game</option><option value="5" ${v("matchupPerformance")==5?"selected":""}>5 — Opponent had a great game</option></select><span class="small">Affects calculated teammate grade.</span></label>
+  </div><div class="row" style="margin-top:12px"><button class="primary" onclick="submitSummerGame()">Evaluate ${summerCurrentTitle(s)}</button></div>${r?`<div class="combineResult"><b>${r.label} • ${r.baseScore}/100</b><div class="small">Teammate Grade: <b>${r.teammateGrade||r.stats?.grade||"—"}</b> • Objectives: ${r.objectivesPassed||0}/3 • Evaluation weight: ${r.multiplier.toFixed(2)}×. Finalize when ready.</div></div><div class="row" style="margin-top:12px"><button class="primary" onclick="finalizeSummerGame()">Finalize ${summerCurrentTitle(s)}</button></div>`:""}</div>`;
 }
 
 function freshGLeague(){return {team:"",games:[],interest:0,status:"Development Prospect",offer:null,lastAlertTier:0,currentGoalIds:[]};}
@@ -3169,21 +3208,27 @@ function gLeagueInterestSummary(){
 }
 function submitGLeagueGame(){
   const num=id=>+(document.getElementById(id)?.value||0);
-  const st={result:document.getElementById("glResult")?.value||"W",min:num("glMin"),pts:num("glPts"),reb:num("glReb"),ast:num("glAst"),stl:num("glStl"),blk:num("glBlk"),to:num("glTo"),pf:num("glPf"),fgm:num("glFgm"),fga:num("glFga"),tpm:num("gl3pm"),tpa:num("gl3pa"),ftm:num("glFtm"),fta:num("glFta")};
+  const st={result:document.getElementById("glResult")?.value||"W",min:num("glMin"),pts:num("glPts"),reb:num("glReb"),ast:num("glAst"),stl:num("glStl"),blk:num("glBlk"),to:num("glTo"),pf:num("glPf"),fgm:num("glFgm"),fga:num("glFga"),tpm:num("gl3pm"),tpa:num("gl3pa"),ftm:num("glFtm"),fta:num("glFta"),matchupPerformance:+(document.getElementById("glMatchupPerformance")?.value||3)};
   if(st.fgm>st.fga||st.tpm>st.tpa||st.ftm>st.fta){alert("Check your shooting totals: makes cannot exceed attempts.");return;}
   const g=ensureGLeague();
+  const gradeInput={...st,t3m:st.tpm,t3a:st.tpa};
+  const autoGrade=calculatePerformanceGrade(gradeInput,state.player?.position||"SF");
+  st.grade=autoGrade.grade;
+  const gradeSP=GRADE_SP[autoGrade.grade]||0;
+  const performanceSP=statSP(gradeInput);
   const goalResults=gLeagueGoalResults(g,st), goalsPassed=goalResults.filter(x=>x.passed).length;
   const goalSP=goalResults.filter(x=>x.passed).reduce((sum,x)=>sum+(x.sp||0),0);
+  const gameSP=gradeSP+performanceSP+goalSP;
   const rawScore=summerBaseScore(st), score=Math.min(100,rawScore+(goalsPassed*2));
-  g.games.push({stats:st,score,rawScore,developmentGoals:goalResults,goalsPassed,goalSP,date:new Date().toISOString()});
-  state.sp=(state.sp||0)+goalSP;
+  g.games.push({stats:st,score,rawScore,teammateGrade:autoGrade.grade,teammateGradeScore:autoGrade.score,gradeSP,performanceSP,developmentGoals:goalResults,goalsPassed,goalSP,gameSP,date:new Date().toISOString()});
+  state.sp=(state.sp||0)+gameSP;
   g.currentGoalIds=[];
   const glMilestones=awardPreNBAMilestones(["gl_first_game",...(st.result==="W"?["gl_first_win"]:[])]);
   const oldTier=g.lastAlertTier||0, e=gLeagueInterestSummary(); g.interest=e.score;g.status=e.status;
-  let entry={id:"gleague_game_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:"G League",headline:`G League Game ${g.games.length}: ${summerGameLabel(score)}`,body:`${state.player?.name||"Your player"}: ${st.pts} PTS, ${st.reb} REB, ${st.ast} AST, ${st.stl} STL, ${st.blk} BLK. Development Goals ${goalsPassed}/3 (+${goalSP} SP). NBA Interest: ${e.score}/100 — ${e.status}.`,read:false};
+  let entry={id:"gleague_game_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:"G League",headline:`G League Game ${g.games.length}: ${summerGameLabel(score)}`,body:`${state.player?.name||"Your player"}: ${st.pts} PTS, ${st.reb} REB, ${st.ast} AST, ${st.stl} STL, ${st.blk} BLK. Teammate Grade ${autoGrade.grade} (+${gradeSP} SP) • Stat Performance +${performanceSP} SP • Development Goals ${goalsPassed}/3 (+${goalSP} SP) • Total +${gameSP} SP. NBA Interest: ${e.score}/100 — ${e.status}.`,read:false};
   if(e.tier>oldTier){
     const msg=e.tier===1?"Your name has started showing up on NBA scouting reports.":e.tier===2?"NBA scouts are actively tracking your G League run.":e.tier===3?"You are officially on call-up watch. Keep stacking strong games.":e.tier===4?"Your play has generated legitimate two-way contract interest.":"You have earned enough NBA interest for a call-up opportunity.";
-    entry.headline=e.status;entry.body=`${msg} You completed ${goalsPassed}/3 development goals (+${goalSP} SP) in Game ${g.games.length}. Current NBA Interest: ${e.score}/100 after ${e.n} G League games.`;g.lastAlertTier=e.tier;
+    entry.headline=e.status;entry.body=`${msg} Game ${g.games.length}: ${autoGrade.grade} teammate grade (+${gradeSP} SP), +${performanceSP} stat SP, and ${goalsPassed}/3 development goals (+${goalSP} SP) for +${gameSP} SP total. Current NBA Interest: ${e.score}/100 after ${e.n} G League games.`;g.lastAlertTier=e.tier;
   }
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();
   // Keep the Stats tab in sync immediately after a G League game is finalized.
@@ -3207,7 +3252,8 @@ function gLeagueStatsForm(){const g=ensureGLeague(),goals=gLeagueDevelopmentGoal
 <label>AST<input id="glAst" type="number" min="0" inputmode="numeric"></label><label>STL<input id="glStl" type="number" min="0" inputmode="numeric"></label><label>BLK<input id="glBlk" type="number" min="0" inputmode="numeric"></label><label>TO<input id="glTo" type="number" min="0" inputmode="numeric"></label>
 <label>PF<input id="glPf" type="number" min="0" inputmode="numeric"></label><label>FGM<input id="glFgm" type="number" min="0" inputmode="numeric"></label><label>FGA<input id="glFga" type="number" min="0" inputmode="numeric"></label><label>3PM<input id="gl3pm" type="number" min="0" inputmode="numeric"></label>
 <label>3PA<input id="gl3pa" type="number" min="0" inputmode="numeric"></label><label>FTM<input id="glFtm" type="number" min="0" inputmode="numeric"></label><label>FTA<input id="glFta" type="number" min="0" inputmode="numeric"></label>
-</div><div class="row" style="margin-top:12px"><button class="primary" onclick="submitGLeagueGame()">Finalize G League Game</button></div></div>`;}
+<label>Matchup Performance<select id="glMatchupPerformance"><option value="1">1 — I locked my opponent up</option><option value="2">2 — I won the matchup</option><option value="3" selected>3 — Even / average</option><option value="4">4 — Opponent had a good game</option><option value="5">5 — Opponent had a great game</option></select><span class="small">Affects calculated teammate grade. Lower is better.</span></label>
+</div><div class="note" style="margin-top:12px"><b>G League SP:</b> Every finalized game now awards Stat Performance SP + calculated Teammate Grade SP + any completed Development Objective SP.</div><div class="row" style="margin-top:12px"><button class="primary" onclick="submitGLeagueGame()">Finalize G League Game</button></div></div>`;}
 
 function saveRosterDecision(){
   const outcome=document.getElementById("rosterOutcome")?.value||"nba";
@@ -3809,7 +3855,7 @@ document.getElementById("nav").addEventListener("click",e=>{
 document.body.classList.add("career-home");
 load();
 
-["gMin","gPts","gReb","gAst","gStl","gBlk","gFgm","gFga","g3pm","g3pa","gFtm","gFta","gTo","gPf","gResult"].forEach(id=>{
+["gMin","gPts","gReb","gAst","gStl","gBlk","gFGM","gFGA","g3M","g3A","gFTM","gFTA","gTO","gPF","gResult","gMatchupPerformance"].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener("input",previewPerformanceGrade);
   if(el) el.addEventListener("change",previewPerformanceGrade);
