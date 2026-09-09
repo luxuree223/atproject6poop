@@ -521,7 +521,7 @@ body:not(.career-home) #k11Hub{display:none!important}
     </div>
     <div class="k11PanelTitle">Next Game / Career Action <span class="k11TestFlag">CAREER HUB</span></div>
     <div class="k11Next">
-      <div><div class="sub">Next opponent</div><div class="opponent" id="k11Opp">TBD</div><button onclick="openTab('game')">Open Postgame →</button></div>
+      <div><div class="sub">Next Key Game</div><div class="opponent" id="k11Opp">TBD</div><div class="small" id="k11NextKeyMeta"></div><button onclick="openTab('schedule')">View Key Game →</button></div>
       <button onclick="openTab('schedule')">View Key Games</button>
     </div>
   </div>
@@ -2183,6 +2183,26 @@ function getUpcomingSchedule(){
   const nextNo=(state.player.gameNo||0)+1;
   return state.schedule.find(x=>+x.season===+season && !x.date && x.gameNo===nextNo) || null;
 }
+
+function getNextKeyGame(){
+  const season=state.player.season||1;
+  const current=state.careerDate?.day?state.careerDate:null;
+  const currentGameNo=Number(state.player.gameNo||0);
+  const eligible=(state.schedule||[]).filter(x=>+x.season===+season && x.key!==false && !x.played).filter(x=>{
+    if(x.date){ return !current || compareDate(x.date,current)>=0; }
+    // Legacy game-number Key Games remain supported, but a past game can never
+    // become the hub's "next" game after a correction/edit.
+    return Number(x.gameNo||0)>currentGameNo;
+  });
+  eligible.sort((a,b)=>{
+    if(a.date&&b.date) return compareDate(a.date,b.date);
+    if(a.date) return -1;
+    if(b.date) return 1;
+    return Number(a.gameNo||9999)-Number(b.gameNo||9999);
+  });
+  return eligible[0]||null;
+}
+
 function renderCurrentGame(){
   const x=getUpcomingSchedule();
   if(x){
@@ -2516,11 +2536,12 @@ function evaluateNBARotation(){
   if(state.preNBA?.stage!=="nba") return null;
   ensureNBARotationStart();
   const r=state.rotationProgress;
-  const n=state.games.length;
-  // The coach reviews the role every 3 NBA games. This keeps changes gradual instead of
-  // changing the rotation after every hot/cold night.
+  // state.games is the NBA game log. Keep the review counter explicit so old/pre-NBA
+  // data can never accidentally advance a coach review.
+  const nbaGames=(state.games||[]).filter(g=>g && Number(g.gameNo||0)>0);
+  const n=nbaGames.length;
   if(n<3 || n-r.lastEvalGame<3) return null;
-  const recent=state.games.slice(0,3);
+  const recent=nbaGames.slice(0,3);
   const avgGrade=recent.reduce((a,g)=>a+(Number(g.autoGradeScore)||50),0)/recent.length;
   const wins=recent.filter(g=>g.stats?.result==="W").length;
   const coach=clamp(state.meters?.coach??25);
@@ -2622,8 +2643,11 @@ function calculateAndPostGame(){
   const maxDay=daysInMonth(month,year);
   const day=Math.max(1,Math.min(maxDay,+gDay.value||0));
   if(!day){alert("Enter the game day.");return}
-  state.careerDate={month,year,day};
-  const upcoming=getUpcomingSchedule();
+  const enteredGameDate={month,year,day};
+  // A typo correction edits that historical game's date only. It must never rewind the
+  // live career calendar or make an old Key Game become "next" again.
+  if(!editingGameId) state.careerDate={...enteredGameDate};
+  const upcoming=editingGameId?null:getUpcomingSchedule();
 
   // Typo correction mode: replace the most recent game's stats/SP instead of creating another game.
   if(editingGameId){
@@ -2631,7 +2655,7 @@ function calculateAndPostGame(){
     if(!g){cancelGameEdit();alert("That game could not be found.");return}
     const oldGrandTotal=state.games.reduce((sum,x)=>sum+(x.total||0),0);
     g.opponent=opponent;
-    g.date={...state.careerDate};
+    g.date={...enteredGameDate};
     recalcEditedGame(g,s);
     rebuildAutomaticMilestones();
     const newGrandTotal=state.games.reduce((sum,x)=>sum+(x.total||0),0);
@@ -2643,6 +2667,7 @@ function calculateAndPostGame(){
       state.pendingInterview.game=g;
     }
     cancelGameEdit();
+    clearPostgameStatInputs();
     persist(); renderAll();
     gameResult.innerHTML=`<div class="note"><b>Game corrected.</b><br>SP adjustment: ${delta>=0?"+":""}${delta.toLocaleString()} SP. Automatic milestone history was rebuilt so nothing was double-counted.</div>`;
     return;
@@ -3933,31 +3958,42 @@ function bindLiveCareerInputs(){
 function showLatestInsiderAgain(){
   const e=(state.insiderFeed||[])[0]; if(e) showInsiderPopup(e); else openTab("insider");
 }
+
+function getCareerStage(){
+  const pre=state.preNBA||{};
+  // preNBA.stage is the canonical source of truth. Only infer a stage for older saves
+  // that do not have one; never let stale UI/button state override an NBA call-up.
+  if(pre.stage) return pre.stage;
+  if(pre.gLeague?.offer==="nba") return "nba";
+  if(pre.gLeague && ((pre.gLeague.games||[]).length || pre.gLeague.team)) return "g_league";
+  if(pre.summerLeague && ((pre.summerLeague.prelimGames||[]).length || (pre.summerLeague.tournamentGames||[]).length || pre.summerLeague.team)) return "summer";
+  if(state.combine?.finished) return "draft_eval";
+  return "combine";
+}
+function isNBACareer(){ return getCareerStage()==="nba"; }
+function careerStageHubLabel(){
+  const stage=getCareerStage();
+  const labels={
+    combine: state.combine?.active?`DRAFT COMBINE • GAME ${state.combine.game||1}`:"ENTER DRAFT COMBINE",
+    draft_eval:"CONTINUE TO NBA DRAFT",
+    draft_result:"NBA DRAFT RESULT",
+    summer:"CONTINUE TO SUMMER LEAGUE",
+    training_camp:"TRAINING CAMP",
+    roster_decision:"ROSTER DECISION",
+    g_league:"CONTINUE TO G LEAGUE",
+    free_agent:"FREE AGENT",
+    nba:"NBA PLAYER"
+  };
+  return labels[stage]||String(stage||"PROSPECT").replaceAll("_"," ").toUpperCase();
+}
+
 function renderCombineEntryButton(){
   const b=document.getElementById("enterCombineFlowBtn"); if(!b)return;
   const hasGames=(state.games?.length||0)>0;
-  const pre=state.preNBA||{};
-  // V23: derive the live pre-NBA return point from the actual active journey data too.
-  // This keeps older/current saves from falling back to Enter Draft Combine when Summer League is already underway.
-  let stage=pre.stage||"";
-  const sl=pre.summerLeague;
-  const gl=pre.gLeague;
-  const summerStarted=!!(sl && (sl.team || (sl.prelimGames&&sl.prelimGames.length) || (sl.tournamentGames&&sl.tournamentGames.length)));
-  const gLeagueStarted=!!(gl && (gl.team || (gl.games&&gl.games.length)));
-  if(stage!=="nba"){
-    if(gLeagueStarted && !pre.gLeagueComplete) stage="g_league";
-    else if(summerStarted && !pre.summerComplete && stage!=="g_league") stage="summer";
-  }
-  if(stage==="summer"){
-    b.style.display="inline-block";
-    b.textContent="Continue to Summer League";
-    return;
-  }
-  if(stage==="g_league"){
-    b.style.display="inline-block";
-    b.textContent="Continue to G League";
-    return;
-  }
+  const stage=getCareerStage();
+  if(stage==="nba"){b.style.display="none";b.textContent="NBA Player";return;}
+  if(stage==="summer"){b.style.display="inline-block";b.textContent="Continue to Summer League";return;}
+  if(stage==="g_league"){b.style.display="inline-block";b.textContent="Continue to G League";return;}
   if(state.combine?.active){b.style.display="inline-block";b.textContent=`Continue Draft Combine • Game ${state.combine.game||1}`;return;}
   if(state.combine?.finished){b.style.display="inline-block";b.textContent=stage==="draft_eval"?"Continue to NBA Draft":"Continue Pre-NBA Journey";return;}
   b.style.display=hasGames?"none":"inline-block"; b.textContent="Enter Draft Combine";
@@ -4574,7 +4610,7 @@ function continuePreNBAJourneyFromHub(){
   const pre=state.preNBA||{};
   const c=state.combine||{};
   // Once the player reaches the NBA this hub status is informational, not a pre-NBA shortcut.
-  if(pre.stage==="nba"){ return; }
+  if((typeof isNBACareer==="function"&&isNBACareer())||pre.stage==="nba"){ return; }
   // If the Combine has not begun yet, use the existing setup flow instead of inventing a second path.
   if((!c.active && !c.finished) && (!pre.stage || pre.stage==="combine")){
     if(typeof enterCombineFromSetup==="function") enterCombineFromSetup();
@@ -4594,7 +4630,7 @@ function continuePreNBAJourneyFromHub(){
 (function(){
   function txt(id,fallback){var e=document.getElementById(id);return e&&String(e.value||e.textContent||'').trim()?String(e.value||e.textContent).trim():fallback;}
   function updateK11Hub(){
-    var name=document.getElementById('pName'), team=document.getElementById('pTeam'), pos=document.getElementById('pPos'), season=document.getElementById('pSeason'), gameNo=document.getElementById('pGameNo'), sp=document.getElementById('spHeader'), opp=document.getElementById('gOpponent')||document.getElementById('sOpponent');
+    var name=document.getElementById('pName'), team=document.getElementById('pTeam'), pos=document.getElementById('pPos'), season=document.getElementById('pSeason'), gameNo=document.getElementById('pGameNo'), sp=document.getElementById('spHeader');
     var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
     set('k11Name',(name&&name.value?name.value:'Antonio Taylor').toUpperCase());
     set('k11Team',(team&&team.value?team.value:'FREE AGENT').toUpperCase());
@@ -4602,24 +4638,25 @@ function continuePreNBAJourneyFromHub(){
     set('k11Season','Season '+(season&&season.value?season.value:'1'));
     set('k11Games',(gameNo&&gameNo.value?gameNo.value:'0')+' Games Completed');
     set('k11SP',sp&&sp.textContent?sp.textContent.trim():'0 SP');
-    set('k11Opp',(opp&&opp.value?opp.value:'TBD').toUpperCase());
-    var enter=document.getElementById('enterCombineFlowBtn');
-    var status='NBA PLAYER';
-    if(enter && getComputedStyle(enter).display!=='none') status=(enter.textContent||'PROSPECT').trim().toUpperCase();
+    var stage=(typeof getCareerStage==='function'?getCareerStage():((window.state&&state.preNBA&&state.preNBA.stage)||'combine'));
+    var status=(typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT'));
     set('k11Status',status);
     var statusEl=document.getElementById('k11Status');
     if(statusEl){
-      var preStage=(window.state&&state.preNBA&&state.preNBA.stage)||'';
-      var isPreNBA=preStage!=="nba";
+      var isPreNBA=stage!=="nba";
       statusEl.classList.toggle('isPreNBA',isPreNBA);
       statusEl.setAttribute('aria-label',isPreNBA?'Continue current pre-NBA journey':'NBA career status');
       statusEl.title=isPreNBA?'Return to your current pre-NBA step':'';
     }
+    var nextKey=(typeof getNextKeyGame==='function'?getNextKeyGame():null);
+    set('k11Opp',nextKey?((nextKey.site==='Home'?'VS ':'@ ')+(nextKey.opponent||'TBD')).toUpperCase():'NO KEY GAME SCHEDULED');
+    var keyMeta=document.getElementById('k11NextKeyMeta');
+    if(keyMeta) keyMeta.textContent=nextKey?(nextKey.date?formatCareerDate(nextKey.date):`Legacy Game ${nextKey.gameNo||'—'}`)+(nextKey.reason?` • ${nextKey.reason}`:''):'';
     var hint=document.getElementById('k11ObjectiveHint'); if(hint){var n=(window.state&&Array.isArray(state.objectives)&&state.objectives.length)?state.objectives.length:3; hint.textContent=n+' targets ready • tap to review';}
     renderK11PlayerPhoto();
   }
   window.updateK11Hub=updateK11Hub;
-  document.addEventListener('input',function(e){if(e.target&&['pName','pTeam','pPos','pSeason','pGameNo','gOpponent','sOpponent'].indexOf(e.target.id)>=0)updateK11Hub();});
+  document.addEventListener('input',function(e){if(e.target&&['pName','pTeam','pPos','pSeason','pGameNo'].indexOf(e.target.id)>=0)updateK11Hub();});
   document.addEventListener('change',updateK11Hub);
   document.addEventListener('DOMContentLoaded',function(){updateK11Hub();setTimeout(updateK11Hub,300);setTimeout(updateK11Hub,1200);});
   var sp=document.getElementById('spHeader');if(sp&&window.MutationObserver)new MutationObserver(updateK11Hub).observe(sp,{childList:true,subtree:true,characterData:true});
