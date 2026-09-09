@@ -639,9 +639,9 @@ body:not(.career-home) #k11Hub{display:none!important}
 <section id="schedule" class="tab">
   <div class="card">
     <h2>Manual Key Games</h2>
-    <p class="small">Do NOT enter the full schedule. Only add games that YOU decide matter to your career lore. You can add or remove Key Games at any time.</p>
+    <p class="small">Do NOT enter the full schedule. Only add games that YOU decide matter to your career lore. Key Games are tied to the career calendar, so they surface when that date arrives. You can add or remove them at any time.</p>
     <div class="grid">
-      <div><label>Game #</label><input id="sGameNo" type="number" inputmode="numeric" min="1" value="1"></div>
+      <div><label>Game Date</label><input id="sGameDate" type="date"></div>
       <div><label>Opponent</label><select id="sOpponent"><option value="">Select team</option><option>Atlanta Hawks</option><option>Boston Celtics</option><option>Brooklyn Nets</option><option>Charlotte Hornets</option><option>Chicago Bulls</option><option>Cleveland Cavaliers</option><option>Dallas Mavericks</option><option>Denver Nuggets</option><option>Detroit Pistons</option><option>Golden State Warriors</option><option>Houston Rockets</option><option>Indiana Pacers</option><option>LA Clippers</option><option>Los Angeles Lakers</option><option>Memphis Grizzlies</option><option>Miami Heat</option><option>Milwaukee Bucks</option><option>Minnesota Timberwolves</option><option>New Orleans Pelicans</option><option>New York Knicks</option><option>Oklahoma City Thunder</option><option>Orlando Magic</option><option>Philadelphia 76ers</option><option>Phoenix Suns</option><option>Portland Trail Blazers</option><option>Sacramento Kings</option><option>San Antonio Spurs</option><option>Toronto Raptors</option><option>Utah Jazz</option><option>Washington Wizards</option></select></div>
       <div><label>Home / Away</label><select id="sHA"><option>Home</option><option>Away</option></select></div>
       <div><label>Key Game</label><input value="Yes — manually selected" disabled></div>
@@ -653,7 +653,7 @@ body:not(.career-home) #k11Hub{display:none!important}
 
   <div class="card">
     <h3>Your Key Games</h3>
-    <div class="scroll"><table><thead><tr><th>Game</th><th>Opponent</th><th>Site</th><th>Multiplier</th><th>Reason</th><th></th></tr></thead><tbody id="scheduleRows"></tbody></table></div>
+    <div class="scroll"><table><thead><tr><th>Date</th><th>Opponent</th><th>Site</th><th>Multiplier</th><th>Reason</th><th></th></tr></thead><tbody id="scheduleRows"></tbody></table></div>
   </div>
 
   <div class="card">
@@ -1784,6 +1784,11 @@ function ensureState(){
   if(!state.games) state.games=[];
   if(!state.upgrades) state.upgrades=[];
   if(!state.schedule) state.schedule=[];
+  // V43: Key Games are date-based. Preserve legacy game-number entries as fallbacks.
+  state.schedule.forEach((x,i)=>{
+    if(!x.id) x.id="kg_"+(x.season||state.player?.season||1)+"_"+(x.gameNo||i)+"_"+i;
+    if(x.date===undefined) x.date=null;
+  });
   if(!state.specialEvents) state.specialEvents=[];
   if(!state.meters) state.meters={fans:15,chemistry:50,coach:25};
   delete state.meters.loyalty; if(state.meters.fans===undefined) state.meters.fans=15; if(state.meters.chemistry===undefined) state.meters.chemistry=50; if(state.meters.coach===undefined) state.meters.coach=25;
@@ -2031,26 +2036,52 @@ function buyUpgrade(attr,tier){
   persist(); renderRatings(); renderUpgrades(); renderHistory();
 }
 
-function addScheduleGame(){
-  const gameNo=Math.max(1,+sGameNo.value||1), opponent=sOpponent.value.trim();
-  if(!opponent){alert("Enter an opponent.");return}
-  const key=true;
-  state.schedule=state.schedule.filter(x=>!(x.season===state.player.season && x.gameNo===gameNo));
-  state.schedule.push({season:state.player.season,gameNo,opponent,site:sHA.value,key,mult:key?+sMult.value:1,reason:sReason.value.trim(),played:false});
-  state.schedule.sort((a,b)=>a.gameNo-b.gameNo);
-  persist(); renderSchedule(); renderCurrentGame();
-  sGameNo.value=gameNo+1; sOpponent.value=""; sReason.value="";
+function keyGameInputDateObj(){
+  const v=(document.getElementById("sGameDate")?.value||"").trim();
+  if(!v) return null;
+  const m=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return null;
+  return {year:+m[1],month:+m[2],day:+m[3]};
 }
-function deleteScheduleGame(season,gameNo){
-  state.schedule=state.schedule.filter(x=>!(x.season===season&&x.gameNo===gameNo)); persist(); renderSchedule(); renderCurrentGame();
+function scheduleDateKey(d){
+  if(!d||!d.year||!d.month||!d.day) return "";
+  return `${String(d.year).padStart(4,"0")}-${String(d.month).padStart(2,"0")}-${String(d.day).padStart(2,"0")}`;
+}
+function addScheduleGame(){
+  const date=keyGameInputDateObj(), opponent=sOpponent.value.trim();
+  if(!date){alert("Enter the Key Game date.");return}
+  if(!opponent){alert("Enter an opponent.");return}
+  const maxDay=daysInMonth(date.month,date.year);
+  if(date.day<1||date.day>maxDay){alert("Enter a valid Key Game date.");return}
+  const season=state.player.season||1, key=true, dk=scheduleDateKey(date);
+  // One Key Game per career date. Re-adding the same date replaces that entry.
+  state.schedule=state.schedule.filter(x=>!(+x.season===+season && x.date && scheduleDateKey(x.date)===dk));
+  state.schedule.push({id:"kg_"+Date.now()+"_"+Math.floor(Math.random()*9999),season,date,opponent,site:sHA.value,key,mult:+sMult.value||2,reason:sReason.value.trim(),played:false});
+  state.schedule.sort((a,b)=>{
+    if(a.date&&b.date) return compareDate(a.date,b.date);
+    if(a.date) return -1;if(b.date) return 1;
+    return (a.gameNo||999)-(b.gameNo||999);
+  });
+  persist(); renderSchedule(); renderCurrentGame();
+  sOpponent.value=""; sReason.value="";
+}
+function deleteScheduleGame(id){
+  state.schedule=state.schedule.filter(x=>x.id!==id); persist(); renderSchedule(); renderCurrentGame();
 }
 function renderSchedule(){
   scheduleRows.innerHTML="";
-  state.schedule.filter(x=>x.season===state.player.season).sort((a,b)=>a.gameNo-b.gameNo).forEach(x=>{
+  state.schedule.filter(x=>+x.season===+(state.player.season||1)).slice().sort((a,b)=>{
+    if(a.date&&b.date) return compareDate(a.date,b.date);
+    if(a.date) return -1;if(b.date) return 1;
+    return (a.gameNo||999)-(b.gameNo||999);
+  }).forEach(x=>{
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${x.gameNo}</td><td>${x.opponent}</td><td>${x.site}</td><td>${x.played?'<span class="good">Played</span>':`<span class="pill key">${x.mult}×</span>`}</td><td>${x.reason||""}</td><td><button class="danger" onclick="deleteScheduleGame(${x.season},${x.gameNo})">Delete</button></td>`;
+    const when=x.date?formatCareerDate(x.date):`Legacy Game ${x.gameNo||"—"}`;
+    tr.innerHTML=`<td>${escapeHtml(when)}</td><td>${escapeHtml(x.opponent||"")}</td><td>${escapeHtml(x.site||"")}</td><td>${x.played?'<span class="good">Played</span>':`<span class="pill key">${x.mult}×</span>`}</td><td>${escapeHtml(x.reason||"")}</td><td><button class="danger" onclick="deleteScheduleGame('${x.id}')">Delete</button></td>`;
     scheduleRows.appendChild(tr);
   });
+  const dateEl=document.getElementById("sGameDate");
+  if(dateEl && !dateEl.value && state.careerDate?.day) dateEl.value=scheduleDateKey(state.careerDate);
 }
 function specialEventDefaultName(type){
   return ({allstar:"All-Star Weekend",nba_cup:"NBA Cup",nba_cup_final:"NBA Cup Final",custom:"Special Event"})[type]||"Special Event";
@@ -2143,13 +2174,19 @@ function getDueSpecialEvents(){
 function showNextDueSpecialEvent(){const e=getDueSpecialEvents()[0];if(e)handleSpecialEvent(e.id)}
 
 function getUpcomingSchedule(){
+  const season=state.player.season||1;
+  if(state.careerDate?.day){
+    const dated=state.schedule.find(x=>+x.season===+season && !x.played && x.date && compareDate(x.date,state.careerDate)===0);
+    if(dated) return dated;
+  }
+  // Backward compatibility for Key Games created in V42 and earlier.
   const nextNo=(state.player.gameNo||0)+1;
-  return state.schedule.find(x=>x.season===state.player.season && x.gameNo===nextNo) || null;
+  return state.schedule.find(x=>+x.season===+season && !x.date && x.gameNo===nextNo) || null;
 }
 function renderCurrentGame(){
   const x=getUpcomingSchedule();
   if(x){
-    currentGameCard.innerHTML=`<div class="kicker">NEXT GAME • S${state.player.season} G${x.gameNo}</div><h2 style="margin:4px 0">${x.site==="Home"?"vs":"@"} ${x.opponent} ${x.key?'<span class="pill key">KEY GAME</span>':""}</h2><div class="small">${x.key?`SP multiplier: ${x.mult}×${x.reason?" • "+x.reason:""}`:"Normal game"}</div>${renderRotationStatus()}`;
+    currentGameCard.innerHTML=`<div class="kicker">${x.date?`KEY GAME • ${formatCareerDate(x.date)}`:`NEXT GAME • S${state.player.season} G${x.gameNo}`}</div><h2 style="margin:4px 0">${x.site==="Home"?"vs":"@"} ${x.opponent} ${x.key?'<span class="pill key">KEY GAME</span>':""}</h2><div class="small">${x.key?`SP multiplier: ${x.mult}×${x.reason?" • "+x.reason:""}`:"Normal game"}</div>${renderRotationStatus()}`;
     gOpponent.value=x.opponent;
     updateMatchupPointsVisibility();
   } else {
@@ -2390,7 +2427,9 @@ function rebuildAutomaticMilestones(){
     });
     g.milestoneSP=milestoneSP;
     g.raw=Math.max(0,(g.gradeSP||0)+(g.performanceSP||0)+(g.resultSP||0)+(g.highlightSP||0)+(g.objSP||0)+milestoneSP);
-    g.total=Math.round(g.raw*(g.multiplier||1));
+    const minMult=(g.minutesSPMult===undefined?1:Number(g.minutesSPMult||1));
+    g.minutesAdjustedRaw=Math.round(g.raw*minMult);
+    g.total=Math.round(g.minutesAdjustedRaw*(g.multiplier||1));
   });
 }
 
@@ -2408,6 +2447,7 @@ function recalcEditedGame(g,s){
   g.performanceSP=performance;
   g.resultSP=resultSP;
   g.highlightSP=highlightSP;
+  if(g.minutesSPMult===undefined) g.minutesSPMult=1;
   // Keep original objective completion and objective SP; this editor is for box-score corrections.
   g.objSP=g.objSP||0;
   return autoGrade;
@@ -2439,6 +2479,7 @@ function showPostgameRewardPopup(details){
         <div class="postgameRewardCell"><span>Highlights</span><b>${details.highlightSP.toLocaleString()} SP</b></div>
         <div class="postgameRewardCell"><span>Milestones</span><b>${details.milestoneSP.toLocaleString()} SP</b></div>
       </div>
+      ${details.coachMinutes?`<div class="postgameKeyBonus">COACH ROLE: ${details.coachMinutes} MPG • SP MULTIPLIER: ${Number(details.minutesSPMult||1).toFixed(2)}×</div>`:""}
       ${details.keyGame?`<div class="postgameKeyBonus">KEY GAME MULTIPLIER: ${details.multiplier}×</div>`:""}
       <div class="postgameRewardTotal">TOTAL EARNED: ${details.total.toLocaleString()} SP</div>
       ${milestones?`<div class="postgameMilestoneBox"><h3>Milestone${details.newMilestones.length===1?"":"s"} Unlocked</h3>${milestones}</div>`:""}
@@ -2547,8 +2588,23 @@ function renderRotationStatus(){
   </div>`;
 }
 
+function nbaMinutesSPMultiplier(minutes){
+  const mpg=Number(minutes||10);
+  if(mpg<=10) return 0.75;
+  if(mpg<=15) return 0.85;
+  if(mpg<=20) return 0.95;
+  if(mpg<=25) return 1.00;
+  if(mpg<=30) return 1.10;
+  if(mpg<=34) return 1.20;
+  return 1.30;
+}
+function currentNBAMinutesSPMultiplier(){
+  if(state.preNBA?.stage!=="nba") return 1;
+  ensureNBARotationStart();
+  return nbaMinutesSPMultiplier(state.rotationProgress?.minutes||10);
+}
+
 function calculateAndPostGame(){
-  const upcoming=getUpcomingSchedule();
   const s={
     min:num("gMin"),pts:num("gPts"),reb:num("gReb"),ast:num("gAst"),stl:num("gStl"),blk:num("gBlk"),
     fgm:num("gFGM"),fga:num("gFGA"),t3m:num("g3M"),t3a:num("g3A"),ftm:num("gFTM"),fta:num("gFTA"),
@@ -2567,6 +2623,7 @@ function calculateAndPostGame(){
   const day=Math.max(1,Math.min(maxDay,+gDay.value||0));
   if(!day){alert("Enter the game day.");return}
   state.careerDate={month,year,day};
+  const upcoming=getUpcomingSchedule();
 
   // Typo correction mode: replace the most recent game's stats/SP instead of creating another game.
   if(editingGameId){
@@ -2610,12 +2667,14 @@ function calculateAndPostGame(){
     }
   });
   const raw=Math.max(0,grade+performance+resultSP+highlightSP+objSP+milestoneSP);
+  const minutesSPMult=currentNBAMinutesSPMultiplier();
+  const minutesAdjustedRaw=Math.round(raw*minutesSPMult);
   const keyGame=!!upcoming?.key;
   const multiplier=keyGame?(upcoming.mult||2):1;
-  const total=Math.round(raw*multiplier);
+  const total=Math.round(minutesAdjustedRaw*multiplier);
   state.sp+=total; state.player.gameNo=(state.player.gameNo||0)+1;
   if(upcoming) upcoming.played=true;
-  const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
+  const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(state.rotationProgress?.minutes||10):null),minutesAdjustedRaw,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
   state.games.unshift(game);
   const rotationChange=evaluateNBARotation();
   if(rotationChange) rotationCoachMessage(rotationChange);
@@ -2623,7 +2682,7 @@ function calculateAndPostGame(){
   maybeQueueInterview(game);
   maybeQueueInsider(game);
   persist();
-  const rewardPopup={grade,performance,resultSP,objSP,highlightSP,milestoneSP,keyGame,multiplier,total,newMilestones:[...newMilestones],pendingInterview:!!state.pendingInterview};
+  const rewardPopup={grade,performance,resultSP,objSP,highlightSP,milestoneSP,keyGame,multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(state.rotationProgress?.minutes||10):null),total,newMilestones:[...newMilestones],pendingInterview:!!state.pendingInterview};
   // Keep the postgame page clean. The reward breakdown is shown immediately in the in-app popup instead of being buried below the form.
   gameResult.innerHTML="";
   clearPostgameStatInputs();
