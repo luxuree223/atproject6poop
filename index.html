@@ -3195,15 +3195,19 @@ function gLeagueInterestSummary(){
   const last=games.slice(-5),recent=last.reduce((a,x)=>a+x.score,0)/last.length;
   const big=games.filter(x=>x.stats.pts>=30||x.stats.reb>=15||x.stats.ast>=12||x.stats.stl>=5||x.stats.blk>=5).length;
   const consistency=games.slice(-5).filter(x=>x.score>=68).length;
-  let score=Math.round(season*.42+recent*.48+Math.min(6,big*2)+Math.min(4,consistency));
+  // Faster old-school MyCareer pacing: recent play drives the evaluation, while a
+  // sustained run of solid G League games adds momentum. Game count alone never
+  // guarantees a call-up; the momentum bonus only applies when recent form is good.
+  const sustained=(recent>=70?(n>=15?8:n>=12?6:n>=8?4:n>=5?2:0):(recent>=65?(n>=12?4:n>=8?2:0):0));
+  let score=Math.round(season*.38+recent*.52+Math.min(6,big*2)+Math.min(4,consistency)+sustained);
   score=Math.max(0,Math.min(100,score));
   let status="Development Prospect",tier=0,offer=null;
-  if(score>=88&&n>=5){status="NBA Call-Up Earned";tier=5;offer="nba";}
+  if(score>=86&&n>=5){status="NBA Call-Up Earned";tier=5;offer="nba";}
   else if(g.offer==="twoway"){status="Two-Way Player • Call-Up Watch";tier=4;offer=null;}
-  else if(score>=80&&n>=3){status="Two-Way Interest";tier=4;offer="twoway";}
-  else if(score>=70&&n>=3){status="Call-Up Watch";tier=3;}
-  else if(score>=60&&n>=2){status="NBA Scouts Watching";tier=2;}
-  else if(score>=50){status="On The Radar";tier=1;}
+  else if(score>=76&&n>=3){status="Two-Way Interest";tier=4;offer="twoway";}
+  else if(score>=68&&n>=3){status="Call-Up Watch";tier=3;}
+  else if(score>=58&&n>=2){status="NBA Scouts Watching";tier=2;}
+  else if(score>=48){status="On The Radar";tier=1;}
   return {score,status,tier,n,recent:Math.round(recent),season:Math.round(season),offer};
 }
 function submitGLeagueGame(){
@@ -3238,8 +3242,8 @@ function submitGLeagueGame(){
 }
 function acceptGLeagueOpportunity(kind){
   const g=ensureGLeague(),e=gLeagueInterestSummary();
-  if(kind==="nba"&&!(e.score>=88&&e.n>=5)){alert("You have not earned an NBA call-up yet.");return;}
-  if(kind==="twoway"&&!(e.score>=80&&e.n>=3)){alert("You have not generated enough two-way interest yet.");return;}
+  if(kind==="nba"&&!(e.score>=86&&e.n>=5)){alert("You have not earned an NBA call-up yet.");return;}
+  if(kind==="twoway"&&!(e.score>=76&&e.n>=3)){alert("You have not generated enough two-way interest yet.");return;}
   awardPreNBAMilestone(kind==="nba"?"gl_callup":"gl_twoway");
   if(kind==="nba") state.preNBA.stage="nba";
   g.offer=kind;
