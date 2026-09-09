@@ -1820,6 +1820,12 @@ if(state.lastTeam===undefined) state.lastTeam=state.player?.team||"";
 if(!state.accomplishmentLog) state.accomplishmentLog=[];
 if(!state.contractHistory) state.contractHistory=[];
 if(!state.streakRewards) state.streakRewards={};
+if(!state.rotationProgress) state.rotationProgress={minutes:10,role:"Bench",lastEvalGame:0,lastChange:0,lastReason:"NBA role begins",history:[]};
+if(state.rotationProgress.minutes===undefined) state.rotationProgress.minutes=10;
+if(!state.rotationProgress.role) state.rotationProgress.role="Bench";
+if(state.rotationProgress.lastEvalGame===undefined) state.rotationProgress.lastEvalGame=0;
+if(state.rotationProgress.lastChange===undefined) state.rotationProgress.lastChange=0;
+if(!Array.isArray(state.rotationProgress.history)) state.rotationProgress.history=[];
 if(!state.shoeCareer) state.shoeCareer={signedBrand:"",offers:[],customShoe:false,signatureShoe:false,signedSeason:null,signedDate:null};
 if(!state.shoeCareer.offers) state.shoeCareer.offers=[];
 if(!state.schemaVersion) state.schemaVersion=1;
@@ -2143,11 +2149,11 @@ function getUpcomingSchedule(){
 function renderCurrentGame(){
   const x=getUpcomingSchedule();
   if(x){
-    currentGameCard.innerHTML=`<div class="kicker">NEXT GAME • S${state.player.season} G${x.gameNo}</div><h2 style="margin:4px 0">${x.site==="Home"?"vs":"@"} ${x.opponent} ${x.key?'<span class="pill key">KEY GAME</span>':""}</h2><div class="small">${x.key?`SP multiplier: ${x.mult}×${x.reason?" • "+x.reason:""}`:"Normal game"}</div>`;
+    currentGameCard.innerHTML=`<div class="kicker">NEXT GAME • S${state.player.season} G${x.gameNo}</div><h2 style="margin:4px 0">${x.site==="Home"?"vs":"@"} ${x.opponent} ${x.key?'<span class="pill key">KEY GAME</span>':""}</h2><div class="small">${x.key?`SP multiplier: ${x.mult}×${x.reason?" • "+x.reason:""}`:"Normal game"}</div>${renderRotationStatus()}`;
     gOpponent.value=x.opponent;
     updateMatchupPointsVisibility();
   } else {
-    currentGameCard.innerHTML=`<div class="kicker">NEXT GAME</div><h2 style="margin:4px 0">Normal Game</h2><div class="small">This game is not on your Key Games list. Enter the opponent after you play, then post the box score normally.</div>`;
+    currentGameCard.innerHTML=`<div class="kicker">NEXT GAME</div><h2 style="margin:4px 0">Normal Game</h2><div class="small">This game is not on your Key Games list. Enter the opponent after you play, then post the box score normally.</div>${renderRotationStatus()}`;
     updateMatchupPointsVisibility();
   }
 }
@@ -2451,6 +2457,96 @@ function showPostgameRewardPopup(details){
   setTimeout(()=>cont?.focus(),0);
 }
 
+
+function rotationRoleForMinutes(m){
+  if(m>=32) return "Starter / Heavy Minutes";
+  if(m>=28) return "Starter Consideration";
+  if(m>=22) return "Major Rotation";
+  if(m>=16) return "Rotation Player";
+  return "Bench";
+}
+function ensureNBARotationStart(){
+  if(!state.rotationProgress) state.rotationProgress={minutes:10,role:"Bench",lastEvalGame:0,lastChange:0,lastReason:"NBA role begins",history:[]};
+  if(!Array.isArray(state.rotationProgress.history)) state.rotationProgress.history=[];
+  if(!state.rotationProgress.minutes) state.rotationProgress.minutes=10;
+  state.rotationProgress.role=rotationRoleForMinutes(state.rotationProgress.minutes);
+}
+function evaluateNBARotation(){
+  if(state.preNBA?.stage!=="nba") return null;
+  ensureNBARotationStart();
+  const r=state.rotationProgress;
+  const n=state.games.length;
+  // The coach reviews the role every 3 NBA games. This keeps changes gradual instead of
+  // changing the rotation after every hot/cold night.
+  if(n<3 || n-r.lastEvalGame<3) return null;
+  const recent=state.games.slice(0,3);
+  const avgGrade=recent.reduce((a,g)=>a+(Number(g.autoGradeScore)||50),0)/recent.length;
+  const wins=recent.filter(g=>g.stats?.result==="W").length;
+  const coach=clamp(state.meters?.coach??25);
+  let delta=0, reason="";
+  if(avgGrade>=86){delta=4;reason="Elite recent play";}
+  else if(avgGrade>=78){delta=3;reason="Strong recent play";}
+  else if(avgGrade>=70){delta=2;reason="Solid recent play";}
+  else if(avgGrade<52){delta=-2;reason="Recent play has slipped";}
+  else {delta=0;reason="Role held steady";}
+
+  if(wins>=2 && delta>0) delta+=1;
+  if(coach>=70 && delta>0) delta+=1;
+  if(coach<35 && delta>3) delta=3;
+
+  // Trust gates keep a rookie from jumping straight to star minutes.
+  let cap=14;
+  if(coach>=35) cap=18;
+  if(coach>=45) cap=22;
+  if(coach>=55) cap=26;
+  if(coach>=65) cap=30;
+  if(coach>=75) cap=34;
+  if(coach>=85) cap=38;
+
+  const old=r.minutes;
+  let next=Math.max(6,Math.min(cap,old+delta));
+  // Once the player is clearly outperforming a low trust score, allow one small
+  // breakthrough beyond the normal trust cap rather than creating a deadlock.
+  if(next===old && delta>0 && avgGrade>=82) next=Math.min(38,old+2);
+
+  r.minutes=next;
+  r.role=rotationRoleForMinutes(next);
+  r.lastEvalGame=n;
+  r.lastChange=next-old;
+  r.lastReason=reason;
+  if(next!==old){
+    r.history.unshift({game:n,from:old,to:next,role:r.role,reason,season:state.player?.season||1,ts:new Date().toISOString()});
+    r.history=r.history.slice(0,30);
+    return {from:old,to:next,role:r.role,reason};
+  }
+  return null;
+}
+function rotationCoachMessage(change){
+  if(!change) return;
+  const name=state.player?.name||"Your player";
+  const up=change.to>change.from;
+  const entry={
+    id:"rotation_"+Date.now(),season:state.player?.season||1,gameNo:state.player?.gameNo||0,date:{...state.careerDate},
+    stage:"Coach • Rotation Update",
+    headline:up?"YOUR ROLE IS GROWING":"COACH ADJUSTS THE ROTATION",
+    body:up
+      ?`${name}, your recent play has earned more floor time. Coach is moving you from ${change.from} MPG to ${change.to} MPG (${change.role}). Set your MyNBA rotation to ${change.to} minutes.`
+      :`${name}, coach is trimming your role from ${change.from} MPG to ${change.to} MPG after the recent stretch. Earn those minutes back with stronger play.`,
+    read:false
+  };
+  state.insiderFeed.unshift(entry); state.insiderUnread=(state.insiderUnread||0)+1;
+}
+function renderRotationStatus(){
+  if(state.preNBA?.stage!=="nba") return "";
+  ensureNBARotationStart();
+  const r=state.rotationProgress;
+  const until=Math.max(0,3-(state.games.length-r.lastEvalGame));
+  return `<div class="note" style="margin-top:12px"><b>COACH ROTATION • ${r.role}</b><br>
+    Recommended MyNBA minutes: <b>${r.minutes} MPG</b><br>
+    <span class="small">Coach reviews your role every 3 games using recent teammate-grade performance, winning and Coach Trust.${until?` Next review in ${until} game${until===1?"":"s"}.`:" Review due after this game."}</span>
+  </div>`;
+}
+
 function calculateAndPostGame(){
   const upcoming=getUpcomingSchedule();
   const s={
@@ -2521,6 +2617,8 @@ function calculateAndPostGame(){
   if(upcoming) upcoming.played=true;
   const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
   state.games.unshift(game);
+  const rotationChange=evaluateNBARotation();
+  if(rotationChange) rotationCoachMessage(rotationChange);
   checkRewardUnlocks(); scheduleUnscheduledRewards();
   maybeQueueInterview(game);
   maybeQueueInsider(game);
@@ -3022,7 +3120,7 @@ function summerOutcome(){
 function finishSummerLeague(champion=false){
   const s=ensureSummerLeague(); if(champion) awardPreNBAMilestone("sl_champ"); s.finished=true; s.phase="complete"; s.champion=!!champion;
   const o=summerOutcome(); s.finalGrade=o.grade; s.finalOutcome=o.code; state.preNBA.summerComplete=true; state.preNBA.rosterOutcome=o.code;
-  if(o.code==="nba") state.preNBA.stage="nba";
+  if(o.code==="nba"){ state.preNBA.stage="nba"; ensureNBARotationStart(); }
   else if(o.code==="twoway"||o.code==="gleague") state.preNBA.stage="g_league";
   else state.preNBA.stage="g_league";
   const team=s.team||state.preNBA?.draftResult?.team||state.player?.team||"your Summer League team";
@@ -3247,7 +3345,7 @@ function acceptGLeagueOpportunity(kind){
   if(kind==="nba"&&!(e.score>=82&&e.n>=7)){alert("You have not earned an NBA call-up yet.");return;}
   if(kind==="twoway"&&!(e.score>=72&&e.n>=4)){alert("You have not generated enough two-way interest yet.");return;}
   awardPreNBAMilestone(kind==="nba"?"gl_callup":"gl_twoway");
-  if(kind==="nba") state.preNBA.stage="nba";
+  if(kind==="nba"){ state.preNBA.stage="nba"; ensureNBARotationStart(); }
   g.offer=kind;
   const entry={id:"gl_offer_"+Date.now(),season:state.player?.season||1,gameNo:g.games.length,date:null,stage:kind==="nba"?"NBA Call-Up":"Two-Way Contract",headline:kind==="nba"?"THE WAIT IS OVER — YOU'RE HEADED TO THE NBA":"THE DOOR JUST OPENED",body:kind==="nba"?`You earned this. The G League work turned into the opportunity you were chasing, and the NBA call has finally come. +1,000 SP milestone earned. Enjoy the moment — then get ready. Making it to the league was the goal, but the job is not done. Move your player to the NBA roster and continue the career from there.`:`The work is starting to pay off. An NBA organization is willing to put a two-way contract on the table, and that is a real step forward. +500 SP milestone earned. You remain in the G League and keep logging games with your NBA Interest intact. You have a foot in the door now — the full call-up is the next thing to earn.`,read:false};
   state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;persist();renderInsider();showInsiderPopup(entry);
@@ -3268,7 +3366,7 @@ function saveRosterDecision(){
   state.preNBA.rosterOutcome=outcome; state.preNBA.gLeagueTeam=gl;
   const nbaTeam=state.preNBA.draftResult?.team||state.player?.team||"your NBA team";
   let headline="",body="",stage="";
-  if(outcome==="nba"){state.preNBA.stage="nba";headline="Welcome to the NBA";stage="NBA Roster";body=`You made the ${nbaTeam} roster. The evaluation phase is over. From here, regular career games, SP progression, milestones and media are live.`;}
+  if(outcome==="nba"){state.preNBA.stage="nba";ensureNBARotationStart();headline="Welcome to the NBA";stage="NBA Roster";body=`You made the ${nbaTeam} roster. The evaluation phase is over. From here, regular career games, SP progression, milestones and media are live.`;}
   else if(outcome==="gleague"||outcome==="twoway"){state.preNBA.stage="g_league";headline=outcome==="twoway"?"Two-way path: earn the call":"Development assignment";stage="G League";body=`${nbaTeam} is sending you to ${gl}${outcome==="twoway"?" on a two-way path":""}. This is not the end of the career — it is the next stage. Regular game progression can now begin, and the goal is an NBA call-up.`;}
   else{state.preNBA.stage="free_agent";headline="The roster closes without you";stage="Free Agent";body=`You did not survive the final roster cut with ${nbaTeam}. The career is still alive, but the next opportunity has to come from another team, the G League, or a new camp invitation.`;}
   const entry={id:"roster_"+Date.now(),season:1,gameNo:0,date:null,stage,headline,body,read:false};
