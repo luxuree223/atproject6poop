@@ -3198,16 +3198,18 @@ function gLeagueInterestSummary(){
   // Faster old-school MyCareer pacing: recent play drives the evaluation, while a
   // sustained run of solid G League games adds momentum. Game count alone never
   // guarantees a call-up; the momentum bonus only applies when recent form is good.
-  const sustained=(recent>=70?(n>=15?8:n>=12?6:n>=8?4:n>=5?2:0):(recent>=65?(n>=12?4:n>=8?2:0):0));
+  const sustained=(recent>=78?(n>=12?18:n>=9?14:n>=6?9:n>=4?5:0):
+                   recent>=70?(n>=15?16:n>=12?13:n>=9?10:n>=6?7:n>=4?4:0):
+                   recent>=65?(n>=15?10:n>=10?7:n>=6?4:0):0);
   let score=Math.round(season*.38+recent*.52+Math.min(6,big*2)+Math.min(4,consistency)+sustained);
   score=Math.max(0,Math.min(100,score));
   let status="Development Prospect",tier=0,offer=null;
-  if(score>=86&&n>=5){status="NBA Call-Up Earned";tier=5;offer="nba";}
+  if(score>=82&&n>=7){status="NBA Call-Up Earned";tier=5;offer="nba";}
   else if(g.offer==="twoway"){status="Two-Way Player • Call-Up Watch";tier=4;offer=null;}
-  else if(score>=76&&n>=3){status="Two-Way Interest";tier=4;offer="twoway";}
-  else if(score>=68&&n>=3){status="Call-Up Watch";tier=3;}
-  else if(score>=58&&n>=2){status="NBA Scouts Watching";tier=2;}
-  else if(score>=48){status="On The Radar";tier=1;}
+  else if(score>=72&&n>=4){status="Two-Way Interest";tier=4;offer="twoway";}
+  else if(score>=62&&n>=3){status="Call-Up Watch";tier=3;}
+  else if(score>=54&&n>=2){status="NBA Scouts Watching";tier=2;}
+  else if(score>=45){status="On The Radar";tier=1;}
   return {score,status,tier,n,recent:Math.round(recent),season:Math.round(season),offer};
 }
 function submitGLeagueGame(){
@@ -3242,8 +3244,8 @@ function submitGLeagueGame(){
 }
 function acceptGLeagueOpportunity(kind){
   const g=ensureGLeague(),e=gLeagueInterestSummary();
-  if(kind==="nba"&&!(e.score>=86&&e.n>=5)){alert("You have not earned an NBA call-up yet.");return;}
-  if(kind==="twoway"&&!(e.score>=76&&e.n>=3)){alert("You have not generated enough two-way interest yet.");return;}
+  if(kind==="nba"&&!(e.score>=82&&e.n>=7)){alert("You have not earned an NBA call-up yet.");return;}
+  if(kind==="twoway"&&!(e.score>=72&&e.n>=4)){alert("You have not generated enough two-way interest yet.");return;}
   awardPreNBAMilestone(kind==="nba"?"gl_callup":"gl_twoway");
   if(kind==="nba") state.preNBA.stage="nba";
   g.offer=kind;
@@ -3317,7 +3319,7 @@ function renderPreNBA(){
   <div class="gLeagueOpportunityNext"><div class="kicker">WHAT HAPPENS NEXT</div><b>CHOOSE YOUR G LEAGUE TEAM</b><div class="small" style="margin-top:6px">Place your player on the G League team you want to use in 2K. Once you begin, every game updates NBA Interest and can move you toward a Two-Way opportunity or a full NBA call-up.</div></div>
   <div class="formgrid" style="margin-top:16px"><label>G League Team<input id="glTeamInput" placeholder="G League team"></label></div>
   <div class="row" style="margin-top:12px"><button class="primary" onclick="setGLeagueTeam()">Begin G League Journey →</button></div>
-</div>`;}return `<div class="kicker">CAREER PHASE • G LEAGUE</div><h2>${g.team.toUpperCase()}</h2><div class="grid"><div class="statbox"><span class="small">NBA INTEREST</span><b>${e.score}/100</b></div><div class="statbox"><span class="small">STATUS</span><b>${e.status}</b></div><div class="statbox"><span class="small">GAMES</span><b>${e.n}</b></div><div class="statbox"><span class="small">RECENT FORM</span><b>${e.n?e.recent+"/100":"—"}</b></div></div><div class="note" style="margin-top:12px"><b>Interest ladder:</b> Development Prospect → On The Radar → NBA Scouts Watching → Call-Up Watch → Two-Way Interest → NBA Call-Up Earned.<br><span class="small">Recent form matters heavily, but the app also rewards sustained production and noteworthy games. There is no automatic call-up just for reaching a fixed game count.</span></div>${e.offer==="twoway"?`<div class="row" style="margin-top:12px"><button class="primary" onclick="acceptGLeagueOpportunity('twoway')">Accept Two-Way Opportunity</button></div>`:""}${e.offer==="nba"?`<div class="row" style="margin-top:12px"><button class="primary" onclick="acceptGLeagueOpportunity('nba')">Accept NBA Call-Up</button></div>`:""}${gLeagueStatsForm()}`;}
+</div>`;}return `<div class="kicker">CAREER PHASE • G LEAGUE</div><h2>${g.team.toUpperCase()}</h2><div class="grid"><div class="statbox"><span class="small">NBA INTEREST</span><b>${e.score}/100</b></div><div class="statbox"><span class="small">STATUS</span><b>${e.status}</b></div><div class="statbox"><span class="small">GAMES</span><b>${e.n}</b></div><div class="statbox"><span class="small">RECENT FORM</span><b>${e.n?e.recent+"/100":"—"}</b></div></div><div class="note" style="margin-top:12px"><b>Interest ladder:</b> Development Prospect → On The Radar → NBA Scouts Watching → Call-Up Watch → Two-Way Interest → NBA Call-Up Earned.<br><span class="small">Recent form matters heavily, and strong sustained play now accelerates the path significantly. A hot G League run can create a call-up within roughly 8–15 games; game count alone still never guarantees promotion.</span></div>${e.offer==="twoway"?`<div class="row" style="margin-top:12px"><button class="primary" onclick="acceptGLeagueOpportunity('twoway')">Accept Two-Way Opportunity</button></div>`:""}${e.offer==="nba"?`<div class="row" style="margin-top:12px"><button class="primary" onclick="acceptGLeagueOpportunity('nba')">Accept NBA Call-Up</button></div>`:""}${gLeagueStatsForm()}`;}
   if(p.stage==="nba"){return `<div class="kicker">CAREER PHASE • NBA</div><h2>WELCOME TO THE NBA</h2><div class="good">The pre-NBA evaluation path is complete. Regular career progression is now active.</div><div class="row" style="margin-top:12px"><button class="primary" onclick="openTab('game')">Open Postgame</button></div>`;}
   if(p.stage==="free_agent"){p.stage="g_league";persist();return renderPreNBA();}
   return "";
