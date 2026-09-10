@@ -651,7 +651,7 @@ body:not(.career-home) #k11Hub{display:none!important}
       <button type="button" class="removePhoto" onclick="removeK11PlayerPhoto()">Remove</button>
     </div>
     <div class="k11TeamStrip"><span>My Team</span><strong id="k11Team">FREE AGENT</strong></div>
-    <div class="k11CoachDestination" onclick="openCoachOffice()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCoachOffice();}">
+    <div id="k11CoachDestination" class="k11CoachDestination" onclick="openCoachOffice()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCoachOffice();}">
       <div class="k11CoachIcon">HC</div>
       <div class="k11CoachDestCopy"><span>TEAM FACILITY</span><strong>COACH'S OFFICE</strong><small id="k11CoachHubHint">Meet with Coach • rotation, trust & expectations</small></div>
       <b>ENTER ›</b>
@@ -896,13 +896,13 @@ body:not(.career-home) #k11Hub{display:none!important}
       <div><label>Assists</label><input id="gAst" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Steals</label><input id="gStl" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Blocks</label><input id="gBlk" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
+      <div><label>Turnovers</label><input id="gTO" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FG Made</label><input id="gFGM" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FG Attempted</label><input id="gFGA" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>3PT Made</label><input id="g3M" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>3PT Attempted</label><input id="g3A" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FT Made</label><input id="gFTM" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FT Attempted</label><input id="gFTA" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
-      <div><label>Turnovers</label><input id="gTO" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Personal Fouls</label><input id="gPF" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Teammate Grade</label>
         <input id="gGrade" value="Auto-calculated from box score" disabled>
@@ -2366,17 +2366,30 @@ function getNextKeyGame(){
 }
 
 function renderCareerHubCoachAssignment(){
-  const box=document.getElementById("k11CoachAssignment"),hint=document.getElementById("k11CoachHubHint");
+  const box=document.getElementById("k11CoachAssignment");
+  const destination=document.getElementById("k11CoachDestination");
+  const hint=document.getElementById("k11CoachHubHint");
   if(!box)return;
-  if(state.preNBA?.stage!=="nba"){box.classList.remove("show");if(hint)hint.textContent="Rotation meetings unlock in the NBA";return;}
+  if(state.preNBA?.stage!=="nba"){
+    box.classList.remove("show");
+    if(destination)destination.style.display="grid";
+    if(hint)hint.textContent="Rotation meetings unlock in the NBA";
+    return;
+  }
   ensureNBARotationStart();
   const goal=assignCoachGoal(false),gp=coachGoalProgress(goal),r=state.rotationProgress;
   if(hint)hint.textContent=`${r.minutes} MPG • ${coachTrustLabel(state.meters.coach||0)}${coachMeetingEvent()?" • Coach wants to see you":""}`;
-  if(!goal){box.classList.remove("show");return;}
+  if(!goal){
+    box.classList.remove("show");
+    if(destination)destination.style.display="grid";
+    return;
+  }
+  // The active expectation card IS the Coach's Office entrance.
+  // Avoid showing two different controls that navigate to the same destination.
+  if(destination)destination.style.display="none";
   box.classList.add("show");
-  box.innerHTML=`<div><span class="eyebrow">FROM COACH • CURRENT EXPECTATION</span><strong>${escapeHtml(goal.title)}</strong><small>${escapeHtml(goal.text)} • ${escapeHtml(gp.label)}</small></div><b>OFFICE ›</b>`;
+  box.innerHTML=`<div><span class="eyebrow">FROM COACH • CURRENT EXPECTATION</span><strong>${escapeHtml(goal.title)}</strong><small>${escapeHtml(goal.text)} • ${escapeHtml(gp.label)}</small></div><b>COACH'S OFFICE ›</b>`;
 }
-
 function renderCurrentGame(){
   const x=getUpcomingSchedule();
   if(x){
