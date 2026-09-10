@@ -467,6 +467,53 @@ body:not(.career-home) #k11Hub{display:none!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
+
+<style id="v48CoachOfficeStyles">
+.coachOfficeRoom{padding:0!important;max-width:none!important;background:#080b0d;min-height:100vh}
+.coachOfficeBackdrop{min-height:100vh;background:
+ radial-gradient(circle at 78% 15%,rgba(205,255,43,.08),transparent 28%),
+ linear-gradient(180deg,#11171a 0,#0a0d0f 52%,#050607 100%);position:relative;overflow:hidden}
+.coachOfficeBackdrop:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;background:
+ repeating-linear-gradient(90deg,transparent 0 64px,rgba(255,255,255,.04) 65px,transparent 66px),
+ linear-gradient(180deg,transparent 0 62%,rgba(108,72,42,.28) 62% 100%)}
+.coachOfficeDoorbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:#080a0b;border-bottom:1px solid #343b3f;font-size:11px;letter-spacing:1.4px;color:#9ca5aa}
+.coachBackBtn{background:transparent!important;border:0!important;color:#d6ff31!important;font-weight:800!important;padding:8px 0!important}
+.coachOfficeScene{position:relative;z-index:1;max-width:760px;margin:auto;padding:28px 16px 70px}
+.coachOfficePlaque{text-align:center;margin:0 auto 24px;padding:14px 18px;max-width:360px;background:linear-gradient(#272c2f,#15191b);border:1px solid #4a5053;box-shadow:0 12px 30px #000;border-radius:4px}
+.coachOfficePlaque span,.coachOfficePlaque small{display:block;font-size:10px;letter-spacing:2px;color:#9ba3a7}
+.coachOfficePlaque strong{display:block;font-size:23px;letter-spacing:1.5px;color:#fff;margin:4px 0}
+.coachOfficeDesk{background:linear-gradient(180deg,rgba(27,32,35,.97),rgba(13,16,18,.98));border:1px solid #42494c;border-radius:7px;box-shadow:0 22px 50px #000;padding:18px}
+.coachConversation{display:grid;grid-template-columns:52px 1fr;gap:13px;align-items:start;padding:4px 2px 20px;border-bottom:1px solid #343a3d;margin-bottom:18px}
+.coachPortrait{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#1d2325;border:2px solid #d6ff31;color:#d6ff31;font-weight:900;letter-spacing:1px}
+.coachSpeaker{font-size:11px;font-weight:900;letter-spacing:1.8px;color:#d6ff31;margin-bottom:5px}
+.coachDialogue{font-size:20px;line-height:1.35;color:#fff;font-weight:650}
+.coachOfficeRoom .coachStatusGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.coachOfficeRoom .coachStatusBox{padding:12px;background:#0d1113;border:1px solid #333a3d;border-radius:5px}
+.coachOfficeRoom .coachStatusBox span{display:block;color:#929da2;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.coachOfficeRoom .coachStatusBox strong{display:block;color:#fff;font-size:15px;line-height:1.25}
+.coachOfficeRoom .coachSection{margin-top:14px;padding:15px;background:#101512;border:1px solid #273129;border-left:3px solid #d6ff31;border-radius:5px}
+.coachOfficeRoom .coachSectionLabel{font-size:10px;color:#d6ff31;letter-spacing:1.5px;font-weight:900;margin-bottom:5px}
+.coachOfficeRoom .coachGoalTitle{font-size:19px;color:#fff;font-weight:850;margin-bottom:4px}
+.coachOfficeRoom .coachGoalText{font-size:16px;color:#e4e7e8;line-height:1.35}
+.coachOfficeRoom .coachProgress{margin-top:12px;background:#080b0c;height:7px;border-radius:99px;overflow:hidden;border:1px solid #2f373a}
+.coachOfficeRoom .coachProgressFill{height:100%;background:#d6ff31}
+.coachOfficeRoom .coachMeta{font-size:12px;color:#9ca5aa;margin-top:8px;line-height:1.45}
+.coachOfficeRoom .coachHistoryRow{padding:9px 0;border-bottom:1px solid #293033;font-size:13px;color:#b9c0c3}
+.coachOfficeRoom .coachHistoryRow:last-child{border-bottom:0}
+.coachOfficeRoom .coachOfficeActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.coachOfficeRoom .coachOfficeActions button{background:#202628;border:1px solid #4a5255;color:#fff;border-radius:4px;padding:10px 13px;font-weight:750}
+.coachOfficeRoom .coachOfficeActions .primary{background:#d6ff31;color:#080a0b;border-color:#d6ff31}
+@media(max-width:600px){
+ .coachOfficeScene{padding:20px 12px 55px}
+ .coachOfficeDesk{padding:14px}
+ .coachOfficeRoom .coachStatusGrid{grid-template-columns:1fr}
+ .coachConversation{grid-template-columns:44px 1fr}
+ .coachPortrait{width:44px;height:44px}
+ .coachDialogue{font-size:18px}
+ .coachOfficePlaque strong{font-size:20px}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -537,11 +584,6 @@ body:not(.career-home) #k11Hub{display:none!important}
   </div>
 </div>
 
-<div class="card" id="coachOfficeCard" style="display:none">
-  <h2>Coach's Office</h2>
-  <div id="coachOfficeBody"></div>
-</div>
-
 <div class="card" id="webAppBanner">
   <h2 style="margin-bottom:8px">Add to Your Phone</h2>
   <div class="note">
@@ -553,6 +595,32 @@ body:not(.career-home) #k11Hub{display:none!important}
 </div>
 
 </div>
+<section id="coachoffice" class="tab coachOfficeRoom">
+  <div class="coachOfficeBackdrop">
+    <div class="coachOfficeDoorbar">
+      <button type="button" class="coachBackBtn" onclick="leaveCoachOffice()">‹ BACK TO MYCAREER</button>
+      <span>TEAM FACILITY • COACH'S OFFICE</span>
+    </div>
+    <div class="coachOfficeScene">
+      <div class="coachOfficePlaque">
+        <span>HEAD COACH</span>
+        <strong>COACH'S OFFICE</strong>
+        <small>ROTATION • DEVELOPMENT • EXPECTATIONS</small>
+      </div>
+      <div class="coachOfficeDesk">
+        <div class="coachConversation">
+          <div class="coachPortrait">HC</div>
+          <div>
+            <div class="coachSpeaker">COACH</div>
+            <div id="coachDialogue" class="coachDialogue">Come in. Let's talk about your role.</div>
+          </div>
+        </div>
+        <div id="coachOfficeBody"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="career" class="tab active">
   <div class="careerPageLayout">
     <aside class="careerSideNav open" id="careerSideNav">
@@ -2881,32 +2949,69 @@ function resetEstablishedStarterExtreme(){
   recordRotationHistory("extreme_reset",old,old,"Established Starter protection reset after a manual extreme-event decision.");
   persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
 }
+function coachDialogueForOffice(goal,pr){
+  ensureNBARotationStart();
+  const trust=Number(state.meters.coach||0),r=state.rotationProgress;
+  if(r.starterProveIt?.active)return "You've earned a look with the starters. Now show me you can hold it over this next evaluation.";
+  if(r.establishedStarter&&trust>=70)return "You've earned your place with the first group. I'm not looking to take that away — I'm looking for consistency.";
+  if(trust<35)return goal?.why||"I need to know I can trust you when I put you on the floor.";
+  if(pr?.done)return "That's what I asked for. Keep stacking nights like that and your opportunity will grow.";
+  return goal?.why||"Keep giving us dependable minutes.";
+}
 function renderCoachOffice(){
-  const card=document.getElementById("coachOfficeCard"),body=document.getElementById("coachOfficeBody");if(!card||!body)return;
-  if(state.preNBA?.stage!=="nba"){card.style.display="none";return;}
-  card.style.display="block";ensureNBARotationStart();
-  const goal=assignCoachGoal(false),pr=coachGoalProgress(goal),until=Math.max(0,(goal?.games||3)-pr.gamesPlayed),role=rotationRoleForMinutes(state.rotationProgress.minutes),rec=coachGoalRecentRecord();
-  const hist=(state.rotationProgress.history||[]).slice(0,6);
-  const historyHtml=hist.length?hist.map(x=>`<div class="small" style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08)"><b>${x.from===x.to?`${x.to} MPG`:`${x.from} → ${x.to} MPG`}</b> — ${escapeHtml(x.reason||x.type||"Rotation update")}</div>`).join(""):`<div class="small">No rotation changes yet.</div>`;
-  body.innerHTML=`<div class="note"><b>COACH:</b> “${escapeHtml(goal?.why||"Keep giving us dependable minutes.")}”</div>
-    <div class="grid3" style="margin-top:12px">
-      <div class="mini"><span>Current Role</span><b>${escapeHtml(role)}</b></div>
-      <div class="mini"><span>Recommended Minutes</span><b>${state.rotationProgress.minutes} MPG</b></div>
-      <div class="mini"><span>Coach Trust</span><b>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</b></div>
+  const room=document.getElementById("coachoffice"),body=document.getElementById("coachOfficeBody"),dialogue=document.getElementById("coachDialogue");
+  if(!room||!body)return;
+  if(state.preNBA?.stage!=="nba"){
+    body.innerHTML=`<div class="coachSection"><div class="coachSectionLabel">COACH'S OFFICE</div><div class="coachGoalTitle">NBA rotation meetings unlock once you reach the league.</div></div>`;
+    if(dialogue)dialogue.textContent="Handle what's in front of you. We'll talk rotation when you're on an NBA roster.";
+    return;
+  }
+  ensureNBARotationStart();
+  const goal=assignCoachGoal(false),pr=coachGoalProgress(goal),until=Math.max(0,(goal?.games||3)-pr.gamesPlayed);
+  const role=rotationRoleForMinutes(state.rotationProgress.minutes),rec=coachGoalRecentRecord(),hist=(state.rotationProgress.history||[]).slice(0,5);
+  if(dialogue)dialogue.textContent=coachDialogueForOffice(goal,pr);
+  const progressPct=goal?Math.max(0,Math.min(100,Math.round((pr.done?1:(Number(pr.value||0)/Math.max(1,Number(goal.target||1))))*100))):0;
+  const historyHtml=hist.length?hist.map(x=>`<div class="coachHistoryRow"><b>${x.from===x.to?`${x.to} MPG`:`${x.from} → ${x.to} MPG`}</b><br>${escapeHtml(x.reason||x.type||"Rotation update")}</div>`).join(""):`<div class="coachHistoryRow">No rotation changes yet. You're starting from here.</div>`;
+  body.innerHTML=`
+    <div class="coachStatusGrid">
+      <div class="coachStatusBox"><span>Your Role</span><strong>${escapeHtml(role)}</strong></div>
+      <div class="coachStatusBox"><span>My Rotation For You</span><strong>${state.rotationProgress.minutes} MPG</strong></div>
+      <div class="coachStatusBox"><span>Coach Trust</span><strong>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</strong></div>
     </div>
-    <div class="note" style="margin-top:12px"><b>STARTER STATUS</b><br>${escapeHtml(coachStarterStatusText())}</div>
-    ${goal?`<div class="note" style="margin-top:12px"><b>COACH GOAL • ${escapeHtml(goal.difficulty||"Standard")} • ${escapeHtml(goal.category)}</b><br><strong>${escapeHtml(goal.title)}</strong><br>${escapeHtml(goal.text)}<br>
-    <span class="small">Progress: <b>${escapeHtml(pr.label)}</b> • ${until?`${until} game${until===1?"":"s"} left`:"Evaluation due"} • Assigned at ${goal.assignedMinutes} MPG</span></div>`:""}
-    <div class="small" style="margin-top:10px">Recent Coach Goals: ${rec.wins}/${rec.n||0} completed. Actual performance drives rotation first; Coach Goals and Coach Trust influence how quickly your opportunity grows or shrinks.</div>
-    <div class="note" style="margin-top:12px"><b>ROTATION HISTORY</b>${historyHtml}</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-      <button type="button" onclick="manualCoachMinutesOverride()">Adjust Minutes Manually</button>
-      ${state.rotationProgress.establishedStarter?`<button type="button" onclick="resetEstablishedStarterExtreme()">Extreme Event: Reset Starter Protection</button>`:""}
+    <div class="coachSection">
+      <div class="coachSectionLabel">WHERE YOU STAND</div>
+      <div class="coachGoalTitle">${escapeHtml(coachStarterStatusText())}</div>
+      <div class="coachMeta">${state.rotationProgress.establishedStarter?"You've earned starter protection. Ordinary coach evaluations cannot push you below 28 MPG.":state.rotationProgress.starterProveIt?.active?"Hold starter-level minutes through this evaluation to establish yourself permanently.":"Keep earning opportunity. Once you reach 32+ MPG, you'll enter a Starter Prove-It evaluation."}</div>
+    </div>
+    ${goal?`<div class="coachSection">
+      <div class="coachSectionLabel">${escapeHtml(goal.difficulty||"Standard")} EXPECTATION • ${escapeHtml(goal.category)}</div>
+      <div class="coachGoalTitle">${escapeHtml(goal.title)}</div>
+      <div class="coachGoalText">${escapeHtml(goal.text)}</div>
+      <div class="coachProgress"><div class="coachProgressFill" style="width:${progressPct}%"></div></div>
+      <div class="coachMeta"><b>${escapeHtml(pr.label)}</b> • ${until?`${until} game${until===1?"":"s"} remaining`:"Evaluation due"}<br>Assigned when you were playing ${goal.assignedMinutes} MPG.</div>
+    </div>`:""}
+    <div class="coachSection">
+      <div class="coachSectionLabel">COACH'S NOTES</div>
+      <div class="coachGoalText">${rec.n?`You've completed ${rec.wins} of your last ${rec.n} Coach Goals.`:"This is our first formal goal review."}</div>
+      <div class="coachMeta">Your actual play comes first. Goals and Coach Trust affect how quickly I expand or trim your opportunity.</div>
+    </div>
+    <div class="coachSection">
+      <div class="coachSectionLabel">ROTATION FILE</div>
+      ${historyHtml}
+    </div>
+    <div class="coachOfficeActions">
+      <button type="button" class="primary" onclick="leaveCoachOffice()">END MEETING</button>
+      <button type="button" onclick="manualCoachMinutesOverride()">Manual Coach Decision</button>
+      ${state.rotationProgress.establishedStarter?`<button type="button" onclick="resetEstablishedStarterExtreme()">Extreme Event Reset</button>`:""}
     </div>`;
 }
 function openCoachOffice(){
-  openTab("career");if(typeof renderCoachOffice==="function")renderCoachOffice();
-  setTimeout(()=>document.getElementById("coachOfficeCard")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
+  openTab("coachoffice");
+  renderCoachOffice();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function leaveCoachOffice(){
+  openTab("career");
 }
 
 function rotationCoachMessage(change){
@@ -4350,6 +4455,7 @@ function openTab(tabId){
   const btn=document.querySelector(`nav button[data-tab="${tabId}"]`);
   if(btn) btn.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
   if(tabId==="stats" && typeof renderStats==="function") renderStats();
+  if(tabId==="coachoffice" && typeof renderCoachOffice==="function") renderCoachOffice();
   if(tabId==="career" && typeof updateK11Hub==="function") updateK11Hub();
   if(tabId==="insider") markInsiderRead();
   window.scrollTo({top:0,behavior:"smooth"});
