@@ -514,6 +514,49 @@ body:not(.career-home) #k11Hub{display:none!important}
 }
 </style>
 
+
+<style id="v49CoachMeetingStyles">
+.coachMeetingStage{min-height:430px;padding:10px 4px 4px}
+.coachMeetingScene{display:flex;flex-direction:column;justify-content:space-between;min-height:400px}
+.coachMeetingTalk{display:grid;grid-template-columns:58px 1fr;gap:16px;align-items:start;padding:18px 4px 28px}
+.coachMeetingTalk .coachPortrait{width:58px;height:58px}
+.coachMeetingKicker{font-size:10px;letter-spacing:1.8px;color:#d6ff31;font-weight:900;margin-bottom:7px}
+.coachMeetingLine{font-size:23px;line-height:1.4;color:#fff;font-weight:700}
+.coachMeetingFooter{border-top:1px solid #343a3d;padding-top:18px}
+.coachContinue{width:100%;background:#d6ff31!important;color:#080a0b!important;border:0!important;border-radius:3px!important;padding:15px 18px!important;font-weight:900!important;letter-spacing:.7px}
+.coachRevealGoal{margin-top:18px;padding:18px;background:#0c120d;border-left:4px solid #d6ff31;border-radius:5px}
+.coachRevealGoal .big{font-size:23px;font-weight:900;color:#fff;margin:5px 0}
+.coachOverviewHeader{padding-bottom:14px;margin-bottom:10px}
+.coachOverviewHeader .coachDialogue{font-size:17px;color:#c8ced1;font-weight:600}
+.coachHeroGoal{padding:18px;margin:12px 0 16px;background:linear-gradient(135deg,#111812,#0b100c);border:1px solid #354137;border-left:4px solid #d6ff31;border-radius:6px}
+.coachHeroGoal .eyebrow{font-size:10px;letter-spacing:1.7px;color:#d6ff31;font-weight:900}
+.coachHeroGoal h3{font-size:25px;line-height:1.15;margin:7px 0 5px;color:#fff}
+.coachHeroGoal .objective{font-size:17px;color:#e8ecee}
+.coachStatusStrip{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #343b3e;border-radius:5px;overflow:hidden;background:#0b0f11;margin-bottom:14px}
+.coachStatusStrip>div{padding:12px 10px;border-right:1px solid #343b3e}
+.coachStatusStrip>div:last-child{border-right:0}
+.coachStatusStrip span{display:block;font-size:9px;letter-spacing:1.2px;color:#8f999e;text-transform:uppercase;margin-bottom:5px}
+.coachStatusStrip b{display:block;font-size:14px;color:#fff;line-height:1.2}
+.coachRoleProgress{padding:14px 2px;border-top:1px solid #303638;border-bottom:1px solid #303638;margin:10px 0}
+.coachRoleProgress .label,.coachNoteQuiet .label{font-size:10px;letter-spacing:1.5px;color:#9ba5aa;font-weight:900;margin-bottom:5px}
+.coachRoleProgress strong{font-size:17px;color:#fff}
+.coachRoleProgress .next{font-size:13px;color:#9da7ab;margin-top:4px}
+.coachNoteQuiet{margin:16px 0;padding:2px 4px 2px 14px;border-left:2px solid #5d686d}
+.coachNoteQuiet blockquote{margin:0;color:#c7ced1;font-size:15px;line-height:1.5;font-style:italic}
+.coachHistoryToggle{width:100%;display:flex;justify-content:space-between;align-items:center;background:#111619!important;border:1px solid #343c3f!important;color:#e9edef!important;border-radius:4px!important;padding:13px 14px!important;font-weight:800!important}
+.coachHistoryPanel{display:none;padding:4px 12px 10px;background:#0c1012;border:1px solid #343c3f;border-top:0}
+.coachHistoryPanel.open{display:block}
+@media(max-width:600px){
+ .coachMeetingLine{font-size:20px}
+ .coachMeetingTalk{grid-template-columns:48px 1fr;gap:12px}
+ .coachMeetingTalk .coachPortrait{width:48px;height:48px}
+ .coachStatusStrip{grid-template-columns:1fr 1fr 1fr}
+ .coachStatusStrip>div{padding:10px 7px}
+ .coachStatusStrip b{font-size:12px}
+ .coachHeroGoal h3{font-size:22px}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -608,14 +651,17 @@ body:not(.career-home) #k11Hub{display:none!important}
         <small>ROTATION • DEVELOPMENT • EXPECTATIONS</small>
       </div>
       <div class="coachOfficeDesk">
-        <div class="coachConversation">
-          <div class="coachPortrait">HC</div>
-          <div>
-            <div class="coachSpeaker">COACH</div>
-            <div id="coachDialogue" class="coachDialogue">Come in. Let's talk about your role.</div>
+        <div id="coachMeetingStage" class="coachMeetingStage" style="display:none"></div>
+        <div id="coachOfficeOverview">
+          <div class="coachConversation coachOverviewHeader">
+            <div class="coachPortrait">HC</div>
+            <div>
+              <div class="coachSpeaker">COACH'S OFFICE</div>
+              <div id="coachDialogue" class="coachDialogue">Here's where things stand.</div>
+            </div>
           </div>
+          <div id="coachOfficeBody"></div>
         </div>
-        <div id="coachOfficeBody"></div>
       </div>
     </div>
   </div>
@@ -1911,6 +1957,9 @@ if(!Array.isArray(state.coachGoals.history)) state.coachGoals.history=[];
 if(!Array.isArray(state.coachGoals.recentKeys)) state.coachGoals.recentKeys=[];
 if(!Array.isArray(state.coachGoals.reviewResults)) state.coachGoals.reviewResults=[];
 if(state.coachGoals.serial===undefined) state.coachGoals.serial=0;
+if(!state.coachMeeting) state.coachMeeting={seenKey:"",firstMeetingSeen:false};
+if(state.coachMeeting.seenKey===undefined) state.coachMeeting.seenKey="";
+if(state.coachMeeting.firstMeetingSeen===undefined) state.coachMeeting.firstMeetingSeen=false;
 if(!state.shoeCareer) state.shoeCareer={signedBrand:"",offers:[],customShoe:false,signatureShoe:false,signedSeason:null,signedDate:null};
 if(!state.shoeCareer.offers) state.shoeCareer.offers=[];
 if(!state.schemaVersion) state.schemaVersion=1;
@@ -2949,70 +2998,175 @@ function resetEstablishedStarterExtreme(){
   recordRotationHistory("extreme_reset",old,old,"Established Starter protection reset after a manual extreme-event decision.");
   persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
 }
-function coachDialogueForOffice(goal,pr){
-  ensureNBARotationStart();
-  const trust=Number(state.meters.coach||0),r=state.rotationProgress;
-  if(r.starterProveIt?.active)return "You've earned a look with the starters. Now show me you can hold it over this next evaluation.";
-  if(r.establishedStarter&&trust>=70)return "You've earned your place with the first group. I'm not looking to take that away — I'm looking for consistency.";
-  if(trust<35)return goal?.why||"I need to know I can trust you when I put you on the floor.";
-  if(pr?.done)return "That's what I asked for. Keep stacking nights like that and your opportunity will grow.";
-  return goal?.why||"Keep giving us dependable minutes.";
+
+function coachNextRoleInfo(m){
+  m=Number(m||10);
+  if(m<16)return{role:"Bench Player",at:16};
+  if(m<20)return{role:"Rotation Player",at:20};
+  if(m<25)return{role:"Major Rotation",at:25};
+  if(m<29)return{role:"Starter Consideration",at:29};
+  if(m<32)return{role:"Regular Starter Prove-It",at:32};
+  return{role:"Established Starter",at:32};
 }
-function renderCoachOffice(){
-  const room=document.getElementById("coachoffice"),body=document.getElementById("coachOfficeBody"),dialogue=document.getElementById("coachDialogue");
-  if(!room||!body)return;
-  if(state.preNBA?.stage!=="nba"){
-    body.innerHTML=`<div class="coachSection"><div class="coachSectionLabel">COACH'S OFFICE</div><div class="coachGoalTitle">NBA rotation meetings unlock once you reach the league.</div></div>`;
-    if(dialogue)dialogue.textContent="Handle what's in front of you. We'll talk rotation when you're on an NBA roster.";
-    return;
-  }
+function coachMeetingEvent(){
   ensureNBARotationStart();
-  const goal=assignCoachGoal(false),pr=coachGoalProgress(goal),until=Math.max(0,(goal?.games||3)-pr.gamesPlayed);
-  const role=rotationRoleForMinutes(state.rotationProgress.minutes),rec=coachGoalRecentRecord(),hist=(state.rotationProgress.history||[]).slice(0,5);
-  if(dialogue)dialogue.textContent=coachDialogueForOffice(goal,pr);
-  const progressPct=goal?Math.max(0,Math.min(100,Math.round((pr.done?1:(Number(pr.value||0)/Math.max(1,Number(goal.target||1))))*100))):0;
-  const historyHtml=hist.length?hist.map(x=>`<div class="coachHistoryRow"><b>${x.from===x.to?`${x.to} MPG`:`${x.from} → ${x.to} MPG`}</b><br>${escapeHtml(x.reason||x.type||"Rotation update")}</div>`).join(""):`<div class="coachHistoryRow">No rotation changes yet. You're starting from here.</div>`;
+  const r=state.rotationProgress,goal=state.coachGoals?.active||assignCoachGoal(false),lastGoal=state.coachGoals?.history?.[0],lastRot=r.history?.[0];
+  if(!state.coachMeeting)state.coachMeeting={seenKey:"",firstMeetingSeen:false};
+  if(!state.coachMeeting.firstMeetingSeen)return{key:"first",kind:"first",goal};
+  if(lastRot&&["milestone","prove_it","review","manual"].includes(lastRot.type)){
+    const key=`rot:${lastRot.type}:${lastRot.gameNo}:${lastRot.from}:${lastRot.to}`;
+    if(state.coachMeeting.seenKey!==key)return{key,kind:lastRot.type,rotation:lastRot,goal};
+  }
+  if(lastGoal){
+    const key=`goal:${lastGoal.id||lastGoal.title}:${lastGoal.finishedGameCount||0}:${lastGoal.result}`;
+    if(state.coachMeeting.seenKey!==key)return{key,kind:"goal_result",lastGoal,goal};
+  }
+  if(goal){
+    const key=`assignment:${goal.id}`;
+    if(state.coachMeeting.seenKey!==key)return{key,kind:"assignment",goal};
+  }
+  return null;
+}
+function coachMeetingLines(ev){
+  const r=state.rotationProgress,g=ev?.goal,rot=ev?.rotation,lg=ev?.lastGoal;
+  if(!ev)return[];
+  if(ev.kind==="first")return[
+    "Hey. Come in for a second.",
+    `Right now I've got you at ${r.minutes} minutes. You're going to have to earn every bit of the next opportunity.`,
+    g?`Here's what I want from you next: ${g.text}`:"Give me dependable minutes and we'll keep talking."
+  ];
+  if(ev.kind==="milestone")return[
+    "You've earned this.",
+    "You've proven you belong with the first group. I'm not evaluating you like a fringe rotation player anymore.",
+    "You're established now. That doesn't mean the expectations stop — it means they've changed."
+  ];
+  if(ev.kind==="prove_it")return[
+    rot?.reason?.includes("began")?"I'm giving you a look with the starters.":"We need to talk about that starter look.",
+    rot?.reason||"This next stretch matters.",
+    g?`For now, focus on this: ${g.text}`:"Keep your game steady."
+  ];
+  if(ev.kind==="review"){
+    const up=Number(rot?.to)>Number(rot?.from),down=Number(rot?.to)<Number(rot?.from);
+    return[
+      up?"You've earned a little more run.":down?"I'm trimming your minutes for now.":"I'm keeping your role where it is.",
+      rot?`I'm moving you from ${rot.from} to ${rot.to} minutes. ${rot.reason||""}`:"Your actual play is what drives this decision.",
+      g?`Now I want you focused on this: ${g.text}`:"Keep earning my trust."
+    ];
+  }
+  if(ev.kind==="goal_result"){
+    const excellent=lg?.result==="failed"&&Number(lg?.trustDelta||0)===0;
+    return[
+      lg?.result==="complete"?"That's what I asked for.":excellent?"You missed the specific target, but I saw the impact you made.":"You didn't get the assignment done.",
+      excellent?"I'm not going to punish a strong overall performance just because one box didn't get checked.":lg?.result==="complete"?"Keep stacking nights like that.":"The objective matters, but your overall play matters more.",
+      g?`Here's the next thing I want from you: ${g.text}`:"We'll evaluate it again after the next stretch."
+    ];
+  }
+  return[
+    "Hey. I want to give you something to focus on.",
+    g?.why||"Keep giving me dependable minutes.",
+    g?g.text:"Keep doing what you're doing."
+  ];
+}
+function showCoachMeeting(ev){
+  const stage=document.getElementById("coachMeetingStage"),overview=document.getElementById("coachOfficeOverview");
+  if(!stage||!overview)return;
+  const lines=coachMeetingLines(ev);stage.dataset.eventKey=ev.key;stage.dataset.step="0";
+  overview.style.display="none";stage.style.display="block";
+  renderCoachMeetingStep();
+}
+function renderCoachMeetingStep(){
+  const stage=document.getElementById("coachMeetingStage");if(!stage)return;
+  const ev=coachMeetingEventFromStage(stage.dataset.eventKey),lines=ev?coachMeetingLines(ev):[];
+  let step=Math.max(0,Number(stage.dataset.step||0));if(!lines.length){finishCoachMeeting();return;}
+  const last=step>=lines.length-1,g=ev?.goal;
+  stage.innerHTML=`<div class="coachMeetingScene">
+    <div class="coachMeetingTalk">
+      <div class="coachPortrait">HC</div>
+      <div><div class="coachMeetingKicker">COACH</div><div class="coachMeetingLine">${escapeHtml(lines[step])}</div>
+      ${last&&g?`<div class="coachRevealGoal"><div class="coachMeetingKicker">${escapeHtml(g.difficulty||"Standard")} EXPECTATION • ${escapeHtml(g.category||"")}</div><div class="big">${escapeHtml(g.title)}</div><div>${escapeHtml(g.text)}</div></div>`:""}</div>
+    </div>
+    <div class="coachMeetingFooter"><button type="button" class="coachContinue" onclick="${last?"finishCoachMeeting()":"advanceCoachMeeting()"}">${last?"VIEW MEETING SUMMARY":"CONTINUE ›"}</button></div>
+  </div>`;
+}
+function coachMeetingEventFromStage(key){
+  const ev=coachMeetingEvent();
+  if(ev&&ev.key===key)return ev;
+  // During an open conversation the underlying event can become "seen" only when finished,
+  // so normally this branch is not needed. Fall back to current assignment gracefully.
+  const goal=state.coachGoals?.active||assignCoachGoal(false);
+  return{key,kind:"assignment",goal};
+}
+function advanceCoachMeeting(){
+  const stage=document.getElementById("coachMeetingStage");if(!stage)return;
+  stage.dataset.step=String(Number(stage.dataset.step||0)+1);renderCoachMeetingStep();
+}
+function finishCoachMeeting(){
+  const stage=document.getElementById("coachMeetingStage"),overview=document.getElementById("coachOfficeOverview");if(!stage||!overview)return;
+  if(!state.coachMeeting)state.coachMeeting={seenKey:"",firstMeetingSeen:false};
+  state.coachMeeting.seenKey=stage.dataset.eventKey||state.coachMeeting.seenKey;
+  state.coachMeeting.firstMeetingSeen=true;
+  persist();stage.style.display="none";overview.style.display="block";renderCoachOfficeOverview();
+}
+function coachOfficeNote(goal){
+  const trust=Number(state.meters.coach||0),r=state.rotationProgress;
+  if(r.starterProveIt?.active)return "You've earned the opportunity. Now show me you can hold it.";
+  if(r.establishedStarter&&trust>=70)return "Your place is earned. Keep your standard where it belongs.";
+  if(trust<35)return "I need to know I can trust you when I put you on the floor.";
+  return goal?.why||"Keep giving me dependable minutes.";
+}
+function toggleCoachHistory(){
+  const panel=document.getElementById("coachHistoryPanel"),chev=document.getElementById("coachHistoryChevron");
+  if(!panel)return;const open=panel.classList.toggle("open");if(chev)chev.textContent=open?"⌃":"›";
+}
+function renderCoachOfficeOverview(){
+  const body=document.getElementById("coachOfficeBody"),dialogue=document.getElementById("coachDialogue");if(!body)return;
+  if(state.preNBA?.stage!=="nba"){body.innerHTML="";if(dialogue)dialogue.textContent="We'll talk rotation when you're on an NBA roster.";return;}
+  ensureNBARotationStart();
+  const goal=assignCoachGoal(false),pr=coachGoalProgress(goal),until=Math.max(0,(goal?.games||3)-pr.gamesPlayed),r=state.rotationProgress;
+  const next=coachNextRoleInfo(r.minutes),hist=(r.history||[]).slice(0,7);
+  if(dialogue)dialogue.textContent="Here's where things stand.";
+  const pct=goal?Math.max(0,Math.min(100,Math.round((pr.done?1:Number(pr.value||0)/Math.max(1,Number(goal.target||1)))*100))):0;
+  const historyHtml=hist.length?hist.map(x=>`<div class="coachHistoryRow"><b>${x.from===x.to?`${x.to} MPG`:`${x.from} → ${x.to} MPG`}</b><br>${escapeHtml(x.reason||"Rotation update")}</div>`).join(""):`<div class="coachHistoryRow">No rotation changes yet.</div>`;
   body.innerHTML=`
-    <div class="coachStatusGrid">
-      <div class="coachStatusBox"><span>Your Role</span><strong>${escapeHtml(role)}</strong></div>
-      <div class="coachStatusBox"><span>My Rotation For You</span><strong>${state.rotationProgress.minutes} MPG</strong></div>
-      <div class="coachStatusBox"><span>Coach Trust</span><strong>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</strong></div>
-    </div>
-    <div class="coachSection">
-      <div class="coachSectionLabel">WHERE YOU STAND</div>
-      <div class="coachGoalTitle">${escapeHtml(coachStarterStatusText())}</div>
-      <div class="coachMeta">${state.rotationProgress.establishedStarter?"You've earned starter protection. Ordinary coach evaluations cannot push you below 28 MPG.":state.rotationProgress.starterProveIt?.active?"Hold starter-level minutes through this evaluation to establish yourself permanently.":"Keep earning opportunity. Once you reach 32+ MPG, you'll enter a Starter Prove-It evaluation."}</div>
-    </div>
-    ${goal?`<div class="coachSection">
-      <div class="coachSectionLabel">${escapeHtml(goal.difficulty||"Standard")} EXPECTATION • ${escapeHtml(goal.category)}</div>
-      <div class="coachGoalTitle">${escapeHtml(goal.title)}</div>
-      <div class="coachGoalText">${escapeHtml(goal.text)}</div>
-      <div class="coachProgress"><div class="coachProgressFill" style="width:${progressPct}%"></div></div>
-      <div class="coachMeta"><b>${escapeHtml(pr.label)}</b> • ${until?`${until} game${until===1?"":"s"} remaining`:"Evaluation due"}<br>Assigned when you were playing ${goal.assignedMinutes} MPG.</div>
+    ${goal?`<div class="coachHeroGoal">
+      <div class="eyebrow">CURRENT ${escapeHtml(goal.difficulty||"Standard").toUpperCase()} EXPECTATION • ${escapeHtml(goal.category||"")}</div>
+      <h3>${escapeHtml(goal.title)}</h3><div class="objective">${escapeHtml(goal.text)}</div>
+      <div class="coachProgress"><div class="coachProgressFill" style="width:${pct}%"></div></div>
+      <div class="coachMeta"><b>${escapeHtml(pr.label)}</b> • ${until?`${until} game${until===1?"":"s"} remaining`:"Evaluation due"}</div>
     </div>`:""}
-    <div class="coachSection">
-      <div class="coachSectionLabel">COACH'S NOTES</div>
-      <div class="coachGoalText">${rec.n?`You've completed ${rec.wins} of your last ${rec.n} Coach Goals.`:"This is our first formal goal review."}</div>
-      <div class="coachMeta">Your actual play comes first. Goals and Coach Trust affect how quickly I expand or trim your opportunity.</div>
+    <div class="coachStatusStrip">
+      <div><span>Minutes</span><b>${r.minutes} MPG</b></div>
+      <div><span>Role</span><b>${escapeHtml(rotationRoleForMinutes(r.minutes))}</b></div>
+      <div><span>Trust</span><b>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</b></div>
     </div>
-    <div class="coachSection">
-      <div class="coachSectionLabel">ROTATION FILE</div>
-      ${historyHtml}
+    <div class="coachRoleProgress">
+      <div class="label">ROLE PROGRESS</div>
+      <strong>${escapeHtml(r.establishedStarter?"Established Starter":rotationRoleForMinutes(r.minutes))}</strong>
+      <div class="next">${r.establishedStarter?"Normal coach-evaluation floor: 28 MPG.":r.starterProveIt?.active?"Starter Prove-It is active. Hold the role through the evaluation.":`Next opportunity: ${escapeHtml(next.role)} at ${next.at} MPG.`}</div>
     </div>
+    <div class="coachNoteQuiet"><div class="label">COACH'S NOTE</div><blockquote>“${escapeHtml(coachOfficeNote(goal))}”</blockquote></div>
+    <button type="button" class="coachHistoryToggle" onclick="toggleCoachHistory()"><span>ROTATION HISTORY</span><span id="coachHistoryChevron">›</span></button>
+    <div id="coachHistoryPanel" class="coachHistoryPanel">${historyHtml}</div>
     <div class="coachOfficeActions">
       <button type="button" class="primary" onclick="leaveCoachOffice()">END MEETING</button>
       <button type="button" onclick="manualCoachMinutesOverride()">Manual Coach Decision</button>
-      ${state.rotationProgress.establishedStarter?`<button type="button" onclick="resetEstablishedStarterExtreme()">Extreme Event Reset</button>`:""}
+      ${r.establishedStarter?`<button type="button" onclick="resetEstablishedStarterExtreme()">Extreme Event Reset</button>`:""}
     </div>`;
+}
+function renderCoachOffice(){
+  const room=document.getElementById("coachoffice"),stage=document.getElementById("coachMeetingStage"),overview=document.getElementById("coachOfficeOverview");if(!room||!stage||!overview)return;
+  if(state.preNBA?.stage!=="nba"){stage.style.display="none";overview.style.display="block";renderCoachOfficeOverview();return;}
+  const activeMeeting=stage.style.display==="block"&&stage.dataset.eventKey;
+  if(activeMeeting)return;
+  renderCoachOfficeOverview();
 }
 function openCoachOffice(){
   openTab("coachoffice");
-  renderCoachOffice();
+  const ev=coachMeetingEvent();
+  if(ev)showCoachMeeting(ev);else{document.getElementById("coachMeetingStage").style.display="none";document.getElementById("coachOfficeOverview").style.display="block";renderCoachOfficeOverview();}
   window.scrollTo({top:0,behavior:"smooth"});
 }
-function leaveCoachOffice(){
-  openTab("career");
-}
+function leaveCoachOffice(){openTab("career");}
 
 function rotationCoachMessage(change){
   if(!change) return;
