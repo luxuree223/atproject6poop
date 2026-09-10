@@ -557,6 +557,33 @@ body:not(.career-home) #k11Hub{display:none!important}
 }
 </style>
 
+
+<style id="v50CareerPresentation">
+.k11CoachDestination{position:absolute;left:14px;right:14px;bottom:58px;z-index:4;display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;padding:10px 11px;background:linear-gradient(100deg,rgba(18,27,20,.98),rgba(7,10,9,.96));border:1px solid #455048;border-left:4px solid var(--k11-yellow);cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.42)}
+.k11CoachDestination:hover{border-color:var(--k11-yellow)}
+.k11CoachIcon{width:36px;height:36px;border:2px solid var(--k11-yellow);border-radius:50%;display:grid;place-items:center;color:var(--k11-yellow);font-size:12px;font-weight:1000}
+.k11CoachDestCopy span{display:block;color:#98a19d;font-size:7px;letter-spacing:1.4px;font-weight:900}.k11CoachDestCopy strong{display:block;color:#fff;font-size:14px;letter-spacing:.6px}.k11CoachDestCopy small{display:block;color:#aeb6b3;font-size:8px;margin-top:1px}.k11CoachDestination>b{color:var(--k11-yellow);font-size:9px}
+.k11CoachAssignment{grid-column:1/-1;display:none;align-items:center;justify-content:space-between;gap:10px;margin-top:7px;padding:11px 12px;background:#0c120e;border:1px solid #29352c;border-left:4px solid var(--k11-yellow);cursor:pointer}
+.k11CoachAssignment.show{display:flex}.k11CoachAssignment .eyebrow{display:block;color:var(--k11-yellow);font-size:8px;letter-spacing:1.2px;font-weight:1000}.k11CoachAssignment strong{display:block;color:#fff;font-size:14px;margin:2px 0}.k11CoachAssignment small{display:block;color:#aab3af;font-size:9px}.k11CoachAssignment>b{color:var(--k11-yellow);font-size:9px;white-space:nowrap}
+.gameCoachBrief{margin-top:14px;background:#0b0f0c;border:1px solid #303a32;border-radius:5px;overflow:hidden}
+.gameCoachBriefHead{display:flex;align-items:center;gap:10px;padding:11px 13px;border-bottom:1px solid #29312b;background:linear-gradient(90deg,rgba(214,255,49,.09),transparent)}
+.gameCoachBriefHead .hc{width:30px;height:30px;border:2px solid var(--k11-yellow);border-radius:50%;display:grid;place-items:center;color:var(--k11-yellow);font-size:9px;font-weight:1000}
+.gameCoachBriefHead span{display:block;color:#9aa39f;font-size:8px;letter-spacing:1.2px}.gameCoachBriefHead strong{display:block;color:#fff;font-size:13px}
+.gameCoachBriefGrid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #29312b}.gameCoachBriefGrid>div{padding:10px;border-right:1px solid #29312b}.gameCoachBriefGrid>div:last-child{border:0}.gameCoachBriefGrid span{display:block;color:#87918c;font-size:8px;text-transform:uppercase;letter-spacing:1px}.gameCoachBriefGrid b{display:block;color:#fff;font-size:12px;margin-top:3px}
+.gameCoachGoal{padding:12px 13px}.gameCoachGoal .label{color:var(--k11-yellow);font-size:8px;letter-spacing:1.3px;font-weight:1000}.gameCoachGoal strong{display:block;color:#fff;font-size:16px;margin:3px 0}.gameCoachGoal .goaltext{color:#d8ddda;font-size:13px}.gameCoachGoal .meta{color:#909a95;font-size:10px;margin-top:5px}
+.pregameMissionCard{background:linear-gradient(160deg,#171c1f,#0b0e10)!important;border-top:3px solid var(--k11-yellow)!important}
+.pregameMissionHeader{margin:-1px -1px 12px;padding:15px 17px;background:linear-gradient(90deg,#151b17,#0b0e10);border-bottom:1px solid #353d39}
+.pregameMissionHeader span{display:block;color:var(--k11-yellow);font-size:9px;letter-spacing:1.7px;font-weight:1000}.pregameMissionHeader strong{display:block;color:#fff;font-size:20px;letter-spacing:.7px;margin:2px 0}.pregameMissionHeader small{color:#99a29e;font-size:11px}
+.objectiveMission{display:grid;grid-template-columns:34px 1fr auto;gap:11px;align-items:center;padding:14px 4px;border-bottom:1px solid #30373a}.objectiveMission:last-child{border-bottom:0}
+.objectiveMission .objNum{width:30px;height:30px;border:1px solid #515a5e;border-radius:50%;display:grid;place-items:center;color:#aeb6b9;font-size:10px;font-weight:900}.objectiveMission .objType{color:var(--k11-yellow);font-size:8px;letter-spacing:1.4px;font-weight:1000}.objectiveMission .objText{color:#fff;font-size:15px;font-weight:700;line-height:1.3;margin-top:2px}.objectiveMission .objReward{color:#aeb6b8;font-size:10px;text-align:right}.objectiveMission .objReward b{display:block;color:var(--k11-yellow);font-size:12px}
+.objectiveMission input{width:26px;height:26px}
+@media(max-width:600px){
+ .k11CoachDestination{left:140px;right:6px;bottom:48px;padding:7px 7px;grid-template-columns:29px 1fr auto;gap:6px}.k11CoachIcon{width:27px;height:27px;font-size:9px}.k11CoachDestCopy strong{font-size:10px}.k11CoachDestCopy small{font-size:6px}.k11CoachDestCopy span{font-size:6px}
+ .gameCoachBriefGrid>div{padding:8px 7px}.gameCoachBriefGrid b{font-size:11px}
+ .objectiveMission{grid-template-columns:30px 1fr auto;gap:8px}.objectiveMission .objText{font-size:14px}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -608,6 +635,7 @@ body:not(.career-home) #k11Hub{display:none!important}
         <div><span>Before You Play</span><strong>PRE-GAME OBJECTIVES</strong><small id="k11ObjectiveHint">3 targets ready • tap to review</small></div>
         <b>VIEW →</b>
       </div>
+      <div id="k11CoachAssignment" class="k11CoachAssignment" onclick="openCoachOffice()" role="button" tabindex="0"></div>
     </div>
     <div class="k11PanelTitle">Next Game / Career Action <span class="k11TestFlag">CAREER HUB</span></div>
     <div class="k11Next">
@@ -623,7 +651,12 @@ body:not(.career-home) #k11Hub{display:none!important}
       <button type="button" class="removePhoto" onclick="removeK11PlayerPhoto()">Remove</button>
     </div>
     <div class="k11TeamStrip"><span>My Team</span><strong id="k11Team">FREE AGENT</strong></div>
-    <div class="k11Quick"><button onclick="openCoachOffice()">Coach's Office</button><button onclick="openTab('stats')">My Stats</button><button onclick="openTab('upgrades')">Upgrades</button></div>
+    <div class="k11CoachDestination" onclick="openCoachOffice()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCoachOffice();}">
+      <div class="k11CoachIcon">HC</div>
+      <div class="k11CoachDestCopy"><span>TEAM FACILITY</span><strong>COACH'S OFFICE</strong><small id="k11CoachHubHint">Meet with Coach • rotation, trust & expectations</small></div>
+      <b>ENTER ›</b>
+    </div>
+    <div class="k11Quick"><button onclick="openTab('stats')">My Stats</button><button onclick="openTab('upgrades')">Upgrades</button></div>
   </div>
 </div>
 
@@ -832,8 +865,8 @@ body:not(.career-home) #k11Hub{display:none!important}
 <section id="game" class="tab">
   <div class="card" id="currentGameCard"></div>
 
-  <div class="card" id="pregameObjectivesCard">
-    <h3>Pregame Objectives</h3>
+  <div class="card pregameMissionCard" id="pregameObjectivesCard">
+    <div class="pregameMissionHeader"><span>GAME PLAN</span><strong>PRE-GAME OBJECTIVES</strong><small>Three ways to earn extra SP tonight</small></div>
     <div id="gameObjectives"></div>
     <div class="row" style="margin-top:12px">
       <button class="secondary" onclick="generateObjectives()">Generate New Objectives</button>
@@ -2332,6 +2365,18 @@ function getNextKeyGame(){
   return eligible[0]||null;
 }
 
+function renderCareerHubCoachAssignment(){
+  const box=document.getElementById("k11CoachAssignment"),hint=document.getElementById("k11CoachHubHint");
+  if(!box)return;
+  if(state.preNBA?.stage!=="nba"){box.classList.remove("show");if(hint)hint.textContent="Rotation meetings unlock in the NBA";return;}
+  ensureNBARotationStart();
+  const goal=assignCoachGoal(false),gp=coachGoalProgress(goal),r=state.rotationProgress;
+  if(hint)hint.textContent=`${r.minutes} MPG • ${coachTrustLabel(state.meters.coach||0)}${coachMeetingEvent()?" • Coach wants to see you":""}`;
+  if(!goal){box.classList.remove("show");return;}
+  box.classList.add("show");
+  box.innerHTML=`<div><span class="eyebrow">FROM COACH • CURRENT EXPECTATION</span><strong>${escapeHtml(goal.title)}</strong><small>${escapeHtml(goal.text)} • ${escapeHtml(gp.label)}</small></div><b>OFFICE ›</b>`;
+}
+
 function renderCurrentGame(){
   const x=getUpcomingSchedule();
   if(x){
@@ -2394,11 +2439,16 @@ function renderObjectives(){
     ];
     persist();
   }
-  const themeLabels={normal:"Normal Game",key:"Key Game",matchup:"Matchup",christmas:"Christmas Showcase",nba_cup:"NBA Cup",nba_cup_final:"NBA Cup Finals",rivalry:"Rivalry",revenge:"Revenge",former:"Former Team",personal:"Personal"};
-  const banner=theme!=="normal"?`<div class="note" style="margin-bottom:12px"><b>${themeLabels[theme]||"Key Game"} objectives:</b> These are tailored to why this game matters. Special Key Game objectives are graded automatically from your box score and matchup points when applicable.</div>`:"";
-  const html=banner+state.objectives.map((o,i)=>`<div class="obj"><input id="obj${i}" type="checkbox"><div><b>${o.type}</b><div>${o.text}</div><div class="small">+100 SP</div></div></div>`).join("");
-  gameObjectives.innerHTML=html;
-  objectiveDisplay.innerHTML=state.objectives.map(o=>`<div class="obj"><div><b>${o.type}</b><div>${o.text}</div></div></div>`).join("");
+  const themeLabels={normal:"Tonight's Game Plan",key:"Key Game",matchup:"Matchup Focus",christmas:"Christmas Showcase",nba_cup:"NBA Cup",nba_cup_final:"NBA Cup Finals",rivalry:"Rivalry",revenge:"Revenge Game",former:"Former Team",personal:"Personal"};
+  const banner=theme!=="normal"?`<div class="note" style="margin-bottom:10px"><b>${themeLabels[theme]||"Key Game"}:</b> These objectives are tailored to why this game matters.</div>`:"";
+  const mission=(o,i,checkbox=true)=>`<div class="objectiveMission">
+    <div class="objNum">${i+1}</div>
+    <div>${checkbox?`<div style="display:flex;gap:9px;align-items:flex-start"><input id="obj${i}" type="checkbox"><div>`:"<div>"}
+      <div class="objType">${escapeHtml(o.type).toUpperCase()}</div><div class="objText">${escapeHtml(o.text)}</div>${checkbox?"</div></div>":"</div>"}
+    </div><div class="objReward"><span>REWARD</span><b>+100 SP</b></div>
+  </div>`;
+  gameObjectives.innerHTML=banner+state.objectives.map((o,i)=>mission(o,i,true)).join("");
+  objectiveDisplay.innerHTML=`<div class="pregameMissionHeader"><span>GAME PLAN</span><strong>${escapeHtml(themeLabels[theme]||"PRE-GAME OBJECTIVES")}</strong><small>Complete what you can. Every target is worth +100 SP.</small></div>`+state.objectives.map((o,i)=>mission(o,i,false)).join("");
   updateMatchupPointsVisibility();
 }
 function updateMatchupPointsVisibility(){
@@ -3105,7 +3155,7 @@ function finishCoachMeeting(){
   if(!state.coachMeeting)state.coachMeeting={seenKey:"",firstMeetingSeen:false};
   state.coachMeeting.seenKey=stage.dataset.eventKey||state.coachMeeting.seenKey;
   state.coachMeeting.firstMeetingSeen=true;
-  persist();stage.style.display="none";overview.style.display="block";renderCoachOfficeOverview();
+  persist();stage.style.display="none";overview.style.display="block";renderCoachOfficeOverview();renderCareerHubCoachAssignment();
 }
 function coachOfficeNote(goal){
   const trust=Number(state.meters.coach||0),r=state.rotationProgress;
@@ -3189,13 +3239,16 @@ function renderRotationStatus(){
   const r=state.rotationProgress;
   const until=Math.max(0,3-(state.games.length-r.lastEvalGame));
   const goal=assignCoachGoal(false),gp=coachGoalProgress(goal);
-  return `<div class="note" style="margin-top:12px"><b>COACH ROTATION • ${r.role}</b><br>
-    Recommended MyNBA minutes: <b>${r.minutes} MPG</b><br>
-    ${goal?`<b>Coach Goal:</b> ${escapeHtml(goal.title)} • ${escapeHtml(gp.label)}<br>`:""}
-    <span class="small">Coach reviews your role every 3 games using recent teammate-grade performance, winning, Coach Trust and your Coach Goal.${until?` Next review in ${until} game${until===1?"":"s"}.`:" Review due after this game."}</span>
+  return `<div class="gameCoachBrief">
+    <div class="gameCoachBriefHead"><div class="hc">HC</div><div><span>COACH'S GAME PLAN</span><strong>${escapeHtml(r.role)}</strong></div></div>
+    <div class="gameCoachBriefGrid">
+      <div><span>Rotation</span><b>${r.minutes} MPG</b></div>
+      <div><span>Trust</span><b>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</b></div>
+      <div><span>Review</span><b>${until?`${until} game${until===1?"":"s"}`:"Due"}</b></div>
+    </div>
+    ${goal?`<div class="gameCoachGoal"><div class="label">${escapeHtml((goal.difficulty||"Standard").toUpperCase())} COACH EXPECTATION</div><strong>${escapeHtml(goal.title)}</strong><div class="goaltext">${escapeHtml(goal.text)}</div><div class="meta">${escapeHtml(gp.label)} • Assigned at ${goal.assignedMinutes} MPG</div></div>`:""}
   </div>`;
 }
-
 function nbaMinutesSPMultiplier(minutes){
   const mpg=Number(minutes||10);
   if(mpg<=10) return 0.75;
@@ -4596,7 +4649,7 @@ function renderAll(){
   if(document.getElementById("pedYears") && pedYears.value==="") pedYears.value=Math.max(0,(state.player.season||1)-1);
   if(document.getElementById("coachBaselinePreview")) previewCoachBaseline();
   gMonth.value=state.careerDate.month; gYear.value=state.careerDate.year; gDay.value="";
-  renderMeters(); renderPrivileges(); renderRatings(); renderSchedule(); renderCoachOffice(); renderSpecialEvents(); renderStats(); renderCurrentGame(); renderObjectives(); renderUpgrades(); renderMilestones(); renderHistory(); renderMedia(); renderInsider(); renderCombineEntryButton(); renderRewards(); renderShoeCareer(); renderContracts();
+  renderMeters(); renderPrivileges(); renderRatings(); renderSchedule(); renderCareerHubCoachAssignment(); renderCoachOffice(); renderSpecialEvents(); renderStats(); renderCurrentGame(); renderObjectives(); renderUpgrades(); renderMilestones(); renderHistory(); renderMedia(); renderInsider(); renderCombineEntryButton(); renderRewards(); renderShoeCareer(); renderContracts();
   bindLiveCareerInputs(); bindSpecialEventButton(); bindManualCareerEventButton();
   if(typeof renderK11PlayerPhoto==="function") renderK11PlayerPhoto();
   if(typeof updateK11Hub==="function") updateK11Hub();
