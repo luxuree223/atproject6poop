@@ -533,8 +533,13 @@ body:not(.career-home) #k11Hub{display:none!important}
       <button type="button" class="removePhoto" onclick="removeK11PlayerPhoto()">Remove</button>
     </div>
     <div class="k11TeamStrip"><span>My Team</span><strong id="k11Team">FREE AGENT</strong></div>
-    <div class="k11Quick"><button onclick="openTab('stats')">My Stats</button><button onclick="openTab('upgrades')">Upgrades</button></div>
+    <div class="k11Quick"><button onclick="openCoachOffice()">Coach's Office</button><button onclick="openTab('stats')">My Stats</button><button onclick="openTab('upgrades')">Upgrades</button></div>
   </div>
+</div>
+
+<div class="card" id="coachOfficeCard" style="display:none">
+  <h2>Coach's Office</h2>
+  <div id="coachOfficeBody"></div>
 </div>
 
 <div class="card" id="webAppBanner">
@@ -1825,12 +1830,19 @@ if(state.lastTeam===undefined) state.lastTeam=state.player?.team||"";
 if(!state.accomplishmentLog) state.accomplishmentLog=[];
 if(!state.contractHistory) state.contractHistory=[];
 if(!state.streakRewards) state.streakRewards={};
-if(!state.rotationProgress) state.rotationProgress={minutes:10,role:"Bench",lastEvalGame:0,lastChange:0,lastReason:"NBA role begins",history:[]};
+if(!state.rotationProgress) state.rotationProgress={minutes:10,role:"Rookie / Low-Minute Bench",lastEvalGame:0,lastChange:0,lastReason:"NBA role begins",history:[],establishedStarter:false,starterProveIt:null};
 if(state.rotationProgress.minutes===undefined) state.rotationProgress.minutes=10;
-if(!state.rotationProgress.role) state.rotationProgress.role="Bench";
+if(!state.rotationProgress.role) state.rotationProgress.role="Rookie / Low-Minute Bench";
 if(state.rotationProgress.lastEvalGame===undefined) state.rotationProgress.lastEvalGame=0;
 if(state.rotationProgress.lastChange===undefined) state.rotationProgress.lastChange=0;
 if(!Array.isArray(state.rotationProgress.history)) state.rotationProgress.history=[];
+if(state.rotationProgress.establishedStarter===undefined) state.rotationProgress.establishedStarter=false;
+if(state.rotationProgress.starterProveIt===undefined) state.rotationProgress.starterProveIt=null;
+if(!state.coachGoals) state.coachGoals={active:null,history:[],serial:0,recentKeys:[],reviewResults:[]};
+if(!Array.isArray(state.coachGoals.history)) state.coachGoals.history=[];
+if(!Array.isArray(state.coachGoals.recentKeys)) state.coachGoals.recentKeys=[];
+if(!Array.isArray(state.coachGoals.reviewResults)) state.coachGoals.reviewResults=[];
+if(state.coachGoals.serial===undefined) state.coachGoals.serial=0;
 if(!state.shoeCareer) state.shoeCareer={signedBrand:"",offers:[],customShoe:false,signatureShoe:false,signedSeason:null,signedDate:null};
 if(!state.shoeCareer.offers) state.shoeCareer.offers=[];
 if(!state.schemaVersion) state.schemaVersion=1;
@@ -2519,70 +2531,384 @@ function showPostgameRewardPopup(details){
 }
 
 
+
+
+
+function coachGoalWindowForMinutes(mpg){
+  mpg=Number(mpg||10);
+  if(mpg<=15)return{tier:"Rookie / Low-Minute Bench",games:3,scale:.55};
+  if(mpg<=19)return{tier:"Bench Player",games:3,scale:.72};
+  if(mpg<=24)return{tier:"Rotation Player",games:3,scale:.90};
+  if(mpg<=28)return{tier:"Major Rotation",games:3,scale:1.05};
+  if(mpg<=31)return{tier:"Starter Consideration",games:3,scale:1.18};
+  return{tier:"Regular Starter",games:3,scale:1.35};
+}
 function rotationRoleForMinutes(m){
-  if(m>=32) return "Starter / Heavy Minutes";
-  if(m>=28) return "Starter Consideration";
-  if(m>=22) return "Major Rotation";
-  if(m>=16) return "Rotation Player";
-  return "Bench";
+  m=Number(m||10);
+  if(m>=32)return"Regular Starter";
+  if(m>=29)return"Starter Consideration";
+  if(m>=25)return"Major Rotation";
+  if(m>=20)return"Rotation Player";
+  if(m>=16)return"Bench Player";
+  return"Rookie / Low-Minute Bench";
+}
+function coachRoleFloor(role){
+  return {"Rookie / Low-Minute Bench":10,"Bench Player":16,"Rotation Player":20,
+    "Major Rotation":25,"Starter Consideration":29,"Regular Starter":32}[role]||10;
+}
+function coachRoleCeiling(role){
+  return {"Rookie / Low-Minute Bench":15,"Bench Player":19,"Rotation Player":24,
+    "Major Rotation":28,"Starter Consideration":31,"Regular Starter":38}[role]||15;
+}
+function coachEstablishedRole(){
+  ensureNBARotationStart();
+  return rotationRoleForMinutes(state.rotationProgress?.minutes||10);
+}
+function coachTrustLabel(v){
+  v=Number(v||0);
+  if(v>=85)return"Coach's Confidence";
+  if(v>=70)return"High Trust";
+  if(v>=55)return"Trusted Rotation Player";
+  if(v>=35)return"Building Trust";
+  return"Low Trust";
+}
+function coachGoalRecentAverages(){
+  const gs=(state.games||[]).slice(0,3);
+  const avg=k=>gs.length?gs.reduce((a,g)=>a+Number(g.stats?.[k]||0),0)/gs.length:0;
+  return {n:gs.length,pts:avg("pts"),reb:avg("reb"),ast:avg("ast"),to:avg("to"),pf:avg("pf"),
+    stl:avg("stl"),blk:avg("blk"),fgm:avg("fgm"),fga:avg("fga"),
+    grade:gs.length?gs.reduce((a,g)=>a+Number(g.autoGradeScore||50),0)/gs.length:0,
+    matchup:gs.length?gs.reduce((a,g)=>a+Number(g.stats?.matchupPerformance||3),0)/gs.length:3};
+}
+function scoreToGrade(score){
+  score=Number(score||0);
+  if(score>=95)return"A+";if(score>=90)return"A";if(score>=86)return"A-";if(score>=82)return"B+";
+  if(score>=77)return"B";if(score>=72)return"B-";if(score>=68)return"C+";if(score>=63)return"C";
+  if(score>=58)return"C-";if(score>=53)return"D+";if(score>=48)return"D";if(score>=43)return"D-";return"F";
+}
+function coachGoalKey(g){return `${g.type}:${g.title}`;}
+function coachGoalDifficultyBonus(goal,passed){
+  if(!passed)return 0;
+  return goal?.difficulty==="Challenge"?2:0;
+}
+function coachGoalTemplatePool(){
+  ensureNBARotationStart();
+  const mpg=Number(state.rotationProgress?.minutes||10), w=coachGoalWindowForMinutes(mpg), a=coachGoalRecentAverages();
+  const pos=(state.player?.position||"SF").toUpperCase(), big=/PF|C/.test(pos), guard=/PG|SG/.test(pos);
+  const singlePts=mpg<=10?5:mpg<=15?7:mpg<=19?9:mpg<=24?11:mpg<=28?13:mpg<=31?15:18;
+  const singleAst=mpg<=15?2:mpg<=24?3:mpg<=31?4:5;
+  const singleReb=mpg<=15?(big?4:3):mpg<=24?(big?6:4):mpg<=31?(big?8:6):(big?10:7);
+  const grade=mpg<=15?72:mpg<=19?72:mpg<=24?77:mpg<=28?77:mpg<=31?82:82;
+  const cumScale=w.scale;
+  const T=(base,min=1)=>Math.max(min,Math.round(base*cumScale));
+  const standard=(o)=>Object.assign({difficulty:"Standard"},o);
+  const challenge=(o)=>Object.assign({difficulty:"Challenge"},o);
+  const pool=[
+    standard({type:"one_pts",games:1,cat:"Scoring",title:"Give Us a Spark",target:singlePts,text:t=>`Score ${t}+ points next game.`,why:"Make something happen in the minutes you get."}),
+    standard({type:"one_ast",games:1,cat:"Playmaking",title:"Create For Others",target:singleAst,text:t=>`Record ${t}+ assists next game.`,why:"Keep the offense moving and create for your teammates."}),
+    standard({type:"one_reb",games:1,cat:"Rebounding",title:"Help On The Glass",target:singleReb,text:t=>`Grab ${t}+ rebounds next game.`,why:"Finish possessions and help us on the glass."}),
+    standard({type:"one_stock",games:1,cat:"Defense",title:"Defensive Impact",target:mpg<=19?1:2,text:t=>`Get ${t}+ combined steals + blocks next game.`,why:"I need to see you affect the game defensively."}),
+    standard({type:"one_to",games:1,cat:"Decision Making",title:"Take Care Of The Ball",target:mpg<=15?1:2,text:t=>`Commit no more than ${t} turnover${t===1?"":"s"} next game.`,why:"Value every possession."}),
+    standard({type:"one_grade",games:1,cat:"Consistency",title:"Give Us Productive Minutes",target:1,threshold:grade,text:(t,g)=>`Earn ${scoreToGrade(g)} or better next game.`,why:"Give me dependable minutes."}),
+    standard({type:"one_matchup",games:1,cat:"Defense",title:"Win Your Matchup",target:1,text:()=>`Win your matchup (rating 1 or 2) next game.`,why:"Win your assignment, not just the box score."}),
+    standard({type:"one_eff",games:1,cat:"Efficiency",title:"Efficient Night",target:50,text:t=>`Shoot ${t}%+ from the field next game (minimum 4 FGA).`,why:"Take good shots and make your opportunities count."}),
+    standard({type:"one_three",games:1,cat:"Shooting",title:"Stretch The Floor",target:mpg<=19?1:2,text:t=>`Make ${t}+ three-pointer${t===1?"":"s"} next game.`,why:"Punish the defense when they leave you open."}),
+    challenge({type:"pts_eff",games:1,cat:"Scoring",title:"Pick Your Spots",target:mpg<=19?8:mpg<=28?12:15,threshold:50,text:(t,g)=>`Score ${t}+ while shooting ${g}%+ FG next game.`,why:"Give us efficient scoring, not empty volume."}),
+    challenge({type:"ast_to",games:1,cat:"Playmaking",title:"Make The Right Read",target:singleAst,threshold:2,text:t=>`Record ${t}+ assists with no more than 2 turnovers next game.`,why:"Create offense without giving possessions away."}),
+    challenge({type:"dirty_work",games:1,cat:"Complete Game",title:"Do The Dirty Work",target:mpg<=19?5:mpg<=28?7:8,threshold:2,text:(t,g)=>`Grab ${t}+ rebounds and record ${g}+ steals/blocks next game.`,why:"Impact possessions that don't show up as scoring."}),
+    challenge({type:"complete_game",games:1,cat:"Complete Game",title:"Complete Game",target:mpg<=19?8:mpg<=28?10:12,threshold:mpg<=19?5:8,text:(t,g)=>`Score ${t}+ points and grab ${g}+ rebounds next game.`,why:"Show me you can contribute in more than one area."}),
+    standard({type:"cum_pts",games:3,cat:"Scoring",title:"Consistent Production",target:T(24,8),text:t=>`Score ${t} points over your next 3 games.`,why:"Keep giving us something every night."}),
+    standard({type:"cum_ast",games:3,cat:"Playmaking",title:"Create Over The Stretch",target:T(10,4),text:t=>`Record ${t} assists over your next 3 games.`,why:"Create consistently, not just for one night."}),
+    standard({type:"cum_reb",games:3,cat:"Rebounding",title:"Work The Glass",target:T(big?20:14,5),text:t=>`Grab ${t} rebounds over your next 3 games.`,why:"I want consistent work on the glass."}),
+    standard({type:"cum_stock",games:3,cat:"Defense",title:"Defensive Impact",target:T(6,3),text:t=>`Record ${t} combined steals + blocks over your next 3 games.`,why:"Impact the game defensively over the whole evaluation."}),
+    standard({type:"max_to",games:3,cat:"Decision Making",title:"Value Every Possession",target:mpg<=19?4:5,text:t=>`Commit no more than ${t} turnovers over your next 3 games.`,why:"Simplify your reads and value every possession."}),
+    standard({type:"grade_count",games:3,cat:"Consistency",title:"Earn Your Minutes",target:2,threshold:grade,text:(t,g)=>`Earn ${scoreToGrade(g)} or better in ${t} of your next 3 games.`,why:"Stack dependable performances."}),
+    standard({type:"matchup_count",games:3,cat:"Defense",title:"Consistent Defense",target:2,text:t=>`Win your matchup (rating 1 or 2) in ${t} of your next 3 games.`,why:"Win your assignment consistently."}),
+    standard({type:"no_bad_matchup",games:3,cat:"Defense",title:"No Easy Nights",target:3,text:()=>`Avoid a matchup rating of 4 or 5 in all 3 evaluation games.`,why:"Don't give your matchup an easy night."}),
+    standard({type:"no_bad_grade",games:3,cat:"Consistency",title:"No Bad Nights",target:3,threshold:68,text:()=>`Do not finish below C+ in any of your next 3 games.`,why:"I need a dependable floor from you."}),
+    standard({type:"maintain_grade",games:3,cat:"Consistency",title:"Maintain Your Level",target:2,threshold:77,text:()=>`Earn B or better in 2 of your next 3 games.`,why:"I don't have much for you right now. Keep doing what you're doing."})
+  ];
+  if(mpg>=25) pool.push(challenge({type:"role_combo",games:1,cat:"Role Expectation",title:"Lead The Second Unit",target:15,threshold:77,text:()=>`Score 15+ points AND earn B or better next game.`,why:"You're getting real minutes now. Lead the group when you're on the floor."}));
+  if(mpg>=29) pool.push(challenge({type:"role_matchup",games:1,cat:"Role Expectation",title:"Set The Tone",target:1,threshold:82,text:()=>`Earn B+ or better AND win your matchup next game.`,why:"You're pushing toward starter-level responsibility. Set the standard at both ends."}));
+  if(mpg>=32) pool.push(challenge({type:"starter_expectation",games:1,cat:"Role Expectation",title:"Set The Standard",target:1,threshold:82,text:()=>`Earn B+ or better next game OR win your matchup with 15+ points.`,why:"You're playing starter minutes. Give us starter-level impact."}));
+
+  // Strengthen contextual selection without creating a separate hidden rating system.
+  const weighted=[...pool];
+  const add=(types,n)=>{const picks=pool.filter(x=>types.includes(x.type));for(let i=0;i<n;i++)weighted.push(...picks);}
+  if(a.n){
+    if(a.to>=3)add(["max_to","one_to","ast_to"],3);
+    if(a.stl+a.blk<1)add(["cum_stock","one_stock","no_bad_matchup"],3);
+    if(a.ast<(guard?4:2.5))add(["cum_ast","one_ast","ast_to"],2);
+    if(a.reb<(big?6:3.5))add(["cum_reb","one_reb","dirty_work"],2);
+    if(a.grade<72)add(["grade_count","one_grade"],3);
+    if(a.grade>=82)add(["maintain_grade","role_matchup","starter_expectation"],2);
+    const fgPct=a.fga?100*a.fgm/a.fga:50;
+    if(a.fga>=4&&fgPct<42)add(["one_eff","pts_eff"],3);
+    if(a.matchup>=3.5)add(["one_matchup","matchup_count","no_bad_matchup"],3);
+  }
+  return weighted;
+}
+function assignCoachGoal(force=false){
+  if(state.preNBA?.stage!=="nba")return null;
+  ensureNBARotationStart();
+  if(!state.coachGoals)state.coachGoals={active:null,history:[],serial:0,recentKeys:[],reviewResults:[]};
+  if(!Array.isArray(state.coachGoals.recentKeys))state.coachGoals.recentKeys=[];
+  if(!Array.isArray(state.coachGoals.reviewResults))state.coachGoals.reviewResults=[];
+  if(state.coachGoals.active&&!force)return state.coachGoals.active;
+  const raw=coachGoalTemplatePool();
+  const recent=new Set(state.coachGoals.recentKeys.slice(0,8));
+  let pool=raw.filter(x=>!recent.has(coachGoalKey(x)));
+  if(!pool.length)pool=raw;
+  const pick=pool[Math.floor(Math.random()*pool.length)]||raw[0];
+  const start=(state.games||[]).length,id="cg_"+(++state.coachGoals.serial)+"_"+Date.now();
+  const goal={id,type:pick.type,category:pick.cat,title:pick.title,target:pick.target,threshold:pick.threshold||null,
+    text:pick.text(pick.target,pick.threshold),why:pick.why,difficulty:pick.difficulty||"Standard",
+    startGameCount:start,games:pick.games||3,progress:0,complete:false,evaluated:false,
+    assignedMinutes:Number(state.rotationProgress?.minutes||10),assignedRole:rotationRoleForMinutes(state.rotationProgress?.minutes||10),season:state.player?.season||1};
+  state.coachGoals.active=goal;
+  const key=coachGoalKey(goal);
+  state.coachGoals.recentKeys=[key,...state.coachGoals.recentKeys.filter(x=>x!==key)].slice(0,8);
+  return goal;
+}
+function coachGoalGames(goal){
+  if(!goal)return[];
+  const all=(state.games||[]).filter(g=>g&&Number(g.gameNo||0)>0),added=Math.max(0,all.length-Number(goal.startGameCount||0));
+  return all.slice(0,Math.min(goal.games||3,added)).reverse();
+}
+function coachGoalProgress(goal){
+  if(!goal)return{value:0,label:"0",done:false,gamesPlayed:0,performanceScore:0};
+  const gs=coachGoalGames(goal),sum=k=>gs.reduce((a,g)=>a+Number(g.stats?.[k]||0),0),last=gs[gs.length-1];
+  let value=0,done=false,label="";
+  switch(goal.type){
+    case"one_pts":value=Number(last?.stats?.pts||0);done=value>=goal.target;label=`${value}/${goal.target} PTS`;break;
+    case"one_ast":value=Number(last?.stats?.ast||0);done=value>=goal.target;label=`${value}/${goal.target} AST`;break;
+    case"one_reb":value=Number(last?.stats?.reb||0);done=value>=goal.target;label=`${value}/${goal.target} REB`;break;
+    case"one_stock":value=Number(last?.stats?.stl||0)+Number(last?.stats?.blk||0);done=value>=goal.target;label=`${value}/${goal.target} STL+BLK`;break;
+    case"one_to":value=Number(last?.stats?.to||0);done=gs.length>=1&&value<=goal.target;label=`${value}/${goal.target} max TO`;break;
+    case"one_grade":value=Number(last?.autoGradeScore||0);done=value>=goal.threshold;label=`${scoreToGrade(value)} / ${scoreToGrade(goal.threshold)}+`;break;
+    case"one_matchup":value=Number(last?.stats?.matchupPerformance||3);done=gs.length>=1&&value<=2;label=`Matchup ${value} / need 1–2`;break;
+    case"one_eff":{const fgm=Number(last?.stats?.fgm||0),fga=Number(last?.stats?.fga||0),pct=fga?Math.round(fgm/fga*100):0;value=pct;done=fga>=4&&pct>=goal.target;label=`${pct}% FG / ${goal.target}%+`;break;}
+    case"one_three":value=Number(last?.stats?.t3m||0);done=value>=goal.target;label=`${value}/${goal.target} 3PM`;break;
+    case"pts_eff":{const fgm=Number(last?.stats?.fgm||0),fga=Number(last?.stats?.fga||0),pct=fga?Math.round(fgm/fga*100):0,pts=Number(last?.stats?.pts||0);value=pts;done=pts>=goal.target&&fga>=4&&pct>=goal.threshold;label=`${pts}/${goal.target} PTS • ${pct}%/${goal.threshold}% FG`;break;}
+    case"ast_to":{const ast=Number(last?.stats?.ast||0),to=Number(last?.stats?.to||0);value=ast;done=ast>=goal.target&&to<=2;label=`${ast}/${goal.target} AST • ${to}/2 max TO`;break;}
+    case"dirty_work":{const reb=Number(last?.stats?.reb||0),stock=Number(last?.stats?.stl||0)+Number(last?.stats?.blk||0);value=reb;done=reb>=goal.target&&stock>=goal.threshold;label=`${reb}/${goal.target} REB • ${stock}/${goal.threshold} STL+BLK`;break;}
+    case"complete_game":{const pts=Number(last?.stats?.pts||0),reb=Number(last?.stats?.reb||0);value=pts;done=pts>=goal.target&&reb>=goal.threshold;label=`${pts}/${goal.target} PTS • ${reb}/${goal.threshold} REB`;break;}
+    case"cum_pts":value=sum("pts");done=value>=goal.target;label=`${value}/${goal.target} PTS`;break;
+    case"cum_ast":value=sum("ast");done=value>=goal.target;label=`${value}/${goal.target} AST`;break;
+    case"cum_reb":value=sum("reb");done=value>=goal.target;label=`${value}/${goal.target} REB`;break;
+    case"cum_stock":value=sum("stl")+sum("blk");done=value>=goal.target;label=`${value}/${goal.target} STL+BLK`;break;
+    case"max_to":value=sum("to");done=gs.length>=goal.games&&value<=goal.target;label=`${value}/${goal.target} max TO`;break;
+    case"grade_count":case"maintain_grade":value=gs.filter(g=>Number(g.autoGradeScore||0)>=Number(goal.threshold||72)).length;done=value>=goal.target;label=`${value}/${goal.target} games at ${scoreToGrade(goal.threshold)}+`;break;
+    case"matchup_count":value=gs.filter(g=>Number(g.stats?.matchupPerformance||3)<=2).length;done=value>=goal.target;label=`${value}/${goal.target} matchups won`;break;
+    case"no_bad_matchup":value=gs.filter(g=>Number(g.stats?.matchupPerformance||3)<=3).length;done=gs.length>=goal.games&&value===goal.games;label=`${value}/${goal.games} acceptable matchups`;break;
+    case"no_bad_grade":value=gs.filter(g=>Number(g.autoGradeScore||0)>=Number(goal.threshold||68)).length;done=gs.length>=goal.games&&value===goal.games;label=`${value}/${goal.games} games at C+ or better`;break;
+    case"role_combo":{const pts=Number(last?.stats?.pts||0),sc=Number(last?.autoGradeScore||0);value=pts;done=pts>=15&&sc>=77;label=`${pts}/15 PTS • ${scoreToGrade(sc)}/B+`;break;}
+    case"role_matchup":{const sc=Number(last?.autoGradeScore||0),mp=Number(last?.stats?.matchupPerformance||3);value=sc;done=sc>=82&&mp<=2;label=`${scoreToGrade(sc)}/B+ • Matchup ${mp}`;break;}
+    case"starter_expectation":{const sc=Number(last?.autoGradeScore||0),mp=Number(last?.stats?.matchupPerformance||3),pts=Number(last?.stats?.pts||0);value=sc;done=sc>=82||(mp<=2&&pts>=15);label=`${scoreToGrade(sc)} • ${pts} PTS • Matchup ${mp}`;break;}
+  }
+  const perf=gs.length?Math.round(gs.reduce((a,g)=>a+Number(g.autoGradeScore||50),0)/gs.length):0;
+  return{value,label,done,gamesPlayed:gs.length,performanceScore:perf};
+}
+function coachGoalTrustDelta(goal,passed,performanceScore){
+  const established=!!state.rotationProgress?.establishedStarter;
+  if(!passed){
+    // Missing a checklist goal is not treated as a bad game when the player was excellent overall.
+    if(Number(performanceScore||0)>=86)return 0;
+    if(Number(performanceScore||0)>=82)return -1;
+    return established?-1:-2;
+  }
+  const base=established?3:6;
+  return base+coachGoalDifficultyBonus(goal,true);
+}
+function finalizeCoachGoalIfDue(){
+  const goal=state.coachGoals?.active;if(!goal)return null;
+  const pr=coachGoalProgress(goal);goal.progress=pr.value;goal.complete=pr.done;
+  if(pr.gamesPlayed<goal.games)return null;
+  goal.evaluated=true;goal.finishedGameCount=(state.games||[]).length;goal.result=pr.done?"complete":"failed";
+  const trustDelta=coachGoalTrustDelta(goal,pr.done,pr.performanceScore);
+  state.meters.coach=clamp(Number(state.meters.coach||25)+trustDelta);
+  goal.trustDelta=trustDelta;goal.performanceScore=pr.performanceScore;
+  state.coachGoals.history.unshift({...goal});state.coachGoals.history=state.coachGoals.history.slice(0,40);
+  if(!Array.isArray(state.coachGoals.reviewResults))state.coachGoals.reviewResults=[];
+  state.coachGoals.reviewResults.push({complete:pr.done,trustDelta,difficulty:goal.difficulty,title:goal.title,performanceScore:pr.performanceScore});
+  state.coachGoals.reviewResults=state.coachGoals.reviewResults.slice(-8);
+  state.coachGoals.active=null;return{goal,complete:pr.done,trustDelta,performanceScore:pr.performanceScore};
+}
+function coachGoalRecentRecord(){
+  const h=(state.coachGoals?.history||[]).slice(0,4);
+  return{n:h.length,wins:h.filter(x=>x.result==="complete").length,losses:h.filter(x=>x.result==="failed").length};
+}
+function coachGoalRotationModifier(results){
+  const arr=Array.isArray(results)?results:[results].filter(Boolean);
+  if(!arr.length)return 0;
+  const wins=arr.filter(x=>x.complete).length,losses=arr.length-wins;
+  let mod=wins>losses?1:losses>wins?-1:0;
+  const recent=(state.coachGoals?.history||[]).slice(0,3);
+  if(recent.length===3&&recent.every(x=>x.result==="complete"))mod+=1;
+  if(recent.length===3&&recent.every(x=>x.result==="failed"))mod-=1;
+  return mod;
+}
+function coachGoalResultMessage(result,change){
+  if(!result)return;
+  const g=result.goal,passed=result.complete,excellent=!passed&&result.trustDelta===0;
+  let body;
+  if(passed){
+    body=`You completed "${g.title}" (${g.text}) Coach Trust ${result.trustDelta>=0?"+":""}${result.trustDelta}. ${change&&change.to>change.from?`Your recommended minutes moved to ${change.to} MPG.`:"Keep stacking dependable performances."}`;
+  }else if(excellent){
+    body=`You missed "${g.title}", but your overall performance was excellent (${scoreToGrade(result.performanceScore)}). No Coach Trust penalty. The objective matters, but so does the way you actually played.`;
+  }else{
+    body=`You did not complete "${g.title}" (${g.text}) Coach Trust ${result.trustDelta}. Your overall play still carries more weight than one objective.`;
+  }
+  state.insiderFeed.unshift({id:"coach_goal_"+Date.now(),season:state.player?.season||1,gameNo:state.player?.gameNo||0,date:{...state.careerDate},
+    stage:"Coach • Evaluation",headline:passed?"COACH GOAL COMPLETE":excellent?"COACH: IMPACT STILL NOTICED":"COACH GOAL MISSED",body,read:false});
+  state.insiderUnread=(state.insiderUnread||0)+1;
 }
 function ensureNBARotationStart(){
-  if(!state.rotationProgress) state.rotationProgress={minutes:10,role:"Bench",lastEvalGame:0,lastChange:0,lastReason:"NBA role begins",history:[]};
-  if(!Array.isArray(state.rotationProgress.history)) state.rotationProgress.history=[];
-  if(!state.rotationProgress.minutes) state.rotationProgress.minutes=10;
+  if(!state.rotationProgress)state.rotationProgress={minutes:10,role:"Rookie / Low-Minute Bench",lastEvalGame:0,lastChange:0,lastReason:"NBA role begins",history:[],establishedStarter:false,starterProveIt:null};
+  if(!Array.isArray(state.rotationProgress.history))state.rotationProgress.history=[];
+  if(!state.rotationProgress.minutes)state.rotationProgress.minutes=10;
+  state.rotationProgress.minutes=Math.max(10,Math.min(38,Number(state.rotationProgress.minutes||10)));
   state.rotationProgress.role=rotationRoleForMinutes(state.rotationProgress.minutes);
+  if(state.rotationProgress.establishedStarter===undefined)state.rotationProgress.establishedStarter=false;
+  if(state.rotationProgress.starterProveIt===undefined)state.rotationProgress.starterProveIt=null;
 }
-function evaluateNBARotation(){
-  if(state.preNBA?.stage!=="nba") return null;
-  ensureNBARotationStart();
+function recordRotationHistory(type,from,to,reason){
   const r=state.rotationProgress;
-  // state.games is the NBA game log. Keep the review counter explicit so old/pre-NBA
-  // data can never accidentally advance a coach review.
-  const nbaGames=(state.games||[]).filter(g=>g && Number(g.gameNo||0)>0);
-  const n=nbaGames.length;
-  if(n<3 || n-r.lastEvalGame<3) return null;
-  const recent=nbaGames.slice(0,3);
-  const avgGrade=recent.reduce((a,g)=>a+(Number(g.autoGradeScore)||50),0)/recent.length;
-  const wins=recent.filter(g=>g.stats?.result==="W").length;
-  const coach=clamp(state.meters?.coach??25);
-  let delta=0, reason="";
-  if(avgGrade>=86){delta=4;reason="Elite recent play";}
-  else if(avgGrade>=78){delta=3;reason="Strong recent play";}
-  else if(avgGrade>=70){delta=2;reason="Solid recent play";}
-  else if(avgGrade<52){delta=-2;reason="Recent play has slipped";}
-  else {delta=0;reason="Role held steady";}
-
-  if(wins>=2 && delta>0) delta+=1;
-  if(coach>=70 && delta>0) delta+=1;
-  if(coach<35 && delta>3) delta=3;
-
-  // Trust gates keep a rookie from jumping straight to star minutes.
-  let cap=14;
-  if(coach>=35) cap=18;
-  if(coach>=45) cap=22;
-  if(coach>=55) cap=26;
-  if(coach>=65) cap=30;
-  if(coach>=75) cap=34;
-  if(coach>=85) cap=38;
-
-  const old=r.minutes;
-  let next=Math.max(6,Math.min(cap,old+delta));
-  // Once the player is clearly outperforming a low trust score, allow one small
-  // breakthrough beyond the normal trust cap rather than creating a deadlock.
-  if(next===old && delta>0 && avgGrade>=82) next=Math.min(38,old+2);
-
-  r.minutes=next;
-  r.role=rotationRoleForMinutes(next);
-  r.lastEvalGame=n;
-  r.lastChange=next-old;
-  r.lastReason=reason;
-  if(next!==old){
-    r.history.unshift({game:n,from:old,to:next,role:r.role,reason,season:state.player?.season||1,ts:new Date().toISOString()});
-    r.history=r.history.slice(0,30);
-    return {from:old,to:next,role:r.role,reason};
-  }
-  return null;
+  r.history.unshift({gameNo:state.player?.gameNo||(state.games||[]).length,from,to,role:rotationRoleForMinutes(to),reason,type:type||"review",season:state.player?.season||1,date:state.careerDate?{...state.careerDate}:null});
+  r.history=r.history.slice(0,40);
 }
+function announceEstablishedStarter(){
+  const r=state.rotationProgress;
+  if(r.establishedStarterAnnounced)return;
+  r.establishedStarterAnnounced=true;
+  state.insiderFeed.unshift({id:"starter_established_"+Date.now(),season:state.player?.season||1,gameNo:state.player?.gameNo||0,date:{...state.careerDate},
+    stage:"Coach • Role",headline:"REGULAR STARTER — ESTABLISHED",
+    body:"Coach: “You've proven you belong with the first group. I'm not evaluating you like a fringe rotation player anymore.” Your normal coach-evaluation floor is now 28 MPG.",read:false});
+  state.insiderUnread=(state.insiderUnread||0)+1;
+}
+function evaluateNBARotation(goalResult=null){
+  if(state.preNBA?.stage!=="nba")return null;
+  ensureNBARotationStart();
+  const r=state.rotationProgress,played=(state.games||[]).length;
+  if(played-r.lastEvalGame<3)return null;
+  const recent=(state.games||[]).slice(0,3);
+  if(recent.length<3)return null;
+  const avg=Math.round(recent.reduce((a,g)=>a+Number(g.autoGradeScore||50),0)/recent.length);
+  const wins=recent.filter(g=>String(g.stats?.result||"").toUpperCase()==="W").length;
+  const coach=Number(state.meters.coach||25),old=Number(r.minutes||10),oldRole=rotationRoleForMinutes(old);
+  let delta=avg>=90?4:avg>=82?3:avg>=74?2:avg>=66?1:avg<52?-3:avg<60?-2:0;
+  if(wins>=2&&delta>0)delta+=1;
+  if(coach>=70&&avg>=70)delta+=1;
+  if(coach<30&&avg<70)delta-=1;
+
+  const blockResults=(state.coachGoals?.reviewResults||[]).slice();
+  delta+=coachGoalRotationModifier(blockResults);
+  if(state.coachGoals)state.coachGoals.reviewResults=[];
+
+  // Cap one review so the rotation evolves rather than teleporting.
+  delta=Math.max(-5,Math.min(5,delta));
+  let candidate=Math.round(old+delta);
+
+  // Before starter establishment, roles can move both forward and backward.
+  // Once established, ordinary reviews cannot push below 28 MPG.
+  const normalFloor=r.establishedStarter?28:10;
+  candidate=Math.max(normalFloor,Math.min(38,candidate));
+
+  // Prove-it period: reaching 32+ starts a full three-game starter evaluation.
+  let milestone=null;
+  if(!r.establishedStarter){
+    if(r.starterProveIt?.active){
+      const fullBlock=played-Number(r.starterProveIt.startGameCount||0)>=3;
+      if(fullBlock){
+        if(old>=32&&avg>=63&&candidate>=32){
+          r.establishedStarter=true;
+          r.starterProveIt={active:false,passed:true,completedGameCount:played};
+          milestone="established";
+          candidate=Math.max(32,candidate);
+          announceEstablishedStarter();
+          recordRotationHistory("milestone",old,candidate,"Regular Starter established after completing the prove-it evaluation.");
+        }else{
+          r.starterProveIt={active:false,passed:false,completedGameCount:played};
+          if(candidate>=32&&avg<63)candidate=31;
+          milestone="prove_it_failed";
+        }
+      }
+    }else if(candidate>=32){
+      r.starterProveIt={active:true,startGameCount:played,startMinutes:candidate};
+      milestone="prove_it_started";
+    }
+  }
+
+  candidate=Math.max(r.establishedStarter?28:10,Math.min(38,candidate));
+  const roleAfter=rotationRoleForMinutes(candidate),changed=candidate!==old;
+  r.minutes=candidate;r.role=roleAfter;r.lastEvalGame=played;r.lastChange=candidate-old;
+  r.lastReason=`3-game review: ${scoreToGrade(avg)} average, ${wins}-win block, Coach Trust ${Math.round(coach)} (${coachTrustLabel(coach)})`;
+  if(changed)recordRotationHistory("review",old,candidate,r.lastReason);
+  if(milestone==="prove_it_started")recordRotationHistory("prove_it",old,candidate,"Starter Prove-It began: hold starter-level play through the next full evaluation.");
+  if(milestone==="prove_it_failed")recordRotationHistory("prove_it",old,candidate,"Starter Prove-It not completed; starter status remains unestablished.");
+  return changed||milestone?{from:old,to:candidate,role:roleAfter,reason:r.lastReason,milestone}:null;
+}
+function coachStarterStatusText(){
+  const r=state.rotationProgress;
+  if(r.establishedStarter)return"Established Starter • 28 MPG normal floor";
+  if(r.starterProveIt?.active)return"Starter Prove-It Active • complete the next 3-game review";
+  return"Not yet established";
+}
+function manualCoachMinutesOverride(){
+  ensureNBARotationStart();
+  const current=Number(state.rotationProgress.minutes||10);
+  const raw=window.prompt(`Manual Coach Decision\nEnter recommended MPG (10–38). Current: ${current}`,String(current));
+  if(raw===null)return;
+  const next=Math.round(Number(raw));
+  if(!Number.isFinite(next)||next<10||next>38){alert("Enter a number from 10 to 38 MPG.");return;}
+  if(next===current)return;
+  state.rotationProgress.minutes=next;state.rotationProgress.role=rotationRoleForMinutes(next);
+  state.rotationProgress.lastReason="Manual Coach Decision override";
+  recordRotationHistory("manual",current,next,"Manual Coach Decision override for an in-game circumstance the companion app cannot see.");
+  if(next>=32&&!state.rotationProgress.establishedStarter){
+    state.rotationProgress.starterProveIt={active:true,startGameCount:(state.games||[]).length,startMinutes:next};
+  }
+  persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
+}
+function resetEstablishedStarterExtreme(){
+  ensureNBARotationStart();
+  if(!state.rotationProgress.establishedStarter)return;
+  if(!window.confirm("Extreme event only: remove Established Starter protection and allow normal rotation movement again?"))return;
+  state.rotationProgress.establishedStarter=false;
+  state.rotationProgress.establishedStarterAnnounced=false;
+  state.rotationProgress.starterProveIt=null;
+  const old=state.rotationProgress.minutes;
+  recordRotationHistory("extreme_reset",old,old,"Established Starter protection reset after a manual extreme-event decision.");
+  persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
+}
+function renderCoachOffice(){
+  const card=document.getElementById("coachOfficeCard"),body=document.getElementById("coachOfficeBody");if(!card||!body)return;
+  if(state.preNBA?.stage!=="nba"){card.style.display="none";return;}
+  card.style.display="block";ensureNBARotationStart();
+  const goal=assignCoachGoal(false),pr=coachGoalProgress(goal),until=Math.max(0,(goal?.games||3)-pr.gamesPlayed),role=rotationRoleForMinutes(state.rotationProgress.minutes),rec=coachGoalRecentRecord();
+  const hist=(state.rotationProgress.history||[]).slice(0,6);
+  const historyHtml=hist.length?hist.map(x=>`<div class="small" style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08)"><b>${x.from===x.to?`${x.to} MPG`:`${x.from} → ${x.to} MPG`}</b> — ${escapeHtml(x.reason||x.type||"Rotation update")}</div>`).join(""):`<div class="small">No rotation changes yet.</div>`;
+  body.innerHTML=`<div class="note"><b>COACH:</b> “${escapeHtml(goal?.why||"Keep giving us dependable minutes.")}”</div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="mini"><span>Current Role</span><b>${escapeHtml(role)}</b></div>
+      <div class="mini"><span>Recommended Minutes</span><b>${state.rotationProgress.minutes} MPG</b></div>
+      <div class="mini"><span>Coach Trust</span><b>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</b></div>
+    </div>
+    <div class="note" style="margin-top:12px"><b>STARTER STATUS</b><br>${escapeHtml(coachStarterStatusText())}</div>
+    ${goal?`<div class="note" style="margin-top:12px"><b>COACH GOAL • ${escapeHtml(goal.difficulty||"Standard")} • ${escapeHtml(goal.category)}</b><br><strong>${escapeHtml(goal.title)}</strong><br>${escapeHtml(goal.text)}<br>
+    <span class="small">Progress: <b>${escapeHtml(pr.label)}</b> • ${until?`${until} game${until===1?"":"s"} left`:"Evaluation due"} • Assigned at ${goal.assignedMinutes} MPG</span></div>`:""}
+    <div class="small" style="margin-top:10px">Recent Coach Goals: ${rec.wins}/${rec.n||0} completed. Actual performance drives rotation first; Coach Goals and Coach Trust influence how quickly your opportunity grows or shrinks.</div>
+    <div class="note" style="margin-top:12px"><b>ROTATION HISTORY</b>${historyHtml}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button type="button" onclick="manualCoachMinutesOverride()">Adjust Minutes Manually</button>
+      ${state.rotationProgress.establishedStarter?`<button type="button" onclick="resetEstablishedStarterExtreme()">Extreme Event: Reset Starter Protection</button>`:""}
+    </div>`;
+}
+function openCoachOffice(){
+  openTab("career");if(typeof renderCoachOffice==="function")renderCoachOffice();
+  setTimeout(()=>document.getElementById("coachOfficeCard")?.scrollIntoView({behavior:"smooth",block:"start"}),80);
+}
+
 function rotationCoachMessage(change){
   if(!change) return;
   const name=state.player?.name||"Your player";
@@ -2603,9 +2929,11 @@ function renderRotationStatus(){
   ensureNBARotationStart();
   const r=state.rotationProgress;
   const until=Math.max(0,3-(state.games.length-r.lastEvalGame));
+  const goal=assignCoachGoal(false),gp=coachGoalProgress(goal);
   return `<div class="note" style="margin-top:12px"><b>COACH ROTATION • ${r.role}</b><br>
     Recommended MyNBA minutes: <b>${r.minutes} MPG</b><br>
-    <span class="small">Coach reviews your role every 3 games using recent teammate-grade performance, winning and Coach Trust.${until?` Next review in ${until} game${until===1?"":"s"}.`:" Review due after this game."}</span>
+    ${goal?`<b>Coach Goal:</b> ${escapeHtml(goal.title)} • ${escapeHtml(gp.label)}<br>`:""}
+    <span class="small">Coach reviews your role every 3 games using recent teammate-grade performance, winning, Coach Trust and your Coach Goal.${until?` Next review in ${until} game${until===1?"":"s"}.`:" Review due after this game."}</span>
   </div>`;
 }
 
@@ -2701,8 +3029,11 @@ function calculateAndPostGame(){
   if(upcoming) upcoming.played=true;
   const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(state.rotationProgress?.minutes||10):null),minutesAdjustedRaw,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
   state.games.unshift(game);
-  const rotationChange=evaluateNBARotation();
+  const coachGoalResult=finalizeCoachGoalIfDue();
+  const rotationChange=evaluateNBARotation(coachGoalResult);
   if(rotationChange) rotationCoachMessage(rotationChange);
+  coachGoalResultMessage(coachGoalResult,rotationChange);
+  if(coachGoalResult) assignCoachGoal(true);
   checkRewardUnlocks(); scheduleUnscheduledRewards();
   maybeQueueInterview(game);
   maybeQueueInsider(game);
@@ -4006,7 +4337,7 @@ function renderAll(){
   if(document.getElementById("pedYears") && pedYears.value==="") pedYears.value=Math.max(0,(state.player.season||1)-1);
   if(document.getElementById("coachBaselinePreview")) previewCoachBaseline();
   gMonth.value=state.careerDate.month; gYear.value=state.careerDate.year; gDay.value="";
-  renderMeters(); renderPrivileges(); renderRatings(); renderSchedule(); renderSpecialEvents(); renderStats(); renderCurrentGame(); renderObjectives(); renderUpgrades(); renderMilestones(); renderHistory(); renderMedia(); renderInsider(); renderCombineEntryButton(); renderRewards(); renderShoeCareer(); renderContracts();
+  renderMeters(); renderPrivileges(); renderRatings(); renderSchedule(); renderCoachOffice(); renderSpecialEvents(); renderStats(); renderCurrentGame(); renderObjectives(); renderUpgrades(); renderMilestones(); renderHistory(); renderMedia(); renderInsider(); renderCombineEntryButton(); renderRewards(); renderShoeCareer(); renderContracts();
   bindLiveCareerInputs(); bindSpecialEventButton(); bindManualCareerEventButton();
   if(typeof renderK11PlayerPhoto==="function") renderK11PlayerPhoto();
   if(typeof updateK11Hub==="function") updateK11Hub();
