@@ -943,17 +943,6 @@ body:not(.career-home) #k11Hub{display:none!important}
     <div class="grid">
       <div><label>Opponent</label><select id="gOpponent"><option value="">Select team</option><option>Atlanta Hawks</option><option>Boston Celtics</option><option>Brooklyn Nets</option><option>Charlotte Hornets</option><option>Chicago Bulls</option><option>Cleveland Cavaliers</option><option>Dallas Mavericks</option><option>Denver Nuggets</option><option>Detroit Pistons</option><option>Golden State Warriors</option><option>Houston Rockets</option><option>Indiana Pacers</option><option>LA Clippers</option><option>Los Angeles Lakers</option><option>Memphis Grizzlies</option><option>Miami Heat</option><option>Milwaukee Bucks</option><option>Minnesota Timberwolves</option><option>New Orleans Pelicans</option><option>New York Knicks</option><option>Oklahoma City Thunder</option><option>Orlando Magic</option><option>Philadelphia 76ers</option><option>Phoenix Suns</option><option>Portland Trail Blazers</option><option>Sacramento Kings</option><option>San Antonio Spurs</option><option>Toronto Raptors</option><option>Utah Jazz</option><option>Washington Wizards</option></select></div>
 
-      <div><label>Career Month</label>
-        <select id="gMonth">
-          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
-          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
-          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
-          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
-        </select>
-      </div>
-      <div><label>Career Year</label><input id="gYear" type="number" inputmode="numeric" min="2020" max="2100" value="2026"></div>
-      <div><label>Game Day</label><input id="gDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div>
-
       <div><label>Minutes</label><input id="gMin" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0" max="60"></div>
       <div><label>Points</label><input id="gPts" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Rebounds</label><input id="gReb" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
@@ -968,6 +957,16 @@ body:not(.career-home) #k11Hub{display:none!important}
       <div><label>FT Made</label><input id="gFTM" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FT Attempted</label><input id="gFTA" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Personal Fouls</label><input id="gPF" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
+      <div><label>Career Month</label>
+        <select id="gMonth">
+          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select>
+      </div>
+      <div><label>Career Year</label><input id="gYear" type="number" inputmode="numeric" min="2020" max="2100" value="2026"></div>
+      <div><label>Date</label><input id="gDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div>
       <div><label>Teammate Grade</label>
         <input id="gGrade" value="Auto-calculated from box score" disabled>
       </div>
@@ -2152,6 +2151,11 @@ if(state.rotationProgress.lastChange===undefined) state.rotationProgress.lastCha
 if(!Array.isArray(state.rotationProgress.history)) state.rotationProgress.history=[];
 if(state.rotationProgress.establishedStarter===undefined) state.rotationProgress.establishedStarter=false;
 if(state.rotationProgress.starterProveIt===undefined) state.rotationProgress.starterProveIt=null;
+if(!state.rotationOpportunity) state.rotationOpportunity={active:false,type:"",reason:"",previousMinutes:null,currentMinutes:null,assignment:"",leash:"",startTrust:null,startGameCount:null,status:"",performance:[],warningLevel:0,pendingDecision:null,history:[]};
+if(!Array.isArray(state.rotationOpportunity.performance)) state.rotationOpportunity.performance=[];
+if(!Array.isArray(state.rotationOpportunity.history)) state.rotationOpportunity.history=[];
+if(state.rotationOpportunity.warningLevel===undefined) state.rotationOpportunity.warningLevel=0;
+
 if(!state.coachGoals) state.coachGoals={active:null,history:[],serial:0,recentKeys:[],reviewResults:[]};
 if(!Array.isArray(state.coachGoals.history)) state.coachGoals.history=[];
 if(!Array.isArray(state.coachGoals.recentKeys)) state.coachGoals.recentKeys=[];
@@ -3353,6 +3357,109 @@ function resetEstablishedStarterExtreme(){
   persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
 }
 
+
+function rotationOpportunityLeash(trust){
+  trust=Number(trust||0); return trust>=60?"Long":trust>=35?"Normal":"Short";
+}
+function activeRotationMinutes(){
+  const o=state.rotationOpportunity;
+  return o?.active&&Number(o.currentMinutes)>0?Number(o.currentMinutes):Number(state.rotationProgress?.minutes||10);
+}
+function opportunityPerformanceScore(s,gradeScore){
+  let score=Number(gradeScore||50);
+  const fga=Number(s.fga||0),fgm=Number(s.fgm||0),to=Number(s.to||0),pf=Number(s.pf||0);
+  const fg=fga?fgm/fga:0;
+  if(fga>=7&&fg<.25)score-=12; else if(fga>=7&&fg<.35)score-=6;
+  if(to>=4)score-=8; else if(to>=3)score-=4;
+  if(pf>=5)score-=6; else if(pf>=4)score-=3;
+  if(Number(s.matchupPerformance||3)>=5)score-=8; else if(Number(s.matchupPerformance||3)>=4)score-=4;
+  const stocks=Number(s.stl||0)+Number(s.blk||0);
+  if(Number(s.reb||0)>=7||Number(s.ast||0)>=5||stocks>=3)score+=4;
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
+function opportunityPerformanceLabel(score){
+  if(score>=82)return"Excellent"; if(score>=72)return"Good"; if(score>=62)return"Solid"; if(score>=50)return"Poor"; return"Severe Failure";
+}
+function opportunityInsider(headline,body,stage="2K Insider • Role Watch"){
+  const entry={id:"opp_"+Date.now()+"_"+Math.floor(Math.random()*9999),season:state.player?.season||1,gameNo:state.player?.gameNo||0,date:{...state.careerDate},stage,headline,body,read:false};
+  state.insiderFeed.unshift(entry);state.insiderUnread=(state.insiderUnread||0)+1;return entry;
+}
+function showOpportunityPopup(title,body,button="CONTINUE"){
+  document.getElementById("rotationOpportunityPopup")?.remove();
+  const o=document.createElement("div");o.id="rotationOpportunityPopup";o.className="postgameRewardOverlay";
+  o.innerHTML=`<div class="postgameRewardModal"><div class="kicker">COACH • ROTATION OPPORTUNITY</div><h2>${escapeHtml(title)}</h2><div class="rewardSub">${escapeHtml(body)}</div><div class="postgameRewardActions"><button class="primary" id="oppPopupDone">${escapeHtml(button)}</button></div></div>`;
+  document.body.appendChild(o);document.getElementById("oppPopupDone").onclick=()=>o.remove();
+}
+function reportRotationEvent(){
+  ensureNBARotationStart();
+  if(state.rotationOpportunity?.active){alert("A rotation opportunity is already active. End or resolve it before reporting another one.");return;}
+  const why=window.prompt("Report Rotation Event\nWhat created the opportunity?\n\n1 = Player ahead injured\n2 = Trade / roster change\n3 = Suspension / absence\n4 = Coach rotation change","1");
+  if(why===null)return;
+  const reasons={1:"Player ahead injured",2:"Trade / roster change",3:"Suspension / absence",4:"Coach rotation change"};
+  if(!reasons[why]){alert("Enter 1, 2, 3, or 4.");return;}
+  const outcome=window.prompt("What did MyNBA actually do with YOUR role?\n\n1 = Minutes increased, still bench\n2 = Major role increase, still bench\n3 = Temporary starter\n4 = No change","3");
+  if(outcome===null)return;
+  if(outcome==="4"){state.rotationOpportunity.history.unshift({reason:reasons[why],result:"No change",gameNo:state.player?.gameNo||0});persist();renderAll();return;}
+  if(!["1","2","3"].includes(outcome)){alert("Enter 1, 2, 3, or 4.");return;}
+  const baseline=Number(state.rotationProgress?.minutes||10),suggest=outcome==="1"?Math.max(baseline,16):outcome==="2"?Math.max(baseline,24):Math.max(baseline,30);
+  const raw=window.prompt(`Enter the MPG MyNBA assigned you.\nYour earned baseline stays protected at ${baseline} MPG.`,String(suggest));
+  if(raw===null)return;const mins=Math.round(Number(raw));if(!Number.isFinite(mins)||mins<1||mins>48){alert("Enter assigned minutes from 1 to 48.");return;}
+  const trust=Number(state.meters.coach||0),leash=rotationOpportunityLeash(trust),assignment=outcome==="3"?"Temporary Starter":"Expanded Bench Role";
+  state.rotationOpportunity={active:true,type:why,reason:reasons[why],previousMinutes:baseline,currentMinutes:mins,assignment,leash,startTrust:trust,startGameCount:(state.games||[]).length,status:"Opportunity Active",performance:[],warningLevel:0,pendingDecision:null,history:state.rotationOpportunity?.history||[]};
+  recordRotationHistory("opportunity",baseline,mins,`${assignment}: ${reasons[why]}. Earned baseline protected at ${baseline} MPG.`);
+  const name=state.player?.name||"Your player";
+  opportunityInsider(outcome==="3"?"OPPORTUNITY KNOCKS":"A BIGGER ROLE OPENS UP",`${name} has been handed a ${assignment.toLowerCase()} after a rotation change created an opening. The assignment is temporary for now, but what happens next could reshape the pecking order.`);
+  persist();renderAll();showOpportunityPopup("Opportunity Granted",`${assignment} • ${mins} MPG • ${leash} leash. Your earned ${baseline}-MPG baseline is protected.`);
+}
+function evaluateRotationOpportunity(game){
+  const o=state.rotationOpportunity;if(!o?.active||o.pendingDecision)return null;
+  const score=opportunityPerformanceScore(game.stats||{},game.autoGradeScore),label=opportunityPerformanceLabel(score);
+  o.performance.unshift({gameNo:game.gameNo,score,label,grade:game.stats?.grade||"",date:game.date});o.performance=o.performance.slice(0,8);
+  const recent=o.performance.slice(0,5),poor=recent.filter(x=>x.score<62).length,severe=recent.filter(x=>x.score<50).length;
+  const consecutivePoor=o.performance.length>=2&&o.performance[0].score<62&&o.performance[1].score<62;
+  const consecutiveSevere=o.performance.length>=2&&o.performance[0].score<50&&o.performance[1].score<50;
+  let warning=false,demote=false;
+  if(o.leash==="Short"){warning=score<62;demote=consecutiveSevere||(consecutivePoor&&severe>=1);}
+  else if(o.leash==="Normal"){warning=poor>=2;demote=(recent.slice(0,3).filter(x=>x.score<62).length>=3)||(consecutiveSevere);}
+  else {warning=poor>=3;demote=(recent.length>=5&&recent.filter(x=>x.score<62).length>=4)||(recent.slice(0,3).filter(x=>x.score<50).length>=3);}
+  if(demote){
+    const baseline=Number(o.previousMinutes||state.rotationProgress?.minutes||10);
+    o.status="Coach Decision Pending";o.warningLevel=2;o.pendingDecision={type:"return_bench",recommendedMinutes:baseline,createdGame:game.gameNo};
+    const trustLoss=o.leash==="Short"?6:o.leash==="Normal"?4:3;state.meters.coach=Math.max(0,Number(state.meters.coach||0)-trustLoss);
+    opportunityInsider("LAKERS CHANGE COURSE",`${state.player?.name||"The rookie"}'s temporary opportunity is in jeopardy after a difficult stretch. The coaching staff is expected to turn to another option and move him back toward a reserve role.`);
+    showOpportunityPopup("Coach Is Making a Change",`The short-term opportunity has not worked. Coach is going with another option. Apply the rotation instruction in MyNBA: move back to the bench at about ${baseline} MPG, then confirm it in Coach's Office.`,"VIEW COACH'S OFFICE");
+    return{type:"demotion",score,label};
+  }
+  if(warning&&o.warningLevel<1){
+    o.warningLevel=1;o.status="Starting Job At Risk";
+    opportunityInsider("EARLY PRESSURE BUILDS",`${state.player?.name||"The rookie"} is under pressure after struggling during a temporary rotation opportunity. With other options available, the leash may be getting shorter.`);
+    showOpportunityPopup("Starting Job At Risk",`That wasn't good enough. You're still getting the opportunity, but Coach needs a response. ${o.leash} leash • ${label} performance.`);
+    return{type:"warning",score,label};
+  }
+  if(score>=72&&o.warningLevel===1){o.warningLevel=0;o.status="Opportunity Active";showOpportunityPopup("That's the Response",`Coach liked the response. The warning has been cleared for now. ${label} performance.`);}
+  return{type:"continue",score,label};
+}
+function confirmRotationDecisionApplied(){
+  const o=state.rotationOpportunity;if(!o?.pendingDecision)return;
+  const mins=Number(o.pendingDecision.recommendedMinutes||o.previousMinutes||10),from=Number(o.currentMinutes||mins);
+  o.history.unshift({reason:o.reason,assignment:o.assignment,result:"Returned to bench",from,to:mins,gameNo:state.player?.gameNo||0});
+  recordRotationHistory("opportunity_end",from,mins,"Temporary opportunity ended after an emergency performance review. Earned baseline restored.");
+  o.active=false;o.status="Opportunity Ended";o.currentMinutes=null;o.assignment="";o.pendingDecision=null;
+  persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
+}
+function endRotationOpportunityManual(){
+  const o=state.rotationOpportunity;if(!o?.active)return;
+  if(!window.confirm("End this temporary rotation opportunity? Use this when the roster situation has normalized or MyNBA has changed your assignment."))return;
+  const raw=window.prompt(`What MPG is MyNBA giving you now?\nYour earned baseline is ${o.previousMinutes} MPG.`,String(o.previousMinutes||state.rotationProgress?.minutes||10));if(raw===null)return;
+  const mins=Math.round(Number(raw));if(!Number.isFinite(mins)||mins<1||mins>48){alert("Enter 1 to 48 MPG.");return;}
+  // Only raise earned baseline conservatively to the role floor represented by the actual post-event assignment.
+  const oldEarned=Number(state.rotationProgress.minutes||10),newEarned=Math.max(oldEarned,Math.min(mins,coachRoleFloor(rotationRoleForMinutes(mins))));
+  state.rotationProgress.minutes=newEarned;state.rotationProgress.role=rotationRoleForMinutes(newEarned);
+  o.history.unshift({reason:o.reason,assignment:o.assignment,result:"Roster normalized",from:o.currentMinutes,to:mins,earnedBaseline:newEarned,gameNo:state.player?.gameNo||0});
+  o.active=false;o.status="Opportunity Ended";o.currentMinutes=null;o.assignment="";o.pendingDecision=null;
+  persist();renderAll();setTimeout(()=>renderCoachOffice(),0);
+}
+
 function coachNextRoleInfo(m){
   m=Number(m||10);
   if(m<16)return{role:"Bench Player",at:16};
@@ -3488,8 +3595,9 @@ function renderCoachOfficeOverview(){
       <div class="coachProgress"><div class="coachProgressFill" style="width:${pct}%"></div></div>
       <div class="coachMeta"><b>${escapeHtml(pr.label)}</b> • ${until?`${until} game${until===1?"":"s"} remaining`:"Evaluation due"}</div>
     </div>`:""}
+    ${state.rotationOpportunity?.active?`<div class="coachHeroGoal"><div class="eyebrow">ROTATION OPPORTUNITY • ${escapeHtml(state.rotationOpportunity.leash||"Normal").toUpperCase()} LEASH</div><h3>${escapeHtml(state.rotationOpportunity.assignment||"Temporary Assignment")}</h3><div class="objective">${escapeHtml(state.rotationOpportunity.reason||"")} • ${state.rotationOpportunity.currentMinutes} MPG</div><div class="coachMeta"><b>${escapeHtml(state.rotationOpportunity.status||"Opportunity Active")}</b> • Earned baseline protected at ${state.rotationOpportunity.previousMinutes} MPG</div>${state.rotationOpportunity.pendingDecision?`<div class="note" style="margin-top:10px"><b>ROTATION INSTRUCTION:</b> Move back to the bench at about ${state.rotationOpportunity.pendingDecision.recommendedMinutes} MPG in MyNBA.</div>`:""}</div>`:""}
     <div class="coachStatusStrip">
-      <div><span>Minutes</span><b>${r.minutes} MPG</b></div>
+      <div><span>Minutes</span><b>${activeRotationMinutes()} MPG${state.rotationOpportunity?.active?" • Current":""}</b></div>
       <div><span>Role</span><b>${escapeHtml(rotationRoleForMinutes(r.minutes))}</b></div>
       <div><span>Trust</span><b>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</b></div>
     </div>
@@ -3504,6 +3612,7 @@ function renderCoachOfficeOverview(){
     <div class="coachOfficeActions">
       <button type="button" class="primary" onclick="leaveCoachOffice()">END MEETING</button>
       <button type="button" onclick="manualCoachMinutesOverride()">Manual Coach Decision</button>
+      ${state.rotationOpportunity?.pendingDecision?`<button type="button" class="primary" onclick="confirmRotationDecisionApplied()">I Updated the MyNBA Rotation</button>`:state.rotationOpportunity?.active?`<button type="button" onclick="endRotationOpportunityManual()">End / Reconcile Opportunity</button>`:`<button type="button" onclick="reportRotationEvent()">Report Rotation Event</button>`}
       ${r.establishedStarter?`<button type="button" onclick="resetEstablishedStarterExtreme()">Extreme Event Reset</button>`:""}
     </div>`;
 }
@@ -3546,7 +3655,7 @@ function renderRotationStatus(){
   return `<div class="gameCoachBrief">
     <div class="gameCoachBriefHead"><div class="hc">HC</div><div><span>COACH'S GAME PLAN</span><strong>${escapeHtml(r.role)}</strong></div></div>
     <div class="gameCoachBriefGrid">
-      <div><span>Rotation</span><b>${r.minutes} MPG</b></div>
+      <div><span>Rotation</span><b>${activeRotationMinutes()} MPG${state.rotationOpportunity?.active?" • Temporary":""}</b></div>
       <div><span>Trust</span><b>${Math.round(state.meters.coach||0)} • ${escapeHtml(coachTrustLabel(state.meters.coach||0))}</b></div>
       <div><span>Review</span><b>${until?`${until} game${until===1?"":"s"}`:"Due"}</b></div>
     </div>
@@ -3566,7 +3675,7 @@ function nbaMinutesSPMultiplier(minutes){
 function currentNBAMinutesSPMultiplier(){
   if(state.preNBA?.stage!=="nba") return 1;
   ensureNBARotationStart();
-  return nbaMinutesSPMultiplier(state.rotationProgress?.minutes||10);
+  return nbaMinutesSPMultiplier(activeRotationMinutes());
 }
 
 function calculateAndPostGame(){
@@ -3644,10 +3753,11 @@ function calculateAndPostGame(){
   const total=Math.round(minutesAdjustedRaw*multiplier);
   state.sp+=total; state.player.gameNo=(state.player.gameNo||0)+1;
   if(upcoming) upcoming.played=true;
-  const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(state.rotationProgress?.minutes||10):null),minutesAdjustedRaw,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
+  const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(activeRotationMinutes()):null),minutesAdjustedRaw,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
   state.games.unshift(game);
+  const opportunityResult=evaluateRotationOpportunity(game);
   const coachGoalResult=finalizeCoachGoalIfDue();
-  const rotationChange=evaluateNBARotation(coachGoalResult);
+  const rotationChange=state.rotationOpportunity?.active?null:evaluateNBARotation(coachGoalResult);
   if(rotationChange) rotationCoachMessage(rotationChange);
   coachGoalResultMessage(coachGoalResult,rotationChange);
   if(coachGoalResult) assignCoachGoal(true);
@@ -3655,7 +3765,7 @@ function calculateAndPostGame(){
   maybeQueueInterview(game);
   maybeQueueInsider(game);
   persist();
-  const rewardPopup={grade,performance,resultSP,objSP,highlightSP,milestoneSP,keyGame,multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(state.rotationProgress?.minutes||10):null),total,newMilestones:[...newMilestones],pendingInterview:!!state.pendingInterview};
+  const rewardPopup={grade,performance,resultSP,objSP,highlightSP,milestoneSP,keyGame,multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(activeRotationMinutes()):null),total,newMilestones:[...newMilestones],pendingInterview:!!state.pendingInterview};
   // Keep the postgame page clean. The reward breakdown is shown immediately in the in-app popup instead of being buried below the form.
   gameResult.innerHTML="";
   clearPostgameStatInputs();
