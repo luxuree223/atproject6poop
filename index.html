@@ -1153,12 +1153,12 @@ body:not(.career-home) #k11Hub{display:none!important}
 <section id="milestones" class="tab">
   <div class="card">
     <h2>Career Milestones</h2>
-    <p class="small">Statistical milestones are detected automatically and only pay once.</p>
+    <p class="small">Firsts and career landmarks are detected automatically. Each listed statistical milestone pays once when you first reach it.</p>
     <div id="milestoneList"></div>
   </div>
   <div class="card">
     <h3>Manual Career Accomplishments</h3>
-    <p class="small">Use these for awards/playoff accomplishments that a box score cannot detect.</p>
+    <p class="small">Awards now follow real recurrence rules: weekly/monthly honors can repeat, season awards can pay once every season, and true career firsts stay one-time.</p>
     <div id="manualMilestones"></div>
     <hr style="border:0;border-top:1px solid var(--border);margin:18px 0">
     <h3>Career Accomplishment Log</h3>
@@ -1380,19 +1380,49 @@ function awardPreNBAMilestones(ids){return ids.map(awardPreNBAMilestone).filter(
 const MILESTONES = [
  {id:"first_game",name:"NBA Debut / First Logged Game",bonus:250,test:s=>true},
  {id:"pts20",name:"First 20-Point Game",bonus:250,test:s=>s.pts>=20},
+ {id:"pts25",name:"First 25-Point Game",bonus:350,test:s=>s.pts>=25},
  {id:"pts30",name:"First 30-Point Game",bonus:500,test:s=>s.pts>=30},
  {id:"pts40",name:"First 40-Point Game",bonus:750,test:s=>s.pts>=40},
  {id:"pts50",name:"First 50-Point Game",bonus:1200,test:s=>s.pts>=50},
  {id:"reb10",name:"First 10-Rebound Game",bonus:300,test:s=>s.reb>=10},
+ {id:"reb15",name:"First 15-Rebound Game",bonus:500,test:s=>s.reb>=15},
  {id:"ast10",name:"First 10-Assist Game",bonus:300,test:s=>s.ast>=10},
+ {id:"ast15",name:"First 15-Assist Game",bonus:500,test:s=>s.ast>=15},
+ {id:"stl3",name:"First 3-Steal Game",bonus:250,test:s=>s.stl>=3},
  {id:"stl5",name:"First 5-Steal Game",bonus:450,test:s=>s.stl>=5},
+ {id:"blk3",name:"First 3-Block Game",bonus:250,test:s=>s.blk>=3},
  {id:"blk5",name:"First 5-Block Game",bonus:450,test:s=>s.blk>=5},
  {id:"dd",name:"First Double-Double",bonus:350,test:s=>[s.pts,s.reb,s.ast,s.stl,s.blk].filter(x=>x>=10).length>=2},
  {id:"td",name:"First Triple-Double",bonus:900,test:s=>[s.pts,s.reb,s.ast,s.stl,s.blk].filter(x=>x>=10).length>=3},
+ {id:"pts20reb10",name:"First 20-Point / 10-Rebound Game",bonus:450,test:s=>s.pts>=20&&s.reb>=10},
+ {id:"pts20_5_5",name:"First 20 / 5 / 5 Game",bonus:450,test:s=>s.pts>=20&&s.reb>=5&&s.ast>=5},
+ {id:"pts30reb10",name:"First 30-Point / 10-Rebound Game",bonus:700,test:s=>s.pts>=30&&s.reb>=10},
  {id:"perfect_ft10",name:"10+ Free Throws Without a Miss",bonus:300,test:s=>s.fta>=10 && s.ftm===s.fta},
+ {id:"threes5",name:"First 5-Three Game",bonus:250,test:s=>s.t3m>=5},
  {id:"threes6",name:"First 6-Three Game",bonus:350,test:s=>s.t3m>=6},
- {id:"threes10",name:"First 10-Three Game",bonus:800,test:s=>s.t3m>=10}
+ {id:"threes10",name:"First 10-Three Game",bonus:800,test:s=>s.t3m>=10},
+
+ // Career-total landmarks. ctx includes the game currently being finalized.
+ {id:"career_pts500",name:"500 Career Points",bonus:400,test:(s,ctx)=>ctx.pts>=500},
+ {id:"career_pts1000",name:"1,000 Career Points",bonus:700,test:(s,ctx)=>ctx.pts>=1000},
+ {id:"career_pts2500",name:"2,500 Career Points",bonus:1000,test:(s,ctx)=>ctx.pts>=2500},
+ {id:"career_pts5000",name:"5,000 Career Points",bonus:1500,test:(s,ctx)=>ctx.pts>=5000},
+ {id:"career_reb250",name:"250 Career Rebounds",bonus:350,test:(s,ctx)=>ctx.reb>=250},
+ {id:"career_reb500",name:"500 Career Rebounds",bonus:600,test:(s,ctx)=>ctx.reb>=500},
+ {id:"career_reb1000",name:"1,000 Career Rebounds",bonus:900,test:(s,ctx)=>ctx.reb>=1000},
+ {id:"career_ast250",name:"250 Career Assists",bonus:350,test:(s,ctx)=>ctx.ast>=250},
+ {id:"career_ast500",name:"500 Career Assists",bonus:600,test:(s,ctx)=>ctx.ast>=500},
+ {id:"career_ast1000",name:"1,000 Career Assists",bonus:900,test:(s,ctx)=>ctx.ast>=1000},
+ {id:"career_stl100",name:"100 Career Steals",bonus:500,test:(s,ctx)=>ctx.stl>=100},
+ {id:"career_blk100",name:"100 Career Blocks",bonus:500,test:(s,ctx)=>ctx.blk>=100}
 ];
+
+function careerTotalsIncluding(currentStats=null){
+  const totals={pts:0,reb:0,ast:0,stl:0,blk:0};
+  (state.games||[]).forEach(g=>Object.keys(totals).forEach(k=>totals[k]+=Number(g.stats?.[k]||0)));
+  if(currentStats)Object.keys(totals).forEach(k=>totals[k]+=Number(currentStats?.[k]||0));
+  return totals;
+}
 
 const MANUAL = [
  ["rotm","Rookie of the Month",600],["potw","Player of the Week",400],["potm","Player of the Month",800],
@@ -1401,6 +1431,38 @@ const MANUAL = [
  ["playoff_debut","Playoff Debut",500],["series_win","First Playoff Series Win",800],["conf_finals","Conference Finals Appearance",1000],
  ["finals","NBA Finals Appearance",1500],["champ","NBA Championship",3000],["finals_mvp","Finals MVP",3500]
 ];
+
+const MANUAL_META = {
+  rotm:{frequency:"repeat",label:"Repeatable",rookieOnly:true},
+  potw:{frequency:"repeat",label:"Repeatable"},
+  potm:{frequency:"repeat",label:"Repeatable"},
+  allstar:{frequency:"season",label:"Once per season"},
+  allnba:{frequency:"season",label:"Once per season"},
+  alldef:{frequency:"season",label:"Once per season"},
+  roy:{frequency:"career",label:"One-time career award"},
+  dpoy:{frequency:"season",label:"Once per season"},
+  mvp:{frequency:"season",label:"Once per season"},
+  playoff_debut:{frequency:"career",label:"One-time career milestone"},
+  series_win:{frequency:"career",label:"One-time career milestone"},
+  conf_finals:{frequency:"season",label:"Once per season"},
+  finals:{frequency:"season",label:"Once per season"},
+  champ:{frequency:"season",label:"Once per season"},
+  finals_mvp:{frequency:"season",label:"Once per season"}
+};
+
+function manualMeta(id){return MANUAL_META[id]||{frequency:"career",label:"One time"};}
+function manualLogFor(id){return (state.manualAccomplishmentLog||[]).filter(x=>x.id===id);}
+function manualSeasonClaimed(id,season=state.player?.season||1){return manualLogFor(id).some(x=>Number(x.season)===Number(season));}
+function manualCareerClaimed(id){return manualLogFor(id).length>0 || !!state.completedManual?.[id];}
+function manualClaimCount(id){return manualLogFor(id).length + ((!manualLogFor(id).length&&state.completedManual?.[id])?1:0);}
+function canClaimManual(id){
+  const meta=manualMeta(id),season=Number(state.player?.season||1);
+  if(meta.rookieOnly&&season!==1)return false;
+  if(meta.frequency==="career")return !manualCareerClaimed(id);
+  if(meta.frequency==="season")return !manualSeasonClaimed(id,season);
+  return true;
+}
+
 
 const ACCOMPLISHMENTS = [
   {id:"allstar",name:"All-Star Selection",sp:350,category:"honor"},
@@ -1898,6 +1960,7 @@ let state = {
  objectives:[],
  completedMilestones:{},
  completedManual:{},
+ manualAccomplishmentLog:[],manualRecurringMigrated:false,
  preNBAMilestones:{},
  games:[],
  upgrades:[],
@@ -1993,7 +2056,7 @@ function createFreshState(){
   return {
     player:{name:"",team:"",position:"SF",season:1,gameNo:0},
     ratings:Object.fromEntries(ATTRS.map(([a])=>[a,60])),
-    sp:0,objectives:[],completedMilestones:{},completedManual:{},preNBAMilestones:{},games:[],upgrades:[],schedule:[],specialEvents:[],
+    sp:0,objectives:[],completedMilestones:{},completedManual:{},manualAccomplishmentLog:[],manualRecurringMigrated:false,preNBAMilestones:{},games:[],upgrades:[],schedule:[],specialEvents:[],
     meters:{fans:15,chemistry:50,coach:25},pendingInterview:null,interviews:[],lastInterviewGame:0,
     insiderFeed:[],insiderUnread:0,insiderPrologueSeen:false,
     combine:{active:false,game:0,total:4,objectives:[],completed:[],finished:false},
@@ -2033,6 +2096,8 @@ function ensureState(){
   if(!state.objectives) state.objectives=[];
   if(!state.completedMilestones) state.completedMilestones={};
   if(!state.completedManual) state.completedManual={};
+  if(!Array.isArray(state.manualAccomplishmentLog)) state.manualAccomplishmentLog=[];
+  if(state.manualRecurringMigrated===undefined) state.manualRecurringMigrated=false;
   if(!state.preNBAMilestones) state.preNBAMilestones={};
   if(!state.careerStartPath) state.careerStartPath="draft_prospect";
   if(!state.games) state.games=[];
@@ -3564,8 +3629,9 @@ function calculateAndPostGame(){
     if(done){objSP+=100;completedObjs.push(o)}
   });
   let milestoneSP=0,newMilestones=[];
+  const careerTotalsNow=careerTotalsIncluding(s);
   MILESTONES.forEach(m=>{
-    if(!state.completedMilestones[m.id] && m.test(s)){
+    if(!state.completedMilestones[m.id] && m.test(s,careerTotalsNow)){
       state.completedMilestones[m.id]={name:m.name,bonus:m.bonus,game:state.player.gameNo+1};
       milestoneSP+=m.bonus; newMilestones.push(m);
     }
@@ -4815,17 +4881,43 @@ function renderMilestones(){
   PRENBA_MILESTONES.forEach(m=>{const done=!!state.preNBAMilestones?.[m.id],d=document.createElement("div");d.className="obj";d.innerHTML=`<div>${done?"✓":"○"}</div><div><b class="${done?"good":""}">${m.name}</b><div class="small">+${m.bonus.toLocaleString()} SP ${done?"• completed":"• one time"}</div></div>`;milestoneList.appendChild(d);});
   manualMilestones.innerHTML="";
   MANUAL.forEach(([id,name,bonus])=>{
-    const done=!!state.completedManual[id], d=document.createElement("div"); d.className="obj";
-    d.innerHTML=`<div><input type="checkbox" ${done?"checked disabled":""} onchange="completeManual('${id}','${name.replaceAll("'","\\'")}',${bonus},this)"></div><div><b>${name}</b><div class="small">+${bonus.toLocaleString()} SP • one time</div></div>`;
+    const meta=manualMeta(id),count=manualClaimCount(id),eligible=canClaimManual(id),season=Number(state.player?.season||1);
+    const d=document.createElement("div");d.className="obj";
+    let status=meta.label;
+    if(meta.rookieOnly&&season!==1)status="Rookie season only";
+    else if(meta.frequency==="season"&&!eligible)status=`Claimed • Season ${season}`;
+    else if(meta.frequency==="career"&&!eligible)status="Completed";
+    else if(count>0&&meta.frequency==="repeat")status=`${count}× earned • repeatable`;
+    d.innerHTML=`<div><button type="button" class="${eligible?"primary":"secondary"}" ${eligible?"":"disabled"} onclick="claimManualAccomplishment('${id}','${name.replaceAll("'","\\'")}',${bonus})">${eligible?(count>0&&meta.frequency==="repeat"?"CLAIM AGAIN":"CLAIM"):"✓"}</button></div>
+      <div><b>${name}</b><div class="small">+${bonus.toLocaleString()} SP • ${status}</div></div>`;
     manualMilestones.appendChild(d);
   });
   renderAccomplishments();
 }
-function completeManual(id,name,bonus,el){
-  if(!el.checked || state.completedManual[id]) return;
-  if(!confirm(`Award ${bonus.toLocaleString()} SP for "${name}"? This can only be claimed once.`)){el.checked=false;return}
-  state.completedManual[id]={name,bonus}; state.sp+=bonus; persist(); renderMilestones(); renderHistory();
+function claimManualAccomplishment(id,name,bonus){
+  ensureState();
+  const meta=manualMeta(id),season=Number(state.player?.season||1);
+  if(!canClaimManual(id)){renderMilestones();return;}
+  const suffix=meta.frequency==="repeat"?"This award can be earned again when it happens again.":meta.frequency==="season"?`This can only be claimed once in Season ${season}.`:"This is a one-time career claim.";
+  if(!confirm(`Award ${bonus.toLocaleString()} SP for "${name}"? ${suffix}`))return;
+  state.manualAccomplishmentLog.push({id,name,bonus,season,gameNo:Number(state.player?.gameNo||0),date:state.careerDate?{...state.careerDate}:null,ts:new Date().toISOString()});
+  // Keep legacy one-time storage populated only for true career one-time items.
+  if(meta.frequency==="career")state.completedManual[id]={name,bonus};
+  state.sp+=bonus;
+  state.insiderFeed=state.insiderFeed||[];
+  if(["allstar","allnba","alldef","roy","dpoy","mvp","champ","finals_mvp"].includes(id)){
+    const entry={id:"manual_award_"+id+"_"+Date.now(),season,gameNo:Number(state.player?.gameNo||0),date:state.careerDate?{...state.careerDate}:null,category:"milestone",
+      stage:`Season ${season} • Career Honor`,headline:name.toUpperCase(),deck:`${name} added to the career résumé.`,body:`${state.player?.name||"Your player"} earned ${name}${meta.frequency==="season"?` in Season ${season}`:""}.`,read:false};
+    state.insiderFeed.unshift(entry);state.insiderFeed=state.insiderFeed.slice(0,60);state.insiderUnread=(state.insiderUnread||0)+1;
+  }
+  persist();renderMilestones();renderHistory();
 }
+function completeManual(id,name,bonus,el){
+  // Backward-compatible wrapper for old saved/browser markup.
+  if(el&& !el.checked)return;
+  claimManualAccomplishment(id,name,bonus);
+}
+
 function renderHistory(){
   historyRows.innerHTML="";
   state.games.forEach(g=>{
