@@ -584,6 +584,41 @@ body:not(.career-home) #k11Hub{display:none!important}
 }
 </style>
 
+
+<style id="v52UpgradePlannerStyles">
+.upgradePlannerCard{overflow:hidden}
+.upgradeHeader{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:14px}
+.upgradeHeader>div:first-child>span,.upgradeBalance span,.upgradePlanBar span{display:block;font-size:9px;letter-spacing:1.4px;color:#9aa3a7;font-weight:900}
+.upgradeHeader h2{margin:3px 0 6px}
+.upgradeBalance{min-width:110px;padding:10px 12px;background:#0c1012;border:1px solid #343b3e;text-align:right}
+.upgradeBalance strong{display:block;color:#d6ff31;font-size:17px;margin-top:3px}
+.upgradePlanBar{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center;padding:11px 12px;margin-bottom:12px;background:#0b0f11;border:1px solid #343b3e;border-left:4px solid #4c5559}
+.upgradePlanBar.hasPlan{border-left-color:#d6ff31;background:linear-gradient(90deg,rgba(214,255,49,.08),#0b0f11 45%)}
+.upgradePlanBar strong{display:block;color:#fff;font-size:14px;margin-top:2px}
+.upgradeTable tr.upgradePlannedRow{background:linear-gradient(90deg,rgba(214,255,49,.12),rgba(214,255,49,.02))}
+.upgradeTable tr.upgradePlannedRow td:first-child{box-shadow:inset 4px 0 0 #d6ff31}
+.upgradeRatingCell{white-space:nowrap}.upgradeRatingCell .baseRating{color:#fff}.upgradeRatingCell .plannedArrow{color:#778087;margin:0 4px}.upgradeRatingCell .plannedRating{color:#d6ff31;font-size:1.08em}
+.upgradeDelta{display:block;margin-top:3px;color:#d6ff31;font-size:9px;font-weight:900;letter-spacing:.7px}
+.upgradeControls{display:flex;gap:6px;align-items:center}.upgradeControls button{width:34px;height:32px;padding:0!important;font-size:19px;font-weight:900;border-radius:4px}
+.upgradeControls .minus{background:#181d20;border:1px solid #485055;color:#fff}.upgradeControls .plus{background:#d6ff31;border:1px solid #d6ff31;color:#080a0b}
+.upgradeControls .minus:disabled,.upgradeControls .plus:disabled{opacity:.32}
+.upgradeNextCost .plannedSpent{display:block;color:#899297;font-size:9px;margin-top:3px}
+.upgradeConfirmOverlay{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.84);display:grid;place-items:center;padding:16px}
+.upgradeConfirmModal{width:min(560px,100%);max-height:88vh;overflow:auto;background:linear-gradient(180deg,#1b2023,#0c0f11);border:1px solid #4a5255;box-shadow:0 28px 80px #000;padding:18px}
+.upgradeConfirmModal .kicker{color:#d6ff31;font-size:9px;letter-spacing:1.6px;font-weight:900}.upgradeConfirmModal h2{margin:5px 0 6px}
+.upgradeConfirmList{margin:14px 0;border-top:1px solid #343b3e}.upgradeConfirmRow{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:11px 0;border-bottom:1px solid #343b3e;align-items:center}
+.upgradeConfirmRow strong{color:#fff}.upgradeConfirmRow .change{color:#d6ff31;font-weight:900}.upgradeConfirmRow .cost{color:#aeb6b9;font-size:12px}
+.upgradeConfirmTotal{display:flex;justify-content:space-between;gap:12px;padding:12px 0;font-size:16px}.upgradeConfirmTotal b{color:#d6ff31}
+.upgradeConfirmActions{display:flex;gap:8px;flex-wrap:wrap}.upgradeConfirmActions button{flex:1;min-width:150px}
+.upgradeReceiptTitle{font-size:25px;color:#d6ff31;font-weight:950;margin:4px 0 10px}
+@media(max-width:600px){
+ .upgradeHeader{display:block}.upgradeBalance{margin-top:10px;text-align:left}
+ .upgradePlanBar{grid-template-columns:1fr 1fr}.upgradePlanBar button{grid-column:1/-1;width:100%}
+ .upgradeTable th:nth-child(3),.upgradeTable td:nth-child(3){display:none}
+ .upgradeConfirmRow{grid-template-columns:1fr auto}.upgradeConfirmRow .cost{grid-column:1/-1}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -1041,10 +1076,17 @@ body:not(.career-home) #k11Hub{display:none!important}
 </section>
 
 <section id="upgrades" class="tab">
-  <div class="card">
-    <h2>Player Upgrades</h2>
-    <p class="small">The +1 price rises with the current rating and the value of the attribute. Purchases are permanent and logged.</p>
-    <div class="scroll"><table><thead><tr><th>Attribute</th><th>Current</th><th>Tier</th><th>Cost +1</th><th></th></tr></thead><tbody id="upgradeRows"></tbody></table></div>
+  <div class="card upgradePlannerCard">
+    <div class="upgradeHeader">
+      <div><span>PLAYER DEVELOPMENT</span><h2>Player Upgrades</h2><p class="small">Build your upgrade plan first. Nothing is spent until you confirm.</p></div>
+      <div class="upgradeBalance"><span>AVAILABLE</span><strong id="upgradeAvailableSP">0 SP</strong></div>
+    </div>
+    <div id="upgradePlanBar" class="upgradePlanBar">
+      <div><span>PLANNED UPGRADES</span><strong id="upgradePlanCount">0 ratings</strong></div>
+      <div><span>PLANNED COST</span><strong id="upgradePlanCost">0 SP</strong></div>
+      <button id="confirmUpgradePlanBtn" class="primary" type="button" onclick="openUpgradeConfirm()" disabled>CONFIRM UPGRADES</button>
+    </div>
+    <div class="scroll"><table class="upgradeTable"><thead><tr><th>Attribute</th><th>Rating</th><th>Tier</th><th>Next +1</th><th>Plan</th></tr></thead><tbody id="upgradeRows"></tbody></table></div>
   </div>
 </section>
 
@@ -2172,31 +2214,155 @@ function renderMeters(){
   });
 }
 
+
 function ratingBaseCost(r){
   if(r<60) return 120; if(r<70) return 220; if(r<80) return 380; if(r<85) return 600;
   if(r<90) return 900; if(r<95) return 1400; return 2300;
 }
 const MULT={cheap:.75,normal:1,expensive:1.25,premium:1.6};
-function upgradeCost(attr,tier){
-  const r=state.ratings[attr]; if(r>=99) return null;
+
+// V52 staged upgrade planner.
+// This is deliberately NOT stored in career state: unconfirmed choices disappear on reload and never touch a confirmed save.
+let pendingUpgradePlan={};
+
+function costAtRating(r,tier){
+  if(r>=99)return null;
   return Math.round(ratingBaseCost(r)*MULT[tier]/10)*10;
 }
+function upgradeCost(attr,tier){
+  return costAtRating(Number(state.ratings[attr]||0),tier);
+}
+function pendingUpgradeCount(attr){
+  return Math.max(0,Number(pendingUpgradePlan[attr]||0));
+}
+function projectedUpgradeRating(attr){
+  return Math.min(99,Number(state.ratings[attr]||0)+pendingUpgradeCount(attr));
+}
+function plannedCostForAttr(attr,tier,count=pendingUpgradeCount(attr)){
+  let cost=0,r=Number(state.ratings[attr]||0);
+  for(let i=0;i<count&&r<99;i++,r++){
+    const c=costAtRating(r,tier); if(c===null)break; cost+=c;
+  }
+  return cost;
+}
+function totalPendingUpgradeCost(){
+  return ATTRS.reduce((sum,[a,t])=>sum+plannedCostForAttr(a,t),0);
+}
+function totalPendingUpgradePoints(){
+  return ATTRS.reduce((sum,[a])=>sum+pendingUpgradeCount(a),0);
+}
+function nextProjectedUpgradeCost(attr,tier){
+  return costAtRating(projectedUpgradeRating(attr),tier);
+}
+function addPendingUpgrade(attr,tier){
+  const projected=projectedUpgradeRating(attr);
+  if(projected>=99)return;
+  const next=costAtRating(projected,tier);
+  if(next===null)return;
+  if(totalPendingUpgradeCost()+next>Number(state.sp||0)){alert("Not enough SP for that planned upgrade.");return;}
+  pendingUpgradePlan[attr]=pendingUpgradeCount(attr)+1;
+  renderUpgrades();
+}
+function removePendingUpgrade(attr){
+  const n=pendingUpgradeCount(attr);
+  if(n<=0)return;
+  if(n===1)delete pendingUpgradePlan[attr];
+  else pendingUpgradePlan[attr]=n-1;
+  renderUpgrades();
+}
+function clearPendingUpgrades(){
+  pendingUpgradePlan={};
+  renderUpgrades();
+}
+function renderUpgradePlanBar(){
+  const count=totalPendingUpgradePoints(),cost=totalPendingUpgradeCost();
+  const bar=document.getElementById("upgradePlanBar"),countEl=document.getElementById("upgradePlanCount"),costEl=document.getElementById("upgradePlanCost"),
+    bal=document.getElementById("upgradeAvailableSP"),btn=document.getElementById("confirmUpgradePlanBtn");
+  if(countEl)countEl.textContent=`${count} rating${count===1?"":"s"}`;
+  if(costEl)costEl.textContent=`${cost.toLocaleString()} SP`;
+  if(bal)bal.textContent=`${Number(state.sp||0).toLocaleString()} SP`;
+  if(bar)bar.classList.toggle("hasPlan",count>0);
+  if(btn)btn.disabled=count===0;
+}
 function renderUpgrades(){
-  const body=document.getElementById("upgradeRows"); body.innerHTML="";
+  const body=document.getElementById("upgradeRows"); if(!body)return; body.innerHTML="";
   ATTRS.forEach(([a,t])=>{
-    const r=state.ratings[a], cost=upgradeCost(a,t);
+    const base=Number(state.ratings[a]||0),n=pendingUpgradeCount(a),projected=projectedUpgradeRating(a),
+      nextCost=nextProjectedUpgradeCost(a,t),spent=plannedCostForAttr(a,t,n);
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${a}</td><td><b>${r}</b></td><td><span class="pill">${t}</span></td><td>${cost===null?"MAX":cost.toLocaleString()+" SP"}</td><td>${cost===null?"":`<button class="secondary" onclick="buyUpgrade('${a.replaceAll("'","\\'")}','${t}')">Buy +1</button>`}</td>`;
+    if(n>0)tr.className="upgradePlannedRow";
+    const safe=a.replaceAll("'","\\'");
+    tr.innerHTML=`<td><b>${escapeHtml(a)}</b>${n?`<span class="upgradeDelta">PLANNED +${n}</span>`:""}</td>
+      <td class="upgradeRatingCell"><span class="baseRating">${base}</span>${n?`<span class="plannedArrow">→</span><b class="plannedRating">${projected}</b>`:""}</td>
+      <td><span class="pill">${escapeHtml(t)}</span></td>
+      <td class="upgradeNextCost">${nextCost===null?"MAX":nextCost.toLocaleString()+" SP"}${n?`<span class="plannedSpent">${spent.toLocaleString()} SP planned</span>`:""}</td>
+      <td><div class="upgradeControls">
+        <button class="minus" type="button" aria-label="Remove planned ${escapeHtml(a)} upgrade" onclick="removePendingUpgrade('${safe}')" ${n<=0?"disabled":""}>−</button>
+        <button class="plus" type="button" aria-label="Add planned ${escapeHtml(a)} upgrade" onclick="addPendingUpgrade('${safe}','${t}')" ${projected>=99?"disabled":""}>+</button>
+      </div></td>`;
     body.appendChild(tr);
   });
+  renderUpgradePlanBar();
 }
-function buyUpgrade(attr,tier){
-  const cost=upgradeCost(attr,tier); if(cost===null) return;
-  if(state.sp<cost){alert("Not enough SP.");return}
-  const from=state.ratings[attr]; state.sp-=cost; state.ratings[attr]=from+1;
-  state.upgrades.unshift({attr,from,to:from+1,cost,ts:new Date().toISOString()});
-  persist(); renderRatings(); renderUpgrades(); renderHistory();
+function upgradePlanItems(){
+  return ATTRS.map(([attr,tier])=>{
+    const count=pendingUpgradeCount(attr); if(!count)return null;
+    const from=Number(state.ratings[attr]||0),to=Math.min(99,from+count),cost=plannedCostForAttr(attr,tier,count);
+    return{attr,tier,count,from,to,cost};
+  }).filter(Boolean);
 }
+function closeUpgradeOverlay(){document.getElementById("upgradeConfirmOverlay")?.remove()}
+function openUpgradeConfirm(){
+  const items=upgradePlanItems(),total=totalPendingUpgradeCost();
+  if(!items.length)return;
+  closeUpgradeOverlay();
+  const overlay=document.createElement("div");overlay.id="upgradeConfirmOverlay";overlay.className="upgradeConfirmOverlay";overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");
+  overlay.innerHTML=`<div class="upgradeConfirmModal">
+    <div class="kicker">PLAYER DEVELOPMENT • REVIEW PLAN</div>
+    <h2>Confirm Upgrades</h2>
+    <div class="small">Review everything before SP is spent. You can go back and change the plan.</div>
+    <div class="upgradeConfirmList">${items.map(x=>`<div class="upgradeConfirmRow"><strong>${escapeHtml(x.attr)}</strong><span class="change">${x.from} → ${x.to}</span><span class="cost">${x.cost.toLocaleString()} SP</span></div>`).join("")}</div>
+    <div class="upgradeConfirmTotal"><span>Total Cost</span><b>${total.toLocaleString()} SP</b></div>
+    <div class="upgradeConfirmTotal"><span>SP After</span><strong>${Math.max(0,Number(state.sp||0)-total).toLocaleString()} SP</strong></div>
+    <div class="upgradeConfirmActions"><button class="secondary" type="button" onclick="closeUpgradeOverlay()">KEEP EDITING</button><button class="primary" type="button" onclick="commitUpgradePlan()">APPLY UPGRADES</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+function commitUpgradePlan(){
+  const items=upgradePlanItems(),total=totalPendingUpgradeCost();
+  if(!items.length){closeUpgradeOverlay();return;}
+  if(total>Number(state.sp||0)){alert("Your SP balance changed. Review the plan again.");closeUpgradeOverlay();renderUpgrades();return;}
+  const now=new Date().toISOString();
+  items.forEach(item=>{
+    let r=item.from;
+    for(let i=0;i<item.count;i++){
+      const cost=costAtRating(r,item.tier);
+      state.upgrades.unshift({attr:item.attr,from:r,to:r+1,cost,ts:now});
+      r++;
+    }
+    state.ratings[item.attr]=item.to;
+  });
+  state.sp-=total;
+  const receipt=items.map(x=>({...x}));
+  pendingUpgradePlan={};
+  persist();renderRatings();renderUpgrades();renderHistory();
+  showUpgradeReceipt(receipt,total);
+}
+function showUpgradeReceipt(items,total){
+  closeUpgradeOverlay();
+  const overlay=document.createElement("div");overlay.id="upgradeConfirmOverlay";overlay.className="upgradeConfirmOverlay";overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");
+  overlay.innerHTML=`<div class="upgradeConfirmModal">
+    <div class="kicker">PLAYER DEVELOPMENT</div><div class="upgradeReceiptTitle">UPGRADES CONFIRMED</div>
+    <div class="upgradeConfirmList">${items.map(x=>`<div class="upgradeConfirmRow"><strong>${escapeHtml(x.attr)}</strong><span class="change">${x.from} → ${x.to}</span><span class="cost">−${x.cost.toLocaleString()} SP</span></div>`).join("")}</div>
+    <div class="upgradeConfirmTotal"><span>Total Spent</span><b>${total.toLocaleString()} SP</b></div>
+    <div class="upgradeConfirmTotal"><span>SP Remaining</span><strong>${Number(state.sp||0).toLocaleString()} SP</strong></div>
+    <div class="upgradeConfirmActions"><button class="primary" type="button" onclick="closeUpgradeOverlay()">DONE</button></div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+
+// Backward compatibility: any legacy Buy +1 call now stages an upgrade instead of spending immediately.
+function buyUpgrade(attr,tier){addPendingUpgrade(attr,tier);}
 
 function keyGameInputDateObj(){
   const v=(document.getElementById("sGameDate")?.value||"").trim();
