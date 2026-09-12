@@ -1013,6 +1013,21 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   body.teamColorTheme .deskArenaLogoWrap,body.teamColorTheme .arenaRefLogoWrap,body.teamColorTheme .deskCoachTeamBadge{border-color:var(--team-border)!important}
   body.teamColorTheme .deskCityPanel{box-shadow:inset 0 0 0 1px var(--team-border),inset 0 32px 60px var(--team-wash)}
 
+  /* V86 — carry the active team palette into the legacy Career Hub controls.
+     These overrides replace only the old lime treatment; spacing and geometry
+     remain inherited from the Definitive Coach build. */
+  body.teamColorTheme .careerSlotCard.currentSlot{border-color:var(--team-secondary)!important;background:linear-gradient(135deg,var(--team-wash),rgba(10,12,14,.96))!important;box-shadow:0 0 0 1px var(--team-glow),0 10px 22px rgba(0,0,0,.28)!important}
+  body.teamColorTheme button.primary,
+  body.teamColorTheme .primary,
+  body.teamColorTheme .careerSlotCard.currentSlot:before,
+  body.teamColorTheme .careerSlotCard.currentSlot .currentBadge{color:var(--team-on-secondary,#071018)!important}
+  body.teamColorTheme .careerSideToggle{color:var(--team-secondary)!important}
+  body.teamColorTheme .careerSideMenu button:hover,
+  body.teamColorTheme .careerSideMenu button:focus{background:var(--team-wash)!important;color:var(--team-secondary)!important}
+  body.teamColorTheme .careerSideMenu .sideGroup{color:var(--team-secondary)!important}
+  body.teamColorTheme .tabSideReminder{border-color:var(--team-border)!important;background:var(--team-wash)!important;color:#eef3f5!important}
+  body.teamColorTheme .note{background:linear-gradient(90deg,var(--team-surface),rgba(17,24,27,.92))!important;color:#eef3f5}
+
   /* Fans has always been blue. Team theming must never recolor it. */
   body.teamColorTheme .deskMeter.blue i,
   body.teamColorTheme #deskFansBar{background:#22b9ed!important;box-shadow:none!important}
@@ -6967,6 +6982,7 @@ function v84ApplyTeamTheme(team){
   /* Set the legacy desktop accent tokens inline as well. This guarantees the
      definitive V82 layout's existing gold accents actually inherit team colors. */
   body.style.setProperty('--desk-gold',s);body.style.setProperty('--desk-gold2',s);body.style.setProperty('--desk-blue','#22b9ed');
+  body.style.setProperty('--accent',s);body.style.setProperty('--k11-yellow',s);
   body.style.setProperty('--team-on-accent',v84Contrast(p));body.style.setProperty('--team-on-secondary',v84Contrast(s));
   body.style.setProperty('--team-glow',`rgba(${r},${g},${b},.30)`);body.style.setProperty('--team-wash',`rgba(${r},${g},${b},.18)`);
   body.style.setProperty('--team-border',`rgba(${sr},${sg},${sb},.66)`);body.style.setProperty('--team-surface',`rgba(${r},${g},${b},.16)`);
