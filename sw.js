@@ -1,5 +1,5 @@
-/* 2K27 Old School Career V68 — arena artwork persistent cache */
-const CACHE_NAME='2k27-oldschool-arena-art-v68';
+/* 2K27 Old School Career V69 — arena, logo and skyline persistent cache */
+const CACHE_NAME='2k27-oldschool-arena-art-v69';
 const ARENA_IMAGES=[
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Philips_Arena_outside.jpg?width=960',
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fleet_Center_from_old_Central_Artery.agr.jpg?width=960',
@@ -55,8 +55,9 @@ self.addEventListener('activate',event=>{
   })());
 });
 self.addEventListener('fetch',event=>{
-  const u=event.request.url;
-  if(!PRESENTATION_IMAGES.includes(u)) return;
+  const u=new URL(event.request.url);
+  const imageHost=/^(commons\.wikimedia\.org|upload\.wikimedia\.org|a\.espncdn\.com)$/.test(u.hostname);
+  if(!PRESENTATION_IMAGES.includes(event.request.url) && !imageHost) return;
   event.respondWith((async()=>{
     const cache=await caches.open(CACHE_NAME);
     const cached=await cache.match(event.request,{ignoreVary:true});
@@ -65,8 +66,6 @@ self.addEventListener('fetch',event=>{
       const live=await fetch(event.request);
       if(live) cache.put(event.request,live.clone()).catch(()=>{});
       return live;
-    }catch(_e){
-      return cached || Response.error();
-    }
+    }catch(_e){ return cached || Response.error(); }
   })());
 });
