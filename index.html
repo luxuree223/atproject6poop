@@ -807,6 +807,25 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   .deskFeatureRow{grid-template-columns:1fr 1fr}
   .deskCoachSummary{grid-template-columns:100px 1fr}.deskCoachGraphic{width:96px;height:96px}.deskCoachAssignment h3{font-size:16px}
 }
+
+/* V76 — 1:1 mockup hub pass. Presentation-only sizing/layout changes; career logic remains intact. */
+@media (min-width:980px){
+  .deskHero{grid-template-columns:minmax(300px,.88fr) minmax(360px,1.02fr) minmax(390px,1.18fr);min-height:410px}
+  .deskHeroVisual{min-height:410px}.deskHeroCore{padding:23px 22px 18px}.deskHeroNext{min-width:0}.deskNextBody{padding:14px 14px 15px}.deskArenaCard{min-height:183px;margin-bottom:12px}.deskNextOpponent{font-size:25px}
+  .deskHeroIdentity{display:none!important}
+  .deskHeroMotto{position:absolute;left:18px;top:104px;z-index:5;display:flex;flex-direction:column;gap:8px;color:#f4f3ed;text-shadow:0 2px 12px rgba(0,0,0,.78);pointer-events:none}
+  .deskHeroMotto span{display:block;font-size:18px;line-height:.92;font-weight:500;letter-spacing:.9px;text-transform:uppercase}
+  .deskHeroVisual.hasPhoto:before{background:linear-gradient(90deg,rgba(3,7,10,.42),rgba(3,7,10,.08) 44%,transparent 70%),linear-gradient(0deg,rgba(3,7,10,.16),transparent 34%)}
+  .deskHeroVisual.hasPhoto .deskPlayerImage{object-position:center 19%}
+  .deskCoreTop{grid-template-columns:96px 1fr;gap:16px;padding-bottom:17px}.deskIdentityMeta h1{font-size:27px;max-width:260px}.deskMeters{padding-top:15px}.deskQuote{margin-top:15px}
+  .deskFeatureRow{grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);gap:10px}
+  .deskCoachCard .deskCardBody{padding:13px 14px 12px}.deskCoachSummary{display:grid;grid-template-columns:124px 74px minmax(0,1fr);gap:11px;align-items:start}.deskCoachGraphic{width:118px;height:118px}.deskCoachNameplate{padding-top:6px}
+  .deskCoachTeamBadge{width:70px;height:70px;margin-top:9px;display:grid;place-items:center;border:1px solid #2e4b5a;background:#07141c;box-shadow:inset 0 0 22px rgba(255,255,255,.025)}.deskCoachTeamBadge img{width:56px;height:56px;object-fit:contain;display:none}.deskCoachTeamBadge i{font-style:normal;font-size:8px;font-weight:1000;color:#d6e0e5}
+  .deskCoachAssignment{padding-top:13px}.deskCoachAssignment h3{font-size:21px;margin:5px 0 4px}.deskCoachAssignment p{font-size:10px}
+  .deskCoachObjective{margin-left:220px;margin-top:-48px;padding:10px 11px 9px}.deskCoachContext{margin-left:220px;margin-top:8px}.deskCoachCard .deskMiniButton{width:calc(100% - 220px);margin-left:220px;margin-top:8px;padding:9px}.deskMilestonesCard .deskCardBody{padding:13px 15px}
+}
+@media (min-width:1350px){.deskHero{grid-template-columns:minmax(340px,.88fr) minmax(410px,1.02fr) minmax(440px,1.18fr)}.deskIdentityMeta h1{font-size:29px}}
+@media (min-width:980px) and (max-width:1180px){.deskHero{grid-template-columns:minmax(245px,.82fr) minmax(315px,1fr) minmax(330px,1.08fr)}.deskHeroMotto{left:13px;top:96px}.deskHeroMotto span{font-size:15px}.deskCoachSummary{grid-template-columns:100px 58px 1fr;gap:8px}.deskCoachGraphic{width:96px;height:96px}.deskCoachTeamBadge{width:54px;height:54px}.deskCoachTeamBadge img{width:44px;height:44px}.deskCoachObjective,.deskCoachContext{margin-left:166px}.deskCoachCard .deskMiniButton{margin-left:166px;width:calc(100% - 166px)}.deskCoachAssignment h3{font-size:16px}}
 </style>
 </head>
 <body>
@@ -904,11 +923,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <img id="deskPlayerPhoto" class="deskPlayerImage" alt="My Player photo">
       <div class="deskHeroFallback" aria-hidden="true"></div>
       <button class="deskUploadBtn" type="button" onclick="chooseK11PlayerPhoto()">UPLOAD PLAYER PHOTO</button>
-      <div class="deskHeroIdentity">
-        <div class="eyebrow" id="deskTeamEyebrow">MY PLAYER</div>
-        <h2 id="deskVisualName">ANTONIO TAYLOR</h2>
-        <p id="deskVisualMeta">SF • ROOKIE • OLD SCHOOL</p>
-      </div>
+      <div class="deskHeroMotto" id="deskHeroMotto" aria-label="Career photo slogan"><span id="deskMotto1">DISCIPLINE</span><span id="deskMotto2">BUILDS</span><span id="deskMotto3">FREEDOM</span></div>
     </section>
 
     <section class="deskHeroCore">
@@ -964,6 +979,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
             </div>
             <div class="deskCoachNameplate"><b id="deskCoachName">HEAD COACH</b><span>HEAD COACH</span></div>
           </div>
+          <div class="deskCoachTeamBadge" aria-label="Current team"><img id="deskCoachTeamLogo" alt="Current team logo"><i id="deskCoachTeamLogoFallback">NBA</i></div>
           <div class="deskCoachAssignment"><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div>
         </div>
         <div class="deskCoachObjective"><div class="label">COACH OBJECTIVE</div><strong id="deskCoachObjectiveText">No active objective.</strong><div class="deskCoachProgressTrack"><i id="deskCoachObjectiveBar"></i></div><div class="deskCoachProgressMeta"><span id="deskCoachProgressText">Waiting for next assignment</span><span id="deskCoachGamesLeft"></span></div></div>
@@ -1075,6 +1091,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <div><label>Career Era Start Year</label><input id="pEraYear" type="number" inputmode="numeric" min="1946" max="2100" value="2003"><div class="small">Example: 2003 for a 2003–04 rookie season. Controls historical arenas and desktop era dates.</div></div>
       <div><label>Game #</label><input id="pGameNo" type="number" inputmode="numeric" min="0" value="0"></div>
       <div><label>NBA 2K Overall</label><input id="pOverall" type="number" inputmode="numeric" min="40" max="99" placeholder="78"><div class="small">Use the OVR NBA 2K currently gives your player.</div></div>
+      <div><label>Player Photo Slogan</label><select id="pHeroSlogan"><option value="discipline">Discipline Builds Freedom</option><option value="earned">Earn Everything</option><option value="different">Built Different</option><option value="ready">Stay Ready</option><option value="legacy">Legacy Over Hype</option><option value="work">Work Speaks</option><option value="none">No Slogan</option></select><div class="small">Changes the presentation text beside your uploaded jersey photo on the Career Hub.</div></div>
     </div>
     <div class="row" style="margin-top:12px">
       <button class="primary" onclick="saveCareer()">Save Career</button>
@@ -2400,6 +2417,7 @@ function ensureState(){
   if(state.player.hometown===undefined) state.player.hometown="";
   if(state.player.hometownTeam===undefined) state.player.hometownTeam="";
   if(state.player.eraStartYear===undefined) state.player.eraStartYear=2003;
+  if(state.player.heroSlogan===undefined) state.player.heroSlogan="discipline";
   if(!state.homecoming) state.homecoming={arrivalTeam:"",arrivalAwarded:false,localOpportunityCount:0,lastHometownKeyGame:"",history:[]};
   if(!Array.isArray(state.homecoming.history)) state.homecoming.history=[];
   if(state.homecoming.arrivalAwarded===undefined) state.homecoming.arrivalAwarded=false;
@@ -2570,7 +2588,7 @@ function rebaseCareerDatesToEra(){
 }
 function saveCareer(){
   state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.hometown=(document.getElementById("pHometown")?.value||"").trim(); state.player.hometownTeam=(document.getElementById("pHometownTeam")?.value||"").trim(); state.player.position=pPos.value;
-  state.player.season=+pSeason.value||1; state.player.gameNo=+pGameNo.value||0; state.player.overall=document.getElementById("pOverall")?.value?Math.max(40,Math.min(99,+document.getElementById("pOverall").value)):null; state.player.eraStartYear=Math.max(1946,Math.min(2100,+document.getElementById("pEraYear")?.value||state.player.eraStartYear||2003)); rebaseCareerDatesToEra(); checkHomecomingArrival(); persist();
+  state.player.season=+pSeason.value||1; state.player.gameNo=+pGameNo.value||0; state.player.overall=document.getElementById("pOverall")?.value?Math.max(40,Math.min(99,+document.getElementById("pOverall").value)):null; state.player.eraStartYear=Math.max(1946,Math.min(2100,+document.getElementById("pEraYear")?.value||state.player.eraStartYear||2003)); state.player.heroSlogan=document.getElementById("pHeroSlogan")?.value||state.player.heroSlogan||"discipline"; rebaseCareerDatesToEra(); checkHomecomingArrival(); persist();
   renderAll(); alert("Career saved.");
 }
 
@@ -5679,7 +5697,7 @@ function renderCombineEntryButton(){
 }
 function renderAll(){
   renderHeader();
-  pName.value=state.player.name||""; pTeam.value=state.player.team||""; if(document.getElementById("pHometown")) pHometown.value=state.player.hometown||""; if(document.getElementById("pHometownTeam")) pHometownTeam.value=state.player.hometownTeam||""; pPos.value=state.player.position||"SF"; pSeason.value=state.player.season||1; pGameNo.value=state.player.gameNo||0; if(document.getElementById("pOverall")) document.getElementById("pOverall").value=state.player.overall??""; if(document.getElementById("pEraYear")) document.getElementById("pEraYear").value=state.player.eraStartYear||2003;
+  pName.value=state.player.name||""; pTeam.value=state.player.team||""; if(document.getElementById("pHometown")) pHometown.value=state.player.hometown||""; if(document.getElementById("pHometownTeam")) pHometownTeam.value=state.player.hometownTeam||""; pPos.value=state.player.position||"SF"; pSeason.value=state.player.season||1; pGameNo.value=state.player.gameNo||0; if(document.getElementById("pOverall")) document.getElementById("pOverall").value=state.player.overall??""; if(document.getElementById("pEraYear")) document.getElementById("pEraYear").value=state.player.eraStartYear||2003; if(document.getElementById("pHeroSlogan")) document.getElementById("pHeroSlogan").value=state.player.heroSlogan||"discipline";
   normalizeCareerDate();
 
   if(document.getElementById("pedYears") && pedYears.value==="") pedYears.value=Math.max(0,(state.player.season||1)-1);
@@ -6616,7 +6634,9 @@ function jumpCareerSection(id){
       if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v75_coach_photo_'+key,src)}catch(e){}setPhoto(src)}
     }catch(e){}
   }
-  function v75RenderCoach(){const team=state.player?.team||q('pTeam')?.value||'',coach=v75CoachForTeam(team);text('deskCoachName',safe(coach.name).toUpperCase());v75LoadCoachPhoto(coach)}
+  const V76_HERO_SLOGANS={discipline:["DISCIPLINE","BUILDS","FREEDOM"],earned:["EARN","EVERYTHING",""] ,different:["BUILT","DIFFERENT",""] ,ready:["STAY","READY",""] ,legacy:["LEGACY","OVER HYPE",""] ,work:["WORK","SPEAKS",""] ,none:["","",""]};
+  function v76RenderMotto(){const key=state.player?.heroSlogan||q('pHeroSlogan')?.value||'discipline',parts=V76_HERO_SLOGANS[key]||V76_HERO_SLOGANS.discipline;['deskMotto1','deskMotto2','deskMotto3'].forEach((id,i)=>{const el=q(id);if(el){el.textContent=parts[i]||'';el.style.display=parts[i]?'block':'none'}});const wrap=q('deskHeroMotto');if(wrap)wrap.style.display=key==='none'?'none':'flex'}
+  function v75RenderCoach(){const team=state.player?.team||q('pTeam')?.value||'',coach=v75CoachForTeam(team);text('deskCoachName',safe(coach.name).toUpperCase());setTeamLogo('deskCoachTeamLogo','deskCoachTeamLogoFallback',team);v75LoadCoachPhoto(coach)}
   function v65RenderArenaGuide(){const root=q('arenaReferenceGrid');if(!root)return;root.innerHTML=Object.entries(V65_ARENAS_2004).map(([team,a])=>{const logo=teamLogoUrl(team),abbr=(V68_TEAM_LOGOS[team]||'NBA').toUpperCase();return `<div class="arenaRef"><img loading="lazy" alt="${esc(a.arena)}" src="${esc(v66CommonsPhoto(a.photo))}" onerror="this.style.display='none'"><div class="arenaRefShade"></div><div class="arenaRefLogoWrap"><i>${esc(abbr)}</i>${logo?`<img alt="${esc(team)} logo" src="${esc(logo)}" onerror="this.style.display='none'">`:''}</div><div class="arenaRefPhotoYear">${esc(a.photoYear||'ARCHIVE')}</div><div class="arenaRefCopy"><b>${esc(team.replace(/\b\w/g,c=>c.toUpperCase()))}</b><span>${esc(a.arena)}</span><em>${esc(a.city)}</em></div></div>`}).join('')}
 
   function renderDesktopCareer(){
@@ -6626,7 +6646,7 @@ function jumpCareerSection(id){
     let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
     text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • YEAR ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);const dateLabel=careerDateText();text('deskCareerDate',dateLabel);text('deskTopYear',`YEAR ${season}`);text('deskTopVC',Number(state.sp||0).toLocaleString()+' VC');text('deskHeaderYear',`YEAR ${season}`);text('deskHeaderDate',dateLabel);text('deskHeaderVC',Number(state.sp||0).toLocaleString()+' VC');setTeamLogo('deskTeamLogo','deskTeamLogoFallback',p.team||q('pTeam')?.value||'');const oi=q('deskOvrInput');if(oi&&document.activeElement!==oi)oi.value=playerOvr()==='—'?'':playerOvr();
     const trust=clamp(m.coach),fans=clamp(m.fans),sp=Number(state.sp||0);text('deskTrust',Math.round(trust)+'/100');text('deskFans',Math.round(fans)+'/100');text('deskSP',sp.toLocaleString());if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
-    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);v73RenderTeamCity();v75RenderCoach();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);v73RenderTeamCity();v75RenderCoach();v76RenderMotto();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
     let story='Keep building your career. The next major story will appear here.';if(next){const ht=safe(p.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase(),opp=safe(next.opponent).toLowerCase();story=ht&&opp&&ht===opp?'HOMETOWN GAME: this matchup can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`)}text('deskStoryline',story);
     const ro=state.rotationOpportunity||{},rp=state.rotationProgress||{};text('deskStoryline2',ro.active?`${safe(ro.assignment||'Rotation opportunity')} • ${safe(ro.leash||'Normal')} leash`:`Current role: ${safe(rp.role||status)}${rp.minutes?' • '+rp.minutes+' MPG':''}`);const htName=safe(p.hometown||q('pHometown')?.value);text('deskStoryline3',htName?`Hometown: ${htName}. Local and homecoming context is active.`:'Set your hometown in Career Setup to unlock hometown story context.');
     const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
@@ -6637,7 +6657,7 @@ function jumpCareerSection(id){
   window.renderDesktopCareer=renderDesktopCareer;
   document.addEventListener('DOMContentLoaded',()=>{const ey=q('pEraYear');if(ey&&ey.dataset.bound!=="1"){ey.dataset.bound="1";const saveEra=()=>{const v=Math.max(1946,Math.min(2100,Number(ey.value)||2003));state.player.eraStartYear=v;const gy=q('gYear');if(gy)gy.value=eraYearFor(Number(q('gMonth')?.value||10),state.player?.season||1);if(typeof persist==='function')persist();renderDesktopCareer()};ey.addEventListener('change',saveEra);ey.addEventListener('blur',saveEra)}});
   document.addEventListener('DOMContentLoaded',()=>{renderDesktopCareer();setTimeout(renderDesktopCareer,300);setTimeout(renderDesktopCareer,1100)});
-  document.addEventListener('input',e=>{if(e.target&&['pName','pTeam','pHometown','pHometownTeam','pPos','pSeason','pGameNo','pOverall','pEraYear'].includes(e.target.id))renderDesktopCareer()});document.addEventListener('change',()=>setTimeout(renderDesktopCareer,0));document.addEventListener('change',e=>{if(e.target&&e.target.id==='gMonth'){const gy=q('gYear');if(gy)gy.value=eraYearFor(Number(e.target.value||10),state.player?.season||1)}});
+  document.addEventListener('input',e=>{if(e.target&&['pName','pTeam','pHometown','pHometownTeam','pPos','pSeason','pGameNo','pOverall','pEraYear','pHeroSlogan'].includes(e.target.id))renderDesktopCareer()});document.addEventListener('change',e=>{if(e.target&&e.target.id==='pHeroSlogan'){state.player.heroSlogan=e.target.value||'discipline';if(typeof persist==='function')persist();v76RenderMotto()}setTimeout(renderDesktopCareer,0)});document.addEventListener('change',e=>{if(e.target&&e.target.id==='gMonth'){const gy=q('gYear');if(gy)gy.value=eraYearFor(Number(e.target.value||10),state.player?.season||1)}});
   const obs=new MutationObserver(()=>renderDesktopCareer());document.addEventListener('DOMContentLoaded',()=>{const sp=q('spHeader');if(sp)obs.observe(sp,{childList:true,subtree:true,characterData:true})});
   document.addEventListener('DOMContentLoaded',()=>{const oi=q('deskOvrInput');if(oi&&oi.dataset.bound!=='1'){oi.dataset.bound='1';const save=()=>{const v=Number(oi.value);state.player.overall=Number.isFinite(v)&&v?Math.max(40,Math.min(99,Math.round(v))):null;const po=q('pOverall');if(po)po.value=state.player.overall??'';if(typeof persist==='function')persist();renderDesktopCareer()};oi.addEventListener('change',save);oi.addEventListener('blur',save);oi.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();oi.blur()}})}});
   const oldUpdate=window.updateK11Hub;if(typeof oldUpdate==='function')window.updateK11Hub=function(){const r=oldUpdate.apply(this,arguments);renderDesktopCareer();return r};
