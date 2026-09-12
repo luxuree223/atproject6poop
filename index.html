@@ -751,45 +751,14 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   .deskArenaEra{right:10px}
   .deskCoachSummary{grid-template-columns:68px 1fr;gap:11px}.deskCoachGraphic{height:68px;width:68px;display:grid;place-items:end center;background:linear-gradient(180deg,#132531,#08131b);border:1px solid #35505f;overflow:hidden}.deskCoachGraphic svg{width:62px;height:62px;color:#d8e0e4;transform:translateY(5px)}
   .deskMilestoneProgress{padding:9px 0;border-bottom:1px solid #233743}.deskMilestoneProgress:last-child{border-bottom:0}.deskMilestoneProgressTop{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}.deskMilestoneProgressTop b{font-size:10px}.deskMilestoneProgressTop span{font-size:8px;color:#f1c95b;font-weight:900}.deskMilestoneTrack{height:8px;margin-top:6px;background:#20333f;border:1px solid #2f4958;overflow:hidden}.deskMilestoneFill{height:100%;background:linear-gradient(90deg,#c99d28,#f0ca5b);width:0}.deskMilestoneMeta{margin-top:4px;font-size:7px;color:#7f95a1;display:flex;justify-content:space-between}
-  .deskCityPanel{display:block;position:relative;margin-top:auto;height:128px;min-height:128px;border-top:1px solid #263b49;overflow:hidden;background:#050b10}
+  .deskCityPanel{display:block;position:relative;margin-top:0;height:128px;min-height:128px;flex:0 0 128px;border-top:1px solid #263b49;overflow:hidden;background:#050b10}
   .deskCityPanel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.46;filter:saturate(.6) brightness(.7) contrast(1.15)}
   .deskCityShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,8,12,.08),rgba(3,8,12,.88))}
   .deskCityCopy{position:absolute;left:12px;right:12px;bottom:28px;z-index:2;text-shadow:0 2px 8px #000}.deskCityCopy small{display:block;font-size:6px;color:#e8bd4b;letter-spacing:1.7px;font-weight:1000}.deskCityCopy b{display:block;margin-top:3px;font-size:13px;letter-spacing:.8px}.deskCityCopy span{display:block;margin-top:2px;font-size:7px;color:#9eb0b9}
   .deskCityLegacy{position:absolute;left:12px;bottom:9px;z-index:2;color:#73858e;font-size:6px;font-weight:900;letter-spacing:2px}
   .arenaRefLogoWrap{position:absolute;left:7px;top:7px;z-index:3;width:34px;height:34px;display:grid;place-items:center;background:rgba(3,9,13,.82);border:1px solid rgba(233,189,66,.4)}.arenaRefLogoWrap img{position:relative;width:100%;height:100%;object-fit:contain;opacity:1;filter:none;padding:3px}.arenaRefLogoWrap i{position:absolute;color:#fff;font-size:8px;font-style:normal;font-weight:1000}
 }
-@media (min-width:980px) and (max-height:780px){nav#nav button{height:36px}.desktopBrand{min-height:80px}.deskCityPanel{height:105px;min-height:105px}.deskCityCopy{bottom:24px}}
-
-/* V69 — desktop prototype is the specification: tighter, denser, no dead zones. */
-@media (min-width:980px){
-  :root{--desk-side:218px;--desk-top:32px}
-  nav#nav{overflow:hidden!important;padding-bottom:0!important}
-  .desktopBrand{min-height:70px!important;height:70px;padding:9px 12px 7px!important}
-  .desktopBrand .db2k{font-size:31px!important}.desktopBrand strong{font-size:9px!important;margin-top:5px!important}.desktopBrand small{font-size:6px!important;margin-top:2px!important}
-  nav#nav button{height:37px!important;padding-left:42px!important;font-size:10px!important}
-  nav#nav button:before{left:15px!important;font-size:13px!important}
-  nav#nav button.active:after{top:7px!important}
-  .deskCityPanel{height:154px!important;min-height:154px!important;margin-top:auto!important;flex:0 0 154px!important;border-top:1px solid #263b49!important}
-  .deskCityPanel img{opacity:.78!important;filter:saturate(.88) brightness(.72) contrast(1.12)!important}
-  .deskCityCopy{bottom:31px!important}.deskCityCopy small{display:none!important}.deskCityCopy b{font-size:14px!important;letter-spacing:1.8px!important}.deskCityCopy span{font-size:7px!important}
-  .deskCityLegacy{bottom:11px!important}
-  header{height:32px!important}.deskHeaderMeta{font-size:7px!important}header>div:first-child h1:after{font-size:6px!important}
-  main{padding:40px 10px 22px!important}.desktopCommandCenter{max-width:none!important}
-  .deskHero{grid-template-columns:minmax(245px,.82fr) minmax(330px,1.22fr) minmax(245px,.82fr) minmax(245px,.86fr)!important;min-height:340px!important}
-  .deskHeroVisual{min-height:340px!important}.deskHeroFallback{height:286px!important;width:180px!important}.deskHeroIdentity{left:16px!important;bottom:14px!important}.deskHeroIdentity h2{font-size:27px!important;margin:4px 0 6px!important}.deskHeroIdentity p{font-size:9px!important}.deskUploadBtn{top:10px!important;right:10px!important;padding:5px 7px!important;font-size:7px!important}
-  .deskHeroCore{padding:15px 16px 12px!important}.deskCoreTop{grid-template-columns:76px 1fr!important;gap:13px!important;padding-bottom:12px!important}.deskOvrBox{height:76px!important;min-width:76px!important}.deskOvrBox input{font-size:31px!important}.deskIdentityMeta h1{font-size:22px!important;margin:4px 0!important}.deskIdentityMeta .sub{font-size:9px!important}.deskRoleBadge{margin-top:7px!important;padding:4px 7px!important;font-size:8px!important}.deskTeamLogoWrap{width:28px!important;height:28px!important;flex-basis:28px!important}
-  .deskMeters{padding:8px 0 0!important}.deskMeterRow{grid-template-columns:76px 1fr 50px!important;gap:8px!important;margin:8px 0!important}.deskMeter{height:9px!important}.deskQuote{margin-top:9px!important;padding:9px 10px!important;font-size:9px!important}
-  .deskHeroNext,.deskHeroArena{background:linear-gradient(180deg,#0b1922,#071018);min-width:0;border-right:1px solid #294250}.deskHeroArena{border-right:0;padding:8px}
-  .deskPanelBar{height:31px!important;padding:0 10px!important;font-size:9px!important}.deskPanelBar small{font-size:6px;color:#8297a3;margin-left:4px}.deskNextBody{padding:12px 10px!important}.deskNextOpponent{font-size:21px!important;margin:4px 0!important}.deskNextMeta{font-size:8px!important}.deskPrimaryAction{margin:10px 0 8px!important;padding:8px 9px!important;font-size:8px!important}
-  .deskArenaCard{min-height:155px!important;height:155px!important;margin:0 0 8px!important}.deskArenaCopy b{font-size:14px!important}.deskArenaCopy small{font-size:7px!important}.deskArenaCopy span{font-size:8px!important}.deskArenaLogoWrap{width:35px!important;height:35px!important}.deskArenaEra{font-size:6px!important}.deskArenaCredit{font-size:5px!important}
-  .deskStoryList{margin-top:0!important;padding:8px 7px 0!important}.deskStoryItem{font-size:8px!important;padding:6px 0 6px 11px!important}.deskStoryList .label{font-size:7px!important}
-  .deskLower{grid-template-columns:.92fr 1fr 1.12fr!important;gap:7px!important;margin-top:7px!important;align-items:start!important}.deskBottom{grid-template-columns:1.05fr 1.05fr .9fr .9fr!important;gap:7px!important;margin-top:7px!important;align-items:start!important}.deskCardBody{padding:8px 10px!important}.deskCard{box-shadow:none!important}
-  .deskRecentTable td{padding:5px 4px!important}.deskRecentTable th{padding:4px!important}.deskHeadlineRow{padding:5px 0!important}.deskInsiderLead{grid-template-columns:82px 1fr!important;gap:8px!important}.deskInsiderLead img{width:82px!important;height:74px!important}.deskInsiderLead h3{font-size:13px!important}.deskInsiderLead p{font-size:8px!important}.deskHeadlineList{margin-top:6px!important}
-  .deskObjectiveRow,.deskEndorseRow{padding:5px 0!important}.deskEndorseLogo{width:34px!important;height:34px!important}.deskCoachSummary{grid-template-columns:54px 1fr!important;gap:8px!important}.deskCoachGraphic{width:54px!important;height:54px!important}.deskCoachGraphic svg{width:50px!important;height:50px!important}.deskCoachSummary h3{font-size:11px!important}.deskCoachSummary p{font-size:8px!important}.deskMiniButton{margin-top:7px!important;padding:6px!important}
-  .deskMilestoneProgress{padding:5px 0!important}.deskMilestoneTrack{height:6px!important;margin-top:4px!important}.deskMilestoneMeta{font-size:6px!important;margin-top:2px!important}.deskMilestoneProgressTop b{font-size:8px!important}.deskMilestoneProgressTop span{font-size:7px!important}
-  .deskSeasonAverages{overflow:hidden}.deskSeasonTable{width:100%;border-collapse:collapse;font-size:8px}.deskSeasonTable th{color:#8196a1;font-size:6px;letter-spacing:.5px;text-align:right;padding:4px 5px;border-bottom:1px solid #29404d}.deskSeasonTable th:first-child,.deskSeasonTable td:first-child{text-align:left}.deskSeasonTable td{padding:7px 5px;text-align:right;border-bottom:1px solid #223641;font-weight:800}.deskSeasonTable tr:last-child td{border-bottom:0}.deskSeasonTable td:first-child{color:#f1f4f5}
-}
-@media(min-width:980px) and (max-width:1250px){.deskHero{grid-template-columns:.74fr 1fr .78fr .82fr!important}.deskHeroIdentity h2{font-size:22px!important}.deskLower{grid-template-columns:1fr 1fr!important}.deskInsiderCard{grid-column:1/3}.deskBottom{grid-template-columns:1fr 1fr!important}}
+@media (min-width:980px) and (max-height:780px){nav#nav button{height:36px}.desktopBrand{min-height:80px}.deskCityPanel{height:105px;min-height:105px;flex-basis:105px;margin-top:0}.deskCityCopy{bottom:24px}}
 
 </style>
 
@@ -916,33 +885,32 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     <section class="deskHeroNext">
       <div class="deskPanelBar"><span>NEXT GAME</span><button type="button" onclick="openTab('schedule')">KEY GAMES</button></div>
       <div class="deskNextBody">
+        <div class="deskArenaCard noImage" id="deskArenaCard">
+          <img id="deskArenaImage" alt="Historical home arena">
+          <div class="deskArenaShade"></div><div class="deskArenaLogoWrap"><img id="deskArenaLogo" class="deskArenaLogo" alt="Home team logo"><i id="deskArenaLogoFallback">NBA</i></div><div class="deskArenaEra" id="deskArenaEra">ERA ARENA</div>
+          <div class="deskArenaCopy"><small id="deskArenaTeam">HOME VENUE</small><b id="deskArenaName">ARENA TBD</b><span id="deskArenaCity">Historical venue presentation</span></div>
+          <div class="deskArenaCredit" id="deskArenaCredit"></div>
+        </div>
         <div class="deskNextLabel">NEXT CAREER MOMENT</div>
         <div class="deskNextOpponent" id="deskOpponent">NO KEY GAME</div>
         <div class="deskNextMeta" id="deskGameMeta">Add a Key Game when a matchup matters to your career story.</div>
         <button class="deskPrimaryAction" type="button" onclick="openPostgameTab()">OPEN POSTGAME</button>
-
-      </div>
-    </section>
-    <section class="deskHeroArena">
-      <div class="deskArenaCard noImage" id="deskArenaCard">
-        <img id="deskArenaImage" alt="Historical home arena">
-        <div class="deskArenaShade"></div><div class="deskArenaLogoWrap"><img id="deskArenaLogo" class="deskArenaLogo" alt="Home team logo"><i id="deskArenaLogoFallback">NBA</i></div><div class="deskArenaEra" id="deskArenaEra">ERA ARENA</div>
-        <div class="deskArenaCopy"><small id="deskArenaTeam">HOME VENUE</small><b id="deskArenaName">ARENA TBD</b><span id="deskArenaCity">Historical venue presentation</span></div>
-        <div class="deskArenaCredit" id="deskArenaCredit"></div>
-      </div>
-      <div class="deskStoryList">
-        <div class="label">KEY STORYLINES</div>
-        <div class="deskStoryItem" id="deskStoryline">Keep building your career. The next major story will appear here.</div>
-        <div class="deskStoryItem" id="deskStoryline2">Coach expectations and role changes will appear here.</div>
-        <div class="deskStoryItem" id="deskStoryline3">Hometown and media moments are tracked by the career engine.</div>
+        <div class="deskStoryList">
+          <div class="label">KEY STORYLINES</div>
+          <div class="deskStoryItem" id="deskStoryline">Keep building your career. The next major story will appear here.</div>
+          <div class="deskStoryItem" id="deskStoryline2">Coach expectations and role changes will appear here.</div>
+          <div class="deskStoryItem" id="deskStoryline3">Hometown and media moments are tracked by the career engine.</div>
+        </div>
       </div>
     </section>
   </div>
 
   <div class="deskLower">
     <article class="deskCard">
-      <div class="deskPanelBar"><span>SEASON AVERAGES <small>(LAST 3 SEASONS)</small></span><button type="button" onclick="openTab('stats')">VIEW MORE</button></div>
-      <div class="deskCardBody"><div id="deskSeasonAverages" class="deskSeasonAverages"></div></div>
+      <div class="deskPanelBar"><span>SEASON AVERAGES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
+      <div class="deskCardBody"><div class="deskAverages">
+        <div class="deskAvg"><b id="deskAvgPts">0.0</b><span>PPG</span></div><div class="deskAvg"><b id="deskAvgReb">0.0</b><span>RPG</span></div><div class="deskAvg"><b id="deskAvgAst">0.0</b><span>APG</span></div><div class="deskAvg"><b id="deskAvgStl">0.0</b><span>SPG</span></div><div class="deskAvg"><b id="deskAvgBlk">0.0</b><span>BPG</span></div><div class="deskAvg"><b id="deskAvgFG">—</b><span>FG%</span></div>
+      </div></div>
     </article>
 
     <article class="deskCard">
