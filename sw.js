@@ -1,5 +1,5 @@
-/* 2K27 Old School Career V70 — arena artwork persistent cache */
-const CACHE_NAME='2k27-oldschool-arena-art-v70';
+/* 2K27 Old School Career V71 — arena artwork persistent cache */
+const CACHE_NAME='2k27-oldschool-arena-art-v71';
 const ARENA_IMAGES=[
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Philips_Arena_outside.jpg?width=960',
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fleet_Center_from_old_Central_Artery.agr.jpg?width=960',
