@@ -6978,21 +6978,23 @@ function jumpCareerSection(id){
     "washington wizards":[{name:"Eddie Jordan"}]
   };
   const V75_COACH_ALIASES={"brooklyn nets":"new jersey nets","new orleans pelicans":"new orleans hornets","oklahoma city thunder":"seattle supersonics","charlotte bobcats":"charlotte hornets"};
-  /* V87 — audited Wikipedia identities. Explicit article titles prevent
-     ambiguous names from resolving to players, crowds, arenas, or unrelated
-     people (notably Larry Brown and Orlando coach Johnny Davis). */
-  const V87_COACH_WIKI_PAGES={
-    "Terry Stotts":"Terry Stotts","Jim O'Brien":"Jim O'Brien (basketball, born 1952)","John Carroll":"John Carroll (basketball)",
-    "Bernie Bickerstaff":"Bernie Bickerstaff","Bill Cartwright":"Bill Cartwright","Pete Myers":"Pete Myers","Scott Skiles":"Scott Skiles",
-    "Paul Silas":"Paul Silas","Don Nelson":"Don Nelson","Jeff Bzdelik":"Jeff Bzdelik","Larry Brown":"Larry Brown (basketball)",
-    "Eric Musselman":"Eric Musselman","Jeff Van Gundy":"Jeff Van Gundy","Rick Carlisle":"Rick Carlisle","Mike Dunleavy Sr.":"Mike Dunleavy Sr.",
-    "Phil Jackson":"Phil Jackson","Hubie Brown":"Hubie Brown","Stan Van Gundy":"Stan Van Gundy","Terry Porter":"Terry Porter",
-    "Flip Saunders":"Flip Saunders","Byron Scott":"Byron Scott","Lawrence Frank":"Lawrence Frank","Tim Floyd":"Tim Floyd",
-    "Don Chaney":"Don Chaney","Herb Williams":"Herb Williams","Lenny Wilkens":"Lenny Wilkens","Doc Rivers":"Doc Rivers",
-    "Johnny Davis":"Johnny Davis (basketball, born 1955)","Randy Ayers":"Randy Ayers","Chris Ford":"Chris Ford (basketball)",
-    "Frank Johnson":"Frank Johnson (basketball)","Mike D'Antoni":"Mike D'Antoni","Maurice Cheeks":"Maurice Cheeks","Rick Adelman":"Rick Adelman",
-    "Gregg Popovich":"Gregg Popovich","Nate McMillan":"Nate McMillan","Kevin O'Neill":"Kevin O'Neill (basketball)",
-    "Jerry Sloan":"Jerry Sloan","Eddie Jordan":"Eddie Jordan (basketball)"
+  /* V91 — all 39 season/timeline coach identities are bundled and audited.
+     No runtime search is allowed: it previously produced player/crowd images. */
+  const V91_COACH_PHOTOS={
+    "Bernie Bickerstaff":"coach-photos/bernie-bickerstaff.jpg","Bill Cartwright":"coach-photos/bill-cartwright.jpg",
+    "Byron Scott":"coach-photos/byron-scott.jpg","Chris Ford":"coach-photos/chris-ford.jpg","Doc Rivers":"coach-photos/doc-rivers.jpg",
+    "Don Chaney":"coach-photos/don-chaney.jpg","Don Nelson":"coach-photos/don-nelson.jpg","Eddie Jordan":"coach-photos/eddie-jordan.jpg",
+    "Eric Musselman":"coach-photos/eric-musselman.jpg","Flip Saunders":"coach-photos/flip-saunders.jpg","Frank Johnson":"coach-photos/frank-johnson.jpg",
+    "Gregg Popovich":"coach-photos/gregg-popovich.jpg","Herb Williams":"coach-photos/herb-williams.jpg","Hubie Brown":"coach-photos/hubie-brown.jpg",
+    "Jeff Bzdelik":"coach-photos/jeff-bzdelik.jpg","Jeff Van Gundy":"coach-photos/jeff-van-gundy.jpg","Jerry Sloan":"coach-photos/jerry-sloan.jpg",
+    "Jim O'Brien":"coach-photos/jim-o-brien.jpg","John Carroll":"coach-photos/john-carroll.jpg","Johnny Davis":"coach-photos/johnny-davis.jpg",
+    "Kevin O'Neill":"coach-photos/kevin-o-neill.jpg","Larry Brown":"coach-photos/larry-brown.jpg","Lawrence Frank":"coach-photos/lawrence-frank.jpg",
+    "Lenny Wilkens":"coach-photos/lenny-wilkens.jpg","Maurice Cheeks":"coach-photos/maurice-cheeks.jpg","Mike D'Antoni":"coach-photos/mike-d-antoni.jpg",
+    "Mike Dunleavy Sr.":"coach-photos/mike-dunleavy-sr.jpg","Nate McMillan":"coach-photos/nate-mcmillan.jpg","Paul Silas":"coach-photos/paul-silas.jpg",
+    "Pete Myers":"coach-photos/pete-myers.jpg","Phil Jackson":"coach-photos/phil-jackson.jpg","Randy Ayers":"coach-photos/randy-ayers.jpg",
+    "Rick Adelman":"coach-photos/rick-adelman.jpg","Rick Carlisle":"coach-photos/rick-carlisle.jpg","Scott Skiles":"coach-photos/scott-skiles.jpg",
+    "Stan Van Gundy":"coach-photos/stan-van-gundy.jpg","Terry Porter":"coach-photos/terry-porter.jpg","Terry Stotts":"coach-photos/terry-stotts.jpg",
+    "Tim Floyd":"coach-photos/tim-floyd.jpg"
   };
   const v75CoachPhotoCache={};
   function v75CoachTeamKey(team){const k=v65TeamKey(team);return V75_COACH_ALIASES[k]||V75_COACH_ALIASES[safe(team).toLowerCase()]||k}
@@ -7007,22 +7009,13 @@ function jumpCareerSection(id){
     const pick=timeline.find(x=>!x.until||iso<=x.until)||timeline[timeline.length-1];
     return {...pick,team:key};
   }
-  async function v75LoadCoachPhoto(coach){
+  function v75LoadCoachPhoto(coach){
     const img=q('deskCoachPhoto'),frame=img?.closest('.deskCoachGraphic');if(!img||!frame)return;
     frame.classList.remove('hasCoachPhoto');img.removeAttribute('src');
     if(!coach?.name||coach.name==='Head Coach')return;
-    const key=coach.name,stored=v75CoachPhotoCache[key]||localStorage.getItem('v87_verified_coach_photo_'+key);
+    const key=coach.name,stored=v75CoachPhotoCache[key]||V91_COACH_PHOTOS[key];
     const setPhoto=src=>{if(!src)return false;img.onload=()=>frame.classList.add('hasCoachPhoto');img.onerror=()=>frame.classList.remove('hasCoachPhoto');img.src=src;return true};
-    if(stored){setPhoto(stored);return}
-    const pageName=V87_COACH_WIKI_PAGES[coach.name]||coach.name;
-    try{
-      const u='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(pageName);
-      const r=await fetch(u,{headers:{'Accept':'application/json'}});if(!r.ok)throw 0;const j=await r.json();const src=j.thumbnail?.source||j.originalimage?.source;
-      if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v87_verified_coach_photo_'+key,src)}catch(e){}setPhoto(src);return}
-    }catch(e){}
-    /* Never accept the first result from a broad Commons search. If an exact,
-       identified article has no portrait, the designed HC fallback remains in
-       place instead of showing an unrelated basketball image. */
+    if(stored){v75CoachPhotoCache[key]=stored;setPhoto(stored)}
   }
   const V76_HERO_SLOGANS={discipline:["DISCIPLINE","BUILDS","FREEDOM"],earned:["EARN","EVERYTHING",""] ,different:["BUILT","DIFFERENT",""] ,ready:["STAY","READY",""] ,legacy:["LEGACY","OVER HYPE",""] ,work:["WORK","SPEAKS",""] ,none:["","",""]};
   function v76RenderMotto(){const key=state.player?.heroSlogan||q('pHeroSlogan')?.value||'discipline',parts=V76_HERO_SLOGANS[key]||V76_HERO_SLOGANS.discipline;['deskMotto1','deskMotto2','deskMotto3'].forEach((id,i)=>{const el=q(id);if(el){el.textContent=parts[i]||'';el.style.display=parts[i]?'block':'none'}});const wrap=q('deskHeroMotto');if(wrap)wrap.style.display=key==='none'?'none':'flex'}

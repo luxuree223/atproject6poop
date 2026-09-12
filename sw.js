@@ -1,5 +1,5 @@
-/* 2K27 Old School Career V75 — presentation artwork persistent cache */
-const CACHE_NAME='2k27-oldschool-presentation-v75';
+/* 2K27 Old School Career V91 — presentation artwork + audited coach photos */
+const CACHE_NAME='2k27-oldschool-presentation-v91';
 const ARENA_IMAGES=[
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Philips_Arena_outside.jpg?width=960',
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fleet_Center_from_old_Central_Artery.agr.jpg?width=960',
@@ -34,7 +34,10 @@ const ARENA_IMAGES=[
 const TEAM_LOGOS=[
 'atl','bos','chi','cle','dal','den','det','gs','hou','ind','lac','lal','mem','mia','mil','min','nj','no','ny','orl','phi','phx','por','sac','sa','sea','tor','utah','wsh'
 ].map(ab=>`https://a.espncdn.com/i/teamlogos/nba/500/${ab}.png`);
-const PRESENTATION_IMAGES=[...ARENA_IMAGES,...TEAM_LOGOS];
+const COACH_IMAGES=[
+'bernie-bickerstaff','bill-cartwright','byron-scott','chris-ford','doc-rivers','don-chaney','don-nelson','eddie-jordan','eric-musselman','flip-saunders','frank-johnson','gregg-popovich','herb-williams','hubie-brown','jeff-bzdelik','jeff-van-gundy','jerry-sloan','jim-o-brien','john-carroll','johnny-davis','kevin-o-neill','larry-brown','lawrence-frank','lenny-wilkens','maurice-cheeks','mike-d-antoni','mike-dunleavy-sr','nate-mcmillan','paul-silas','pete-myers','phil-jackson','randy-ayers','rick-adelman','rick-carlisle','scott-skiles','stan-van-gundy','terry-porter','terry-stotts','tim-floyd'
+].map(name=>`coach-photos/${name}.jpg`);
+const PRESENTATION_IMAGES=[...ARENA_IMAGES,...TEAM_LOGOS,...COACH_IMAGES];
 self.addEventListener('install',event=>{
   self.skipWaiting();
   event.waitUntil((async()=>{
@@ -57,7 +60,8 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
   const u=event.request.url;
   const isDynamicPresentation=/^https:\/\/(?:upload\.wikimedia\.org|commons\.wikimedia\.org)\//.test(u);
-  if(!PRESENTATION_IMAGES.includes(u) && !isDynamicPresentation) return;
+  const isBundledCoach=/\/coach-photos\/[^/]+\.jpg$/.test(new URL(u).pathname);
+  if(!PRESENTATION_IMAGES.includes(u) && !isDynamicPresentation && !isBundledCoach) return;
   event.respondWith((async()=>{
     const cache=await caches.open(CACHE_NAME);
     const cached=await cache.match(event.request,{ignoreVary:true});
