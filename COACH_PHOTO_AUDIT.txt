@@ -1,0 +1,6 @@
+V93 PHOTO QUALITY PASS
+- Layout/code/coach mappings unchanged.
+- Reprocessed legacy low-resolution coach assets with high-quality Lanczos resampling and conservative denoise/sharpening.
+- Jim O'Brien and Randy Ayers received targeted soft-image cleanup.
+- Audit rendered at the app's 118x118 display size.
+- This pass improves visible pixelation/softness but does not claim synthetic upscaling creates new photographic detail.

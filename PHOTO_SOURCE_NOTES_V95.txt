@@ -1,0 +1,1 @@
+V95 full coach-photo quality pass. Replaced visibly weak sources where a materially sharper source was verified. External web-hosted images require internet access. Layout and save schema unchanged.

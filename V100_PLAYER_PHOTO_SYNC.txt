@@ -1,0 +1,7 @@
+V100 PLAYER PHOTO PORTABILITY
+
+- Player portrait is included with manual Export Save File / Import Save File.
+- Cloud Push ALL Career Slots syncs each career slot's portrait as a separate Firestore photo document.
+- Cloud Pull ALL Career Slots restores each portrait to the matching career slot/device.
+- Photos remain stored locally per career for offline display after sync.
+- Existing saves without a portrait remain compatible.

@@ -1,5 +1,5 @@
-/* 2K27 Old School Career V99 — full legacy logo assets + audited coach photos */
-const CACHE_NAME='2k27-oldschool-presentation-v99';
+/* 2K27 Old School Career V100 — portable player-photo cloud/export sync */
+const CACHE_NAME='2k27-oldschool-presentation-v100';
 const ARENA_IMAGES=[
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Philips_Arena_outside.jpg?width=960',
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fleet_Center_from_old_Central_Artery.agr.jpg?width=960',

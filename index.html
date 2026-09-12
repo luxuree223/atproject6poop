@@ -1744,7 +1744,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <div class="obj"><div>2.</div><div>Press <b>SAVE CLOUD CONFIG</b>.</div></div>
       <div class="obj"><div>3.</div><div><b>CREATE ACCOUNT</b> the first time, or <b>SIGN IN</b> if you already have one.</div></div>
       <div class="obj"><div>4.</div><div><b>TO SAVE/BACK UP YOUR CAREER:</b> press <b>PUSH ALL CAREER SLOTS</b>. Push sends the careers on <u>this device</u> up to your account's private cloud library.</div></div>
-      <div class="obj"><div>5.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>down to this device</u>.</div></div>
+      <div class="obj"><div>5.</div><div><b>TO LOAD YOUR CAREER ON ANOTHER DEVICE:</b> sign into the same account and press <b>PULL ALL CAREER SLOTS</b>. Pull brings the cloud careers <u>and their player photos</u> down to this device.</div></div>
       <div style="margin-top:12px;font-weight:900;font-size:16px">PUSH = SAVE THIS DEVICE TO CLOUD &nbsp; • &nbsp; PULL = LOAD CLOUD SAVE TO THIS DEVICE</div>
     </div>
 
@@ -2598,6 +2598,7 @@ function deleteCareerSlot(id){
   if(!confirm(`Delete the saved slot "${careerSlotName(item)}"? Export it first if you may want it later.`))return;
   const next=slots.filter(x=>x.id!==id);
   writeCareerSlots(next);
+  setK11PlayerPhotoForSlot(id,'');
   if(activeSlotId===id){
     activeSlotId="";
     localStorage.removeItem("2k27_oldschool_active_slot");
@@ -5805,10 +5806,14 @@ function renderHistory(){
   });
 }
 function exportSave(){
+  // V100: the active career portrait travels with manual export/import.
+  let playerPhoto="";
+  try{playerPhoto=localStorage.getItem(k11PlayerPhotoKey(activeSlotId))||"";}catch(e){}
   const packageData={
     format:"2K27_OLD_SCHOOL_CAREER_SAVE",
     schemaVersion:19,
     exportedAt:new Date().toISOString(),
+    playerPhoto,
     data:state
   };
   const blob=new Blob([JSON.stringify(packageData,null,2)],{type:"application/json"});
@@ -5820,12 +5825,17 @@ function importSave(file){
   r.onload=()=>{try{
     const parsed=JSON.parse(r.result);
     // V6+ saves use a versioned wrapper. V1–V5 raw-state saves are still accepted.
+    const importedPhoto=(parsed && parsed.format==="2K27_OLD_SCHOOL_CAREER_SAVE")?(parsed.playerPhoto||""):"";
     saveCurrentToSlot(true);
     state=(parsed && parsed.format==="2K27_OLD_SCHOOL_CAREER_SAVE" && parsed.data)?parsed.data:parsed;
     activeSlotId="career_"+Date.now()+"_"+Math.floor(Math.random()*99999);
     localStorage.setItem("2k27_oldschool_active_slot",activeSlotId);
+    try{
+      if(importedPhoto) localStorage.setItem(k11PlayerPhotoKey(activeSlotId),importedPhoto);
+      else localStorage.removeItem(k11PlayerPhotoKey(activeSlotId));
+    }catch(e){console.warn("Imported career photo could not be stored:",e)}
     ensureState(); persist(); saveCurrentToSlot(true); renderAll(); renderCareerSlots();
-    alert("Save imported as its own career slot. You can now switch between careers without importing again.");
+    alert("Save imported as its own career slot. Career data and player photo are now portable together.");
   }catch(e){alert("That file is not a valid career save.")}};
   r.readAsText(file);
 }
@@ -6305,6 +6315,69 @@ function markCloudSync(direction,count){
     console.warn("Could not record last-sync timestamp:",e);
   }
 }
+// V100: player portraits are stored as separate Firestore documents so the main
+// career-library document never risks Firebase's per-document size limit.
+function cloudPlayerPhotoDocId(slotId){
+  return 'player_photo_'+String(slotId||'current').replace(/[^A-Za-z0-9_-]/g,'_').slice(0,120);
+}
+function cloudPlayerPhotoDocRef(slotId){
+  if(!cloudReady()) throw new Error('Sign in to cloud sync first.');
+  return cloudDb.collection("users").doc(cloudUser.uid).collection("careers").doc(cloudPlayerPhotoDocId(slotId));
+}
+function getPlayerPhotoManifest(slots){
+  const out={};
+  Object.keys(slots||{}).forEach(()=>{}); // supports both legacy object maps and current slot arrays below
+  const arr=Array.isArray(slots)?slots:Object.values(slots||{});
+  arr.forEach(x=>{const id=x?.id;if(id)out[id]=!!getK11PlayerPhoto(id)});
+  return out;
+}
+function compressPlayerPhotoForCloud(dataUrl){
+  return new Promise(resolve=>{
+    if(!dataUrl || dataUrl.length<700000){resolve(dataUrl||'');return}
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        const maxW=480,maxH=640;
+        const scale=Math.min(1,maxW/img.width,maxH/img.height);
+        const w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        let q=.78,out=c.toDataURL('image/jpeg',q);
+        while(out.length>700000 && q>.45){q-=.08;out=c.toDataURL('image/jpeg',q)}
+        resolve(out);
+      }catch(e){resolve(dataUrl)}
+    };
+    img.onerror=()=>resolve(dataUrl);
+    img.src=dataUrl;
+  });
+}
+async function cloudPushPlayerPhotos(manifest){
+  const ids=Object.keys(manifest||{});
+  for(const slotId of ids){
+    const ref=cloudPlayerPhotoDocRef(slotId);
+    const local=getK11PlayerPhoto(slotId);
+    if(local){
+      const dataUrl=await compressPlayerPhotoForCloud(local);
+      if(dataUrl.length>950000) throw new Error('Player photo for one career is too large for cloud sync. Re-select that photo so the app can resize it.');
+      await withTimeout(ref.set({format:'2K27_PLAYER_PHOTO_V100',slotId,dataUrl,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:false}),12000,'Player photo push');
+    }else{
+      try{await withTimeout(ref.delete(),12000,'Player photo cleanup')}catch(e){}
+    }
+  }
+}
+async function cloudPullPlayerPhotos(manifest,slotIds){
+  if(!manifest)return;
+  for(const slotId of (slotIds||[])){
+    if(manifest[slotId]){
+      const snap=await withTimeout(cloudPlayerPhotoDocRef(slotId).get(),12000,'Player photo pull');
+      const data=snap.exists?(snap.data()?.dataUrl||''):'';
+      if(data) setK11PlayerPhotoForSlot(slotId,data);
+    }else{
+      setK11PlayerPhotoForSlot(slotId,'');
+    }
+  }
+}
+
 function getFullCareerDatabase(){
   // Flush active career into its slot before taking the cloud snapshot.
   saveCurrentToSlot(true);
@@ -6332,6 +6405,7 @@ async function cloudPushDatabase(silent=false){
 
     const library=getFullCareerDatabase();
     const count=Object.keys(library.slots||{}).length;
+    const playerPhotoManifest=getPlayerPhotoManifest(library.slots);
     const payload={
       format:"2K27_OLD_SCHOOL_CAREER_CLOUD_LIBRARY",
       schemaVersion:19,
@@ -6339,9 +6413,11 @@ async function cloudPushDatabase(silent=false){
       updatedAtClient:new Date().toISOString(),
       careerId:id,
       slotCount:count,
+      playerPhotoManifest,
       library
     };
     await withTimeout(cloudDocRef().set(payload,{merge:false}),12000,"Career library push");
+    await cloudPushPlayerPhotos(playerPhotoManifest);
     const t=new Date().toLocaleTimeString();
     setCloudStatus(`Pushed ${count} career slot(s) to cloud at ${t}.`,"goodState");
     cloudDebug(`SUCCESS — ${count} slot(s) are now in Firestore under "${id}".`,"goodState");
@@ -6390,19 +6466,23 @@ async function cloudPullDatabase(){
 
     // Replace slot library atomically in localStorage.
     writeCareerSlots(lib.slots);
+    const slotArray=Array.isArray(lib.slots)?lib.slots:Object.values(lib.slots||{});
     let targetId=lib.activeSlotId;
-    if(!targetId || !lib.slots[targetId]){
-      targetId=Object.keys(lib.slots)[0]||"";
+    let target=slotArray.find(x=>x && x.id===targetId);
+    if(!target){
+      target=slotArray[0]||null;
+      targetId=target?.id||"";
     }
-    if(targetId){
+    if(targetId && target){
+      activeSlotId=targetId;
       localStorage.setItem("2k27_oldschool_active_slot",targetId);
-      const target=lib.slots[targetId];
       state=JSON.parse(JSON.stringify(target.data||target.state||target));
     }else if(lib.currentState){
       state=JSON.parse(JSON.stringify(lib.currentState));
     }
     ensureState();
     localStorage.setItem("2k27_oldschool_career",JSON.stringify(state));
+    await cloudPullPlayerPhotos(pkg.playerPhotoManifest||null,slotArray.map(x=>x?.id).filter(Boolean));
     renderAll();
     renderCareerSlots();
     const t=new Date().toLocaleTimeString();
@@ -6555,10 +6635,20 @@ document.addEventListener('click',function(e){
 window.addEventListener('resize',()=>{if(window.innerWidth>700)closeMobileNav();});
 document.addEventListener('DOMContentLoaded',updateMobileNavCurrent);
 
-/* Player hub photo is intentionally stored outside career JSON/cloud sync.
-   That keeps V19 saves small and avoids a large image breaking whole-slot Firebase sync. */
-function k11PlayerPhotoKey(){
-  return '2k27_k11_player_photo_'+(window.activeSlotId||activeSlotId||'current');
+/* V100 player-photo portability. Photos stay outside the career state object so normal
+   slot JSON stays lean, but they now travel with manual exports and cloud sync. */
+function k11PlayerPhotoKey(slotId){
+  return '2k27_k11_player_photo_'+(slotId||window.activeSlotId||activeSlotId||'current');
+}
+function getK11PlayerPhoto(slotId){
+  try{return localStorage.getItem(k11PlayerPhotoKey(slotId))||'';}catch(e){return ''}
+}
+function setK11PlayerPhotoForSlot(slotId,data){
+  try{
+    const key=k11PlayerPhotoKey(slotId);
+    if(data) localStorage.setItem(key,data); else localStorage.removeItem(key);
+    return true;
+  }catch(e){console.warn('Player photo storage failed:',e);return false}
 }
 function chooseK11PlayerPhoto(){
   const input=document.getElementById('k11PlayerPhotoInput');
@@ -6569,7 +6659,7 @@ function renderK11PlayerPhoto(){
   const box=document.getElementById('k11PlayerVisual');
   if(!img||!box)return;
   let src='';
-  try{src=localStorage.getItem(k11PlayerPhotoKey())||'';}catch(e){}
+  src=getK11PlayerPhoto(activeSlotId);
   if(src){img.src=src;img.style.display='block';box.classList.add('hasPlayerPhoto');}
   else{img.removeAttribute('src');img.style.display='none';box.classList.remove('hasPlayerPhoto');}
 }
@@ -6590,8 +6680,9 @@ function handleK11PlayerPhotoUpload(event){
       let data='';
       try{data=canvas.toDataURL('image/webp',.82);}catch(e){data=canvas.toDataURL('image/jpeg',.82);}
       try{
-        localStorage.setItem(k11PlayerPhotoKey(),data);
+        setK11PlayerPhotoForSlot(activeSlotId,data);
         renderK11PlayerPhoto();
+        try{if(typeof scheduleCloudPush==='function') scheduleCloudPush();}catch(e){}
       }catch(e){alert('The photo could not be saved in this browser. Try a smaller image.');}
     };
     source.onerror=()=>alert('That image could not be loaded.');
@@ -6601,8 +6692,9 @@ function handleK11PlayerPhotoUpload(event){
 }
 function removeK11PlayerPhoto(){
   if(!confirm('Remove this player photo from the hub?'))return;
-  try{localStorage.removeItem(k11PlayerPhotoKey());}catch(e){}
+  setK11PlayerPhotoForSlot(activeSlotId,'');
   renderK11PlayerPhoto();
+  try{if(typeof scheduleCloudPush==='function') scheduleCloudPush();}catch(e){}
 }
 
 function continuePreNBAJourneyFromHub(){
