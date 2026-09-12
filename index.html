@@ -696,6 +696,23 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 }
 @media (min-width:1350px){.deskHero{grid-template-columns:minmax(340px,.95fr) minmax(410px,1.08fr) minmax(340px,.8fr)}.deskHeroIdentity h2{font-size:36px}.deskLower{grid-template-columns:1fr 1fr 1.18fr}.deskBottom{grid-template-columns:1.12fr 1.12fr .92fr .92fr}}
 @media (min-width:980px) and (max-width:1180px){:root{--desk-side:214px}.deskHero{grid-template-columns:.82fr 1.08fr .9fr}.deskHeroVisual{min-height:390px}.deskHero{min-height:390px}.deskHeroIdentity h2{font-size:26px}.deskLower{grid-template-columns:1fr 1fr}.deskInsiderCard{grid-column:1/3}.deskBottom{grid-template-columns:1fr 1fr}.deskAverages{grid-template-columns:repeat(3,1fr)}.deskAvg:nth-child(3){border-right:0}.deskHeroCore{padding:18px}.deskNextOpponent{font-size:22px}}
+
+/* V64 — Clutch Moment is deliberately prominent in stat entry and also summarized in Stats. */
+.clutchMomentField{grid-column:1/-1;border:1px solid rgba(233,189,66,.48);background:linear-gradient(90deg,rgba(233,189,66,.10),rgba(25,45,58,.72));padding:12px 14px;border-radius:3px;box-shadow:inset 3px 0 0 #e9bd42}
+.clutchMomentField label{color:#f5d66b!important;letter-spacing:.8px;font-weight:900!important;text-transform:uppercase}
+.clutchMomentField .small{margin-top:5px;color:#aebdc6}
+.clutchStatsHero{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}.clutchStatBox{background:#0b151c;border:1px solid #233b49;padding:12px}.clutchStatBox span{display:block;color:#7f96a3;font-size:10px;text-transform:uppercase;letter-spacing:.8px}.clutchStatBox b{display:block;margin-top:4px;font-size:20px;color:#f3f6f8}.clutchRecent{display:grid;gap:6px}.clutchRecentRow{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(150px,1.4fr) auto;gap:10px;align-items:center;padding:8px 10px;background:#0a141a;border:1px solid #1d3340}.clutchPositive{color:#54da82}.clutchNegative{color:#ff6b6b}
+@media(max-width:700px){.clutchStatsHero{grid-template-columns:1fr 1fr}.clutchRecentRow{grid-template-columns:1fr}.clutchMomentField{padding:10px}}
+
+/* V66 — curated historical arena photography. Historical venue/photo data stays outside career state. */
+.deskArenaCard{position:relative;min-height:176px;margin:0 0 14px;overflow:hidden;border:1px solid #365363;background:radial-gradient(circle at 70% 25%,rgba(63,126,160,.25),transparent 38%),linear-gradient(135deg,#0b1b25,#050b10 72%);box-shadow:inset 0 -45px 70px rgba(0,0,0,.72)}
+.deskArenaCard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.76;filter:saturate(.92) contrast(1.06);transition:opacity .2s ease}.deskArenaCard.noImage img{display:none}.deskArenaShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,7,11,.08),rgba(2,7,11,.18) 40%,rgba(2,7,11,.92) 100%)}
+.deskArenaCopy{position:absolute;left:14px;right:14px;bottom:12px;z-index:2;text-shadow:0 2px 8px #000}.deskArenaCopy small{display:block;color:#e8bd4b;font-size:8px;font-weight:1000;letter-spacing:1.5px}.deskArenaCopy b{display:block;margin-top:3px;font-size:18px;line-height:1.05;text-transform:uppercase}.deskArenaCopy span{display:block;margin-top:4px;color:#c0ccd2;font-size:9px}.deskArenaEra{position:absolute;right:10px;top:9px;z-index:3;padding:4px 6px;background:rgba(3,9,13,.82);border:1px solid rgba(233,189,66,.45);color:#f1ca5e;font-size:7px;font-weight:900;letter-spacing:1px}.deskArenaCredit{position:absolute;right:8px;bottom:6px;z-index:4;font-size:6px;color:rgba(255,255,255,.5)}
+.arenaReferenceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.arenaRef{position:relative;min-height:126px;padding:0;border:1px solid #263f4c;background:#09151d;overflow:hidden}.arenaRef img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62;filter:saturate(.88) contrast(1.05)}.arenaRefShade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,7,11,.06),rgba(2,7,11,.2) 42%,rgba(2,7,11,.94) 100%)}.arenaRefCopy{position:absolute;z-index:2;left:10px;right:10px;bottom:9px;text-shadow:0 2px 7px #000}.arenaRef b{display:block;font-size:11px}.arenaRef span{display:block;margin-top:3px;color:#c6d2d8;font-size:9px}.arenaRef em{display:block;margin-top:4px;color:#e6bd4d;font-size:8px;font-style:normal}.arenaRefPhotoYear{position:absolute;right:7px;top:7px;z-index:2;background:rgba(4,10,14,.82);border:1px solid rgba(233,189,66,.38);padding:3px 5px;color:#f3cf68;font-size:7px;font-weight:900;letter-spacing:.7px}
+@media(min-width:980px) and (max-width:1180px){.deskArenaCard{min-height:140px}.deskArenaCopy b{font-size:15px}}
+@media(max-width:979px){.arenaReferenceGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.arenaReferenceGrid{grid-template-columns:1fr}}
+
 </style>
 
 </head>
@@ -778,7 +795,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 <section id="desktopCommandCenter" class="desktopCommandCenter" aria-label="Desktop career dashboard">
   <div class="deskTopStrip">
     <div><b>BUILD YOUR LEGACY. YOUR CAREER. YOUR STORY.</b></div>
-    <div class="deskBuild"><span id="deskCareerDate">CAREER DATE</span><span>V63 DESKTOP</span></div>
+    <div class="deskBuild"><span id="deskCareerDate">CAREER DATE</span><span>V66 DESKTOP • CURATED ERA ARENAS</span></div>
   </div>
 
   <div class="deskHero">
@@ -814,6 +831,12 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     <section class="deskHeroNext">
       <div class="deskPanelBar"><span>NEXT GAME</span><button type="button" onclick="openTab('schedule')">KEY GAMES</button></div>
       <div class="deskNextBody">
+        <div class="deskArenaCard noImage" id="deskArenaCard">
+          <img id="deskArenaImage" alt="Historical home arena">
+          <div class="deskArenaShade"></div><div class="deskArenaEra" id="deskArenaEra">ERA ARENA</div>
+          <div class="deskArenaCopy"><small id="deskArenaTeam">HOME VENUE</small><b id="deskArenaName">ARENA TBD</b><span id="deskArenaCity">Historical venue presentation</span></div>
+          <div class="deskArenaCredit" id="deskArenaCredit"></div>
+        </div>
         <div class="deskNextLabel">NEXT CAREER MOMENT</div>
         <div class="deskNextOpponent" id="deskOpponent">NO KEY GAME</div>
         <div class="deskNextMeta" id="deskGameMeta">Add a Key Game when a matchup matters to your career story.</div>
@@ -958,12 +981,12 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   <div class="card careerAnchor" id="careerMetersSection">
     <h2>Career Meters</h2>
     <div class="grid4" id="meterGrid"></div>
-    <p class="small" style="margin-bottom:0">Interviews can move these up or down. Fans starts low for a new player; Chemistry begins neutral; rookie Coach Trust starts low and must be earned. High levels unlock career/gameplay privileges and Fan-based rewards.</p>
+    <p class="small" style="margin-bottom:0">Interviews can move Fans and Coach Trust up or down. Fans starts low for a new player; rookie Coach Trust starts low and must be earned. High levels unlock career opportunities and Fan-based rewards.</p>
     <div id="privilegePanel" style="margin-top:14px"></div>
     <div class="row" style="margin-top:12px">
       <button class="secondary" onclick="resetRookieMeters()">Reset Rookie Meter Defaults</button>
     </div>
-    <p class="small">Repair option only: sets Fans to 15, Chemistry to 50, and Coach Trust to 25 without touching SP, ratings, games, rewards, or history.</p>
+    <p class="small">Repair option only: sets Fans to 15 and Coach Trust to 25 without touching SP, ratings, games, rewards, or history.</p>
   </div>
 
   
@@ -983,7 +1006,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <button class="secondary" onclick="previewCoachBaseline()">Preview New-Team Trust</button>
       <button class="primary" onclick="applyCoachBaseline()">Apply When Joining New Team</button>
     </div>
-    <p class="small" style="margin-bottom:0">This changes only Coach Trust. Fans carry with you; Teammate Chemistry still has to be built with the new locker room.</p>
+    <p class="small" style="margin-bottom:0">This changes only Coach Trust. Fans carry with you; organizational trust must be earned again with the new team.</p>
   </div>
 
 <div class="card careerAnchor" id="careerRatingsSection">
@@ -1001,6 +1024,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 </section>
 
 <section id="schedule" class="tab">
+<div class="card" id="eraArenaGuide"><h2>2003–04 Arena Guide</h2><div class="small" style="margin-bottom:10px">Each 2003–04 team is mapped to its era venue and a curated real arena photograph from Wikimedia Commons. Photo dates are shown on the cards; the venue system does not change your career save.</div><div id="arenaReferenceGrid" class="arenaReferenceGrid"></div></div>
   <div class="card">
     <h2>Manual Key Games</h2>
     <p class="small">Do NOT enter the full schedule. Only add games that YOU decide matter to your career lore. Key Games are tied to the career calendar, so they surface when that date arrives. You can add or remove them at any time.</p>
@@ -1028,7 +1052,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <div><label>Event Name</label><input id="seName" placeholder="Optional — e.g. All-Star Weekend"></div>
       <div><label>Month</label><select id="seMonth"><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></div>
       <div><label>Day</label><input id="seDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div>
-      <div><label>Year</label><input id="seYear" type="number" inputmode="numeric" min="2020" max="2100"></div>
+      <div><label>Year</label><input id="seYear" type="number" inputmode="numeric" min="1946" max="2100"></div>
     </div>
     <div class="row" style="margin-top:12px"><button type="button" class="primary" id="addSpecialEventBtn">+ Add Special Event</button></div>
     <div id="specialEventFeedback" class="note" style="display:none;margin-top:12px"></div>
@@ -1049,6 +1073,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   </div>
 
   <div class="card"><h3>NBA Stats</h3><div id="nbaStatsSummary"></div></div>
+  <div class="card"><h3>Clutch Moments</h3><p class="small">Pulled directly from your logged NBA games. Normal games marked None are not counted.</p><div id="clutchStatsSummary"></div></div>
   <div class="card"><h3>G League Stats</h3><div id="gLeagueStatsSummary"></div></div>
   <div class="card"><h3>NBA Cup Stats</h3><div class="small" style="margin-bottom:10px">Any NBA Key Game whose reason contains <b>NBA Cup</b> is included here, including NBA Cup Finals.</div><div id="nbaCupStatsSummary"></div></div>
 
@@ -1067,7 +1092,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <div><label>Custom Name</label><input id="manualEventName" placeholder="Optional"></div>
       <div><label>Month</label><select id="manualEventMonth"><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></div>
       <div><label>Day</label><input id="manualEventDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div>
-      <div><label>Year</label><input id="manualEventYear" type="number" inputmode="numeric" min="2020" max="2100"></div>
+      <div><label>Year</label><input id="manualEventYear" type="number" inputmode="numeric" min="1946" max="2100"></div>
     </div>
     <div class="row" style="margin-top:12px"><button type="button" class="primary" id="manualCareerEventBtn">+ Log Career Event</button></div>
     <div id="manualEventFeedback" class="note" style="display:none;margin-top:12px"></div>
@@ -1105,7 +1130,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <div><label>FT Made</label><input id="gFTM" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FT Attempted</label><input id="gFTA" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Personal Fouls</label><input id="gPF" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
-      <div><label>Clutch Moment</label><select id="gClutch"><option value="none" selected>None</option><option value="game_winner">Game Winner</option><option value="go_ahead">Go-Ahead Basket</option><option value="game_tying">Game-Tying Basket</option><option value="clutch_defense">Clutch Defensive Play</option><option value="clutch_fts">Made Clutch Free Throws</option><option value="missed_fts">Missed Clutch Free Throws</option><option value="clutch_turnover">Clutch Turnover</option><option value="missed_winner">Missed Potential Game Winner</option></select><div class="small">Default is None every game. Clutch moments affect public reaction, not your box-score SP.</div></div>
+      <div id="clutchMomentField" class="clutchMomentField"><label>Clutch Moment</label><select id="gClutch"><option value="none" selected>None</option><option value="game_winner">Game Winner</option><option value="go_ahead">Go-Ahead Basket</option><option value="game_tying">Game-Tying Basket</option><option value="clutch_defense">Clutch Defensive Play</option><option value="clutch_fts">Made Clutch Free Throws</option><option value="missed_fts">Missed Clutch Free Throws</option><option value="clutch_turnover">Clutch Turnover</option><option value="missed_winner">Missed Potential Game Winner</option></select><div class="small"><b>Optional.</b> Leave this at None for a normal game. It resets to None after every postgame entry. Positive or negative clutch moments affect public reaction, not box-score SP.</div></div>
       <div><label>Career Month</label>
         <select id="gMonth">
           <option value="1">January</option><option value="2">February</option><option value="3">March</option>
@@ -1114,7 +1139,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
           <option value="10">October</option><option value="11">November</option><option value="12">December</option>
         </select>
       </div>
-      <div><label>Career Year</label><input id="gYear" type="number" inputmode="numeric" min="2020" max="2100" value="2026"></div>
+      <div><label>Career Year</label><input id="gYear" type="number" inputmode="numeric" min="1946" max="2100" value="2026"></div>
       <div><label>Date</label><input id="gDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div>
       <div><label>Teammate Grade</label>
         <input id="gGrade" value="Auto-calculated from box score" disabled>
@@ -1271,7 +1296,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
           <option value="10">October</option><option value="11">November</option><option value="12">December</option>
         </select>
       </div>
-      <div><label>Signed Year</label><input id="cYear" type="number" inputmode="numeric" min="2020" max="2100" value="2026"></div>
+      <div><label>Signed Year</label><input id="cYear" type="number" inputmode="numeric" min="1946" max="2100" value="2026"></div>
     </div>
     <div id="contractPreview" class="note" style="margin-top:12px"></div>
     <div class="row" style="margin-top:12px">
@@ -1700,7 +1725,7 @@ function daysInMonth(month,year){
 }
 function normalizeCareerDate(){
   let m=Math.max(1,Math.min(12,+state.careerDate.month||10));
-  let y=Math.max(2020,Math.min(2100,+state.careerDate.year||2026));
+  let y=Math.max(1946,Math.min(2100,+state.careerDate.year||2026));
   let d=state.careerDate.day==null?null:Math.max(1,Math.min(daysInMonth(m,y),+state.careerDate.day||1));
   state.careerDate={month:m,year:y,day:d};
 }
@@ -2407,7 +2432,6 @@ function tierFor(v,kind){
 function renderPrivileges(){
   const items=[
     ["Fans",state.meters.fans,"fans"],
-    ["Teammate Chemistry",state.meters.chemistry,"chemistry"],
     ["Coach Trust",state.meters.coach,"coach"]
   ];
   privilegePanel.innerHTML='<h3 style="margin-bottom:8px">Current Privileges</h3>'+items.map(([name,v,k])=>{
@@ -2472,7 +2496,7 @@ function showNewSeasonSetup(){
   closeSpecialEventOverlay();
   const overlay=document.createElement("div");overlay.id="specialEventOverlay";overlay.className="postgameRewardOverlay";overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");
   const y=state.careerDate?.year||2026;
-  overlay.innerHTML=`<div class="postgameRewardModal"><div class="kicker">SEASON ${state.player.season} SETUP</div><h2>Set Important Dates</h2><div class="rewardSub">Optional. Add dates now and you can edit or add more later under Key Games → Special Events.</div><div class="grid"><div><label>All-Star Weekend Month</label><select id="nsMonth"><option value="1">January</option><option value="2" selected>February</option><option value="3">March</option></select></div><div><label>All-Star Weekend Day</label><input id="nsDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div><div><label>Year</label><input id="nsYear" type="number" inputmode="numeric" min="2020" max="2100" value="${y}"></div></div><div class="postgameRewardActions"><button class="secondary" id="nsSkip">Skip for Now</button><button class="primary" id="nsSave">Save Date & Start Season</button></div></div>`;
+  overlay.innerHTML=`<div class="postgameRewardModal"><div class="kicker">SEASON ${state.player.season} SETUP</div><h2>Set Important Dates</h2><div class="rewardSub">Optional. Add dates now and you can edit or add more later under Key Games → Special Events.</div><div class="grid"><div><label>All-Star Weekend Month</label><select id="nsMonth"><option value="1">January</option><option value="2" selected>February</option><option value="3">March</option></select></div><div><label>All-Star Weekend Day</label><input id="nsDay" type="number" inputmode="numeric" min="1" max="31" placeholder="15"></div><div><label>Year</label><input id="nsYear" type="number" inputmode="numeric" min="1946" max="2100" value="${y}"></div></div><div class="postgameRewardActions"><button class="secondary" id="nsSkip">Skip for Now</button><button class="primary" id="nsSave">Save Date & Start Season</button></div></div>`;
   document.body.appendChild(overlay);
   document.getElementById("nsSkip")?.addEventListener("click",closeSpecialEventOverlay);
   document.getElementById("nsSave")?.addEventListener("click",()=>{
@@ -2501,17 +2525,16 @@ function renderRatings(){
 }
 
 function resetRookieMeters(){
-  if(!confirm("Reset career meters to rookie defaults? Fans 15 • Chemistry 50 • Coach Trust 25. Your other career data will not be changed.")) return;
+  if(!confirm("Reset career meters to rookie defaults? Fans 15 • Coach Trust 25. Your other career data will not be changed.")) return;
   state.meters.fans=15;
-  state.meters.chemistry=50;
   state.meters.coach=25;
-  state.schemaVersion=19;
+  state.schemaVersion=21;
   persist();
   renderMeters(); renderPrivileges(); renderRewards(); renderShoeCareer();
 }
 
 function renderMeters(){
-  const labels={fans:"Fans",chemistry:"Teammate Chemistry",coach:"Coach Trust"};
+  const labels={fans:"Fans",coach:"Coach Trust"};
   meterGrid.innerHTML="";
   Object.keys(labels).forEach(k=>{
     const v=clamp(state.meters[k]);
@@ -2732,7 +2755,7 @@ function addSpecialEvent(){
   const type=typeEl.value||"custom";
   const month=Math.max(1,Math.min(12,+monthEl.value||2));
   const fallbackYear=state.careerDate?.year||new Date().getFullYear();
-  const year=Math.max(2020,Math.min(2100,+yearEl.value||fallbackYear));
+  const year=Math.max(1946,Math.min(2100,+yearEl.value||fallbackYear));
   const rawDay=+dayEl.value||0;
   if(!rawDay){alert("Enter the event day.");dayEl.focus();return}
   const maxDay=daysInMonth(month,year);
@@ -3071,6 +3094,7 @@ function editMostRecentGame(){
   g3M.value=s.t3m??0; g3A.value=s.t3a??0; gFTM.value=s.ftm??0; gFTA.value=s.fta??0;
   gTO.value=s.to??0; gPF.value=s.pf??0; gHighlights.value=s.highlights??0; if(document.getElementById("gMatchupPts")) gMatchupPts.value=s.matchupPts??0;
   if(document.getElementById("gMatchupPerformance")) gMatchupPerformance.value=String(s.matchupPerformance||3);
+  if(document.getElementById("gClutch")) gClutch.value=s.clutch||"none";
   gResult.value=s.result||"W"; gOpponent.value=g.opponent||"";
   if(g.date){gMonth.value=g.date.month;gYear.value=g.date.year;gDay.value=g.date.day;}
 
@@ -3100,12 +3124,17 @@ function cancelGameEdit(){
 
 function rebuildAutomaticMilestones(){
   state.completedMilestones={};
+  const runningTotals={pts:0,reb:0,ast:0,stl:0,blk:0};
   // Oldest to newest so each milestone belongs to the first game that actually earned it.
+  // Career-total milestones must receive cumulative totals; otherwise editing an old game can crash
+  // when a total milestone test tries to read ctx.pts / ctx.reb / etc.
   [...state.games].reverse().forEach(g=>{
+    const stats=g.stats||{};
+    Object.keys(runningTotals).forEach(k=>runningTotals[k]+=Number(stats[k]||0));
     g.newMilestones=[];
     let milestoneSP=0;
     MILESTONES.forEach(m=>{
-      if(!state.completedMilestones[m.id] && m.test(g.stats)){
+      if(!state.completedMilestones[m.id] && m.test(stats,runningTotals)){
         state.completedMilestones[m.id]={name:m.name,bonus:m.bonus,game:g.gameNo};
         milestoneSP+=m.bonus;
         g.newMilestones.push(m);
@@ -3874,7 +3903,7 @@ function calculateAndPostGame(){
   const opponent=gOpponent.value.trim() || upcoming?.opponent || "";
 
   const month=Math.max(1,Math.min(12,+gMonth.value||state.careerDate.month||10));
-  const year=Math.max(2020,Math.min(2100,+gYear.value||state.careerDate.year||2026));
+  const year=Math.max(1946,Math.min(2100,+gYear.value||state.careerDate.year||2026));
   const maxDay=daysInMonth(month,year);
   const day=Math.max(1,Math.min(maxDay,+gDay.value||0));
   if(!day){alert("Enter the game day.");return}
@@ -4965,12 +4994,14 @@ function renderMedia(){
   `).join(""):`<div class="small">No completed interviews yet.</div>`;
 }
 function formatEffects(e){
-  const labels={fans:"Fans",chemistry:"Chemistry",coach:"Coach Trust"};
-  return Object.entries(e).map(([k,v])=>`${labels[k]} ${v>=0?"+":""}${v}`).join(" • ");
+  const labels={fans:"Fans",coach:"Coach Trust"};
+  return Object.entries(e||{}).filter(([k])=>k==="fans"||k==="coach").map(([k,v])=>`${labels[k]} ${v>=0?"+":""}${v}`).join(" • ") || "No meter change";
 }
 function answerInterview(template,answer,game){
-  const effects=answer[1];
-  Object.entries(effects).forEach(([k,v])=>state.meters[k]=clamp((state.meters[k]||50)+v));
+  // Chemistry is intentionally not a managed system. Legacy interview templates may still
+  // contain old chemistry weights, but only Fans and Coach Trust are applied and recorded.
+  const effects=Object.fromEntries(Object.entries(answer[1]||{}).filter(([k])=>k==="fans"||k==="coach"));
+  Object.entries(effects).forEach(([k,v])=>state.meters[k]=clamp((state.meters[k]??(k==="fans"?15:25))+v));
   state.interviews.unshift({season:game.season||state.player.season,gameNo:game.gameNo||state.player.gameNo,question:template.q(game),answer:answer[0],effects});
   state.lastInterviewGame=game.gameNo||state.player.gameNo;
   state.pendingInterview=null;
@@ -5257,7 +5288,7 @@ function logContract(){
   const years=Math.max(1,+cYears.value||1);
   const value=Math.max(0,+cValue.value||0);
   const month=Math.max(1,Math.min(12,+cMonth.value||7));
-  const year=Math.max(2020,Math.min(2100,+cYear.value||state.careerDate?.year||2026));
+  const year=Math.max(1946,Math.min(2100,+cYear.value||state.careerDate?.year||2026));
   if(!confirm(`Log ${years}-year, $${value.toLocaleString()}M contract with ${team} and award +${x.sp} SP?`)) return;
   state.contractHistory.unshift({id:"c_"+Date.now(),team,years,value,type:cType.value,month,year,status:x.status,sp:x.sp,rep:x.rep});
   state.sp+=x.sp;
@@ -5391,6 +5422,20 @@ function renderCareerEventsStats(scope){
   events.sort((a,b)=>(b.season||0)-(a.season||0) || compareDate(b.date||{year:0,month:0,day:0},a.date||{year:0,month:0,day:0}));
   box.innerHTML=events.length?`<div class="scroll"><table><thead><tr><th>Season</th><th>Date</th><th>Event</th><th>Result</th><th>SP</th></tr></thead><tbody>${events.map(e=>`<tr><td>S${e.season||1}</td><td>${e.date?formatCareerDate(e.date):"—"}</td><td><b>${escapeHtml(e.name)}</b></td><td>${escapeHtml(e.summary)}</td><td>${e.sp?"+"+Number(e.sp).toLocaleString():"—"}</td></tr>`).join("")}</tbody></table></div>`:'<div class="small">No career events recorded yet.</div>';
 }
+function renderClutchStatsSummary(scope){
+  const box=document.getElementById("clutchStatsSummary"); if(!box)return;
+  const season=state.player?.season||1;
+  const labels={none:"None",game_winner:"Game Winner",go_ahead:"Go-Ahead Basket",game_tying:"Game-Tying Basket",clutch_defense:"Clutch Defensive Play",clutch_fts:"Made Clutch Free Throws",missed_fts:"Missed Clutch Free Throws",clutch_turnover:"Clutch Turnover",missed_winner:"Missed Potential Game Winner"};
+  const negative=new Set(["missed_fts","clutch_turnover","missed_winner"]);
+  const games=(state.games||[]).filter(g=>(scope==="career"||+g.season===+season) && g.stats && (g.stats.clutch||"none")!=="none");
+  const positiveCount=games.filter(g=>!negative.has(g.stats.clutch)).length;
+  const negativeCount=games.filter(g=>negative.has(g.stats.clutch)).length;
+  const winners=games.filter(g=>g.stats.clutch==="game_winner").length;
+  const defense=games.filter(g=>g.stats.clutch==="clutch_defense").length;
+  const summary=`<div class="clutchStatsHero"><div class="clutchStatBox"><span>Clutch Games</span><b>${games.length}</b></div><div class="clutchStatBox"><span>Positive</span><b class="clutchPositive">${positiveCount}</b></div><div class="clutchStatBox"><span>Game Winners</span><b>${winners}</b></div><div class="clutchStatBox"><span>Clutch Stops</span><b>${defense}</b></div></div>`;
+  if(!games.length){box.innerHTML=summary+'<div class="small">No clutch moments logged in this split yet.</div>';return;}
+  box.innerHTML=summary+`<div class="clutchRecent">${games.slice(0,8).map(g=>{const c=g.stats.clutch||"none",bad=negative.has(c),d=g.date?formatCareerDate(g.date):`S${g.season||1} G${g.gameNo||"—"}`;return `<div class="clutchRecentRow"><span>${escapeHtml(d)}</span><b class="${bad?'clutchNegative':'clutchPositive'}">${escapeHtml(labels[c]||c)}</b><span>${escapeHtml(g.opponent||"Opponent")}</span></div>`}).join("")}</div>${negativeCount?`<div class="small" style="margin-top:8px">Negative clutch moments logged: ${negativeCount}. They remain part of career history; one miss does not erase your reputation.</div>`:""}`;
+}
 function renderStats(){
   const scope=document.getElementById("statsScope")?.value||"season", season=state.player?.season||1;
   const nba=(state.games||[]).filter(g=>scope==="career" || +g.season===+season);
@@ -5400,6 +5445,7 @@ function renderStats(){
   document.getElementById("nbaStatsSummary").innerHTML=statsCards(aggregateStats(nba,g=>g.stats));
   document.getElementById("gLeagueStatsSummary").innerHTML=statsCards(aggregateStats(glAll,g=>g.stats));
   document.getElementById("nbaCupStatsSummary").innerHTML=statsCards(aggregateStats(cup,g=>g.stats));
+  renderClutchStatsSummary(scope);
   renderCareerEventsStats(scope);
   const y=document.getElementById("manualEventYear"),m=document.getElementById("manualEventMonth");
   if(y&&!y.value)y.value=state.careerDate?.year||2026;if(m&&!m.value)m.value=state.careerDate?.month||2;
@@ -6203,14 +6249,13 @@ function jumpCareerSection(id){
       ['Manual Key Games','Manual Key Games'],['Your Key Games','Your Key Games'],['Special Events','Special Events']
     ]},
     stats:{title:'Stats Menu',items:[
-      ['Stats Overview','Stats'],['NBA Stats','NBA Stats'],['G League Stats','G League Stats'],['NBA Cup Stats','NBA Cup Stats'],['Career Events','Career Events / Special Achievements'],['Log Career Event','Log a Career Event Manually']
+      ['Stats Overview','Stats'],['NBA Stats','NBA Stats'],['Clutch Moments','Clutch Moments'],['G League Stats','G League Stats'],['NBA Cup Stats','NBA Cup Stats'],['Career Events','Career Events / Special Achievements'],['Log Career Event','Log a Career Event Manually']
     ]},
     game:{title:'Postgame Menu',reminder:'BEFORE YOU PLAY: check your Pregame Objectives. After the game, come back here and enter the box score.',items:[
-      ['Current Game','__firstcard__'],['Pregame Objectives','Pregame Objectives'],['Enter Postgame Stats','Enter Postgame Box Score'],['Post Game','__postbutton__']
+      ['Current Game','__firstcard__'],['Pregame Objectives','__pregame__'],['Enter Postgame Stats','Enter Postgame Box Score'],['Clutch Moment','__clutch__'],['Post Game','__postbutton__']
     ]},
     media:{title:'Media Menu',items:[['Media / Interviews','Media / Interviews'],['Interview History','Interview History']]},
-    insider:{title:'2K Insider Menu',items:[['Latest Insider','2K Insider'],['Insider Archive','Insider Archive']]},
-    rewards:{title:'Rewards Menu',items:[['Shoe Career','Shoe Career'],['Rewards & Endorsements','Rewards & Endorsements'],['Career Calendar','Career Calendar'],['Shoe Sponsor','Shoe Sponsor']]},
+    rewards:{title:'Rewards Menu',items:[['Shoe Career','Shoe Career'],['Rewards & Endorsements','Rewards & Endorsements'],['Career Calendar','Career Calendar'],['Off-Court Events','Off-Court Events'],['Fan Profile','Fan Profile'],['Shoe Sponsor','Shoe Sponsor']]},
     contracts:{title:'Contracts Menu',items:[['Contracts','Contracts'],['Contract History','Contract History']]},
     milestones:{title:'Milestones Menu',items:[['Career Milestones','Career Milestones'],['Manual Accomplishments','Manual Career Accomplishments'],['Accomplishment Log','Career Accomplishment Log']]},
     history:{title:'History Menu',items:[['Game History','Game History'],['Upgrade History','Upgrade History']]},
@@ -6220,6 +6265,8 @@ function jumpCareerSection(id){
   function findTarget(section,label){
     if(label==='__firstcard__') return section.querySelector('.card');
     if(label==='__postbutton__'){const b=section.querySelector('#postGameButton');return b?b.closest('.card'):null;}
+    if(label==='__clutch__') return section.querySelector('#clutchMomentField');
+    if(label==='__pregame__') return section.querySelector('#pregameObjectivesCard');
     return Array.from(section.querySelectorAll('h2,h3')).find(h=>h.textContent.trim()===label)?.closest('.card') || null;
   }
   function toggleTabSideNav(id){const n=document.getElementById(id);if(n)n.classList.toggle('open');}
@@ -6267,14 +6314,55 @@ function jumpCareerSection(id){
   function renderEndorsements(){const root=q('deskEndorsements');if(!root)return;const es=(state.endorsements||[]).filter(e=>e.status!=='Completed').slice(0,4);if(!es.length){root.innerHTML='<div class="desktopEmpty">No active endorsement events yet. Fans and basketball credibility unlock opportunities.</div>';return}root.innerHTML=es.map(e=>`<div class="deskEndorseRow"><div class="deskEndorseLogo">AD</div><div class="deskRowText"><b>${esc(e.name||'Endorsement')}</b><span>${esc(e.status||'Scheduled')}${e.date?' • '+esc(e.date):''}</span></div><div class="deskRowReward">${Number(e.sp||0)?'+'+Number(e.sp).toLocaleString()+' SP':'ACTIVE'}</div></div>`).join('')}
   function renderMilestones(){const root=q('deskMilestones');if(!root)return;const completed=state.completedMilestones||{},manual=state.manualAccomplishmentLog||[];const season=Number(state.player?.season||1);const items=[['★','NBA Milestones',Object.keys(completed).length+' completed'],['🏆','Career Honors',manual.length+' claimed'],['◈','Season '+season,(state.games||[]).filter(g=>!g.season||Number(g.season)===season).length+' games logged'],['🔒','Franchise Influence',clamp(state.meters?.coach)>=95?'ELITE TRUST':'KEEP BUILDING']];root.innerHTML=items.map(x=>`<div class="deskMilestoneRow"><div class="deskMilestoneIcon">${x[0]}</div><div class="deskRowText"><b>${esc(x[1])}</b><span>${esc(x[2])}</span></div></div>`).join('')}
   function renderHeadlines(){const root=q('deskHeadlineList');if(!root)return;const pool=(state.insiderFeed||[]).slice(1,5);root.innerHTML=pool.map(x=>`<div class="deskHeadlineRow"><span>${esc(x.headline||x.title||'Career update')}</span><span>${esc(x.stage||('S'+(x.season||state.player?.season||1)))}</span></div>`).join('')}
+
+  const V65_ARENAS_2004={
+    "atlanta hawks":{arena:"Philips Arena",city:"Atlanta, GA",page:"State Farm Arena",photo:"Philips_Arena_outside.jpg",photoYear:"2006",credit:"DerrickT • CC BY 2.0"},
+    "boston celtics":{arena:"FleetCenter",city:"Boston, MA",page:"TD Garden",photo:"Fleet_Center_from_old_Central_Artery.agr.jpg",photoYear:"2003",credit:"ArnoldReinhold • CC BY-SA 4.0"},
+    "chicago bulls":{arena:"United Center",city:"Chicago, IL",page:"United Center",photo:"United_Center_Exterior.JPG",photoYear:"2014",credit:"Mr.Konerko • Wikimedia Commons"},
+    "cleveland cavaliers":{arena:"Gund Arena",city:"Cleveland, OH",page:"Rocket Arena",photo:"Jacobs_Field_Cleveland.JPG",photoYear:"1999",credit:"Paul M. Walsh • Wikimedia Commons"},
+    "dallas mavericks":{arena:"American Airlines Center",city:"Dallas, TX",page:"American Airlines Center",photo:"American_Airlines_Center_outside.jpg",photoYear:"2004",credit:"RadicalBender • Wikimedia Commons"},
+    "denver nuggets":{arena:"Pepsi Center",city:"Denver, CO",page:"Ball Arena",photo:"Denver_Pepsi_Center_1.jpg",photoYear:"2006",credit:"KM Newnham • CC BY-SA 2.5"},
+    "detroit pistons":{arena:"The Palace of Auburn Hills",city:"Auburn Hills, MI",page:"The Palace of Auburn Hills",photo:"Palace_Of_Auburn_Hills_Michigan.jpg",photoYear:"2015",credit:"Ian121289S • CC BY-SA 3.0"},
+    "golden state warriors":{arena:"The Arena in Oakland",city:"Oakland, CA",page:"Oakland Arena",photo:"Oracle_Arena_exterior_1.JPG",photoYear:"2009",credit:"BrokenSphere • CC BY-SA 3.0"},
+    "houston rockets":{arena:"Toyota Center",city:"Houston, TX",page:"Toyota Center (Houston)",photo:"Toyota_Center.JPG",photoYear:"2000s",credit:"Nick Juhasz • Wikimedia Commons"},
+    "indiana pacers":{arena:"Conseco Fieldhouse",city:"Indianapolis, IN",page:"Gainbridge Fieldhouse",photo:"ConsecoFieldhouse.jpg",photoYear:"2006",credit:"Durin • Wikimedia Commons"},
+    "los angeles clippers":{arena:"STAPLES Center",city:"Los Angeles, CA",page:"Crypto.com Arena",photo:"Staples_Center_outside.jpg",photoYear:"2004",credit:"Elise Dicharry • CC BY 2.0"},
+    "los angeles lakers":{arena:"STAPLES Center",city:"Los Angeles, CA",page:"Crypto.com Arena",photo:"Staples_Center_outside.jpg",photoYear:"2004",credit:"Elise Dicharry • CC BY 2.0"},
+    "memphis grizzlies":{arena:"Pyramid Arena",city:"Memphis, TN",page:"Memphis Pyramid",photo:"PyramidArena.jpg",photoYear:"2002",credit:"Jeremy Atherton • CC BY-SA 2.5"},
+    "miami heat":{arena:"AmericanAirlines Arena",city:"Miami, FL",page:"Kaseya Center",photo:"American_Airline_Arena_exterior.jpg",photoYear:"2010",credit:"HumongoNation • Wikimedia Commons"},
+    "milwaukee bucks":{arena:"Bradley Center",city:"Milwaukee, WI",page:"Bradley Center",photo:"Bradley_Center.jpg",photoYear:"2005",credit:"Jeramey Jannene • Wikimedia Commons"},
+    "minnesota timberwolves":{arena:"Target Center",city:"Minneapolis, MN",page:"Target Center",photo:"Target_Center.jpg",photoYear:"2005",credit:"Mulad • Public domain"},
+    "new jersey nets":{arena:"Continental Airlines Arena",city:"East Rutherford, NJ",page:"Meadowlands Arena",photo:"IZOD_Center.jpg",photoYear:"same venue",credit:"Wikimedia Commons"},
+    "new orleans hornets":{arena:"New Orleans Arena",city:"New Orleans, LA",page:"Smoothie King Center",photo:"New_Orleans_Arena,_exterior_view,_10_January_2022.jpg",photoYear:"same venue",credit:"Infrogmation • CC BY-SA 4.0"},
+    "new york knicks":{arena:"Madison Square Garden",city:"New York, NY",page:"Madison Square Garden",photo:"Madisonsquaregarden.jpg",photoYear:"2003",credit:"Baschti84 • CC BY-SA 3.0"},
+    "orlando magic":{arena:"TD Waterhouse Centre",city:"Orlando, FL",page:"Kia Center",photo:"TD-Waterhouse8.jpg",photoYear:"2004",credit:"Piutus • CC BY 2.0"},
+    "philadelphia 76ers":{arena:"Wachovia Center",city:"Philadelphia, PA",page:"Wells Fargo Center (Philadelphia)",photo:"Wachovia_Center,_Philadelphia.jpg",photoYear:"2007",credit:"Phillyfan0419 • Public domain"},
+    "phoenix suns":{arena:"America West Arena",city:"Phoenix, AZ",page:"Mortgage Matchup Center",photo:"AmericaWestArena.jpg",photoYear:"era photo",credit:"Wikimedia Commons"},
+    "portland trail blazers":{arena:"Rose Garden Arena",city:"Portland, OR",page:"Moda Center",photo:"RoseGardenArenaPortland.jpg",photoYear:"2007",credit:"Cacophony • CC BY-SA 2.5"},
+    "sacramento kings":{arena:"ARCO Arena",city:"Sacramento, CA",page:"ARCO Arena (1988)",photo:"Arcoarenakings.jpg",photoYear:"2006",credit:"Michelle • CC BY 2.0"},
+    "san antonio spurs":{arena:"SBC Center",city:"San Antonio, TX",page:"Frost Bank Center",photo:"Att-center.jpg",photoYear:"2005",credit:"Dknights411 • Wikimedia Commons"},
+    "seattle supersonics":{arena:"KeyArena at Seattle Center",city:"Seattle, WA",page:"Climate Pledge Arena",photo:"KeyArena_Seattle.jpg",photoYear:"2005",credit:"Jeramey Jannene • CC BY 2.0"},
+    "toronto raptors":{arena:"Air Canada Centre",city:"Toronto, ON",page:"Scotiabank Arena",photo:"Air_Canada_Centre_in_1999.jpg",photoYear:"1999",credit:"Chris Miller • Public domain"},
+    "utah jazz":{arena:"Delta Center",city:"Salt Lake City, UT",page:"Delta Center",photo:"Delta-center.jpg",photoYear:"2005",credit:"Paul Kucher • CC BY 2.0"},
+    "washington wizards":{arena:"MCI Center",city:"Washington, DC",page:"Capital One Arena",photo:"MCI_Center.jpg",photoYear:"2004",credit:"Postdlf • CC BY-SA 3.0"}
+  };
+  const V65_TEAM_ALIASES={"lakers":"los angeles lakers","clippers":"los angeles clippers","sixers":"philadelphia 76ers","76ers":"philadelphia 76ers","sonics":"seattle supersonics","supersonics":"seattle supersonics","nets":"new jersey nets","hornets":"new orleans hornets","blazers":"portland trail blazers","trailblazers":"portland trail blazers","cavs":"cleveland cavaliers","wolves":"minnesota timberwolves","t-wolves":"minnesota timberwolves","mavs":"dallas mavericks","spurs":"san antonio spurs","warriors":"golden state warriors","knicks":"new york knicks","bulls":"chicago bulls","celtics":"boston celtics","grizzlies":"memphis grizzlies","heat":"miami heat","magic":"orlando magic","bucks":"milwaukee bucks","pistons":"detroit pistons","pacers":"indiana pacers","rockets":"houston rockets","nuggets":"denver nuggets","suns":"phoenix suns","kings":"sacramento kings","jazz":"utah jazz","raptors":"toronto raptors","wizards":"washington wizards","hawks":"atlanta hawks"};
+  function v65TeamKey(name){const n=safe(name).toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();if(V65_ARENAS_2004[n])return n;if(V65_TEAM_ALIASES[n])return V65_TEAM_ALIASES[n];const hit=Object.keys(V65_ARENAS_2004).find(k=>k.includes(n)||n.includes(k));return hit||n}
+  function v65ArenaFor(team,year){const key=v65TeamKey(team);const a=V65_ARENAS_2004[key];if(!a)return {arena:"Arena TBD",city:"Set the team name to identify the venue",page:"",photo:"",team:safe(team)||"HOME TEAM"};return {...a,team:key.replace(/\b\w/g,c=>c.toUpperCase())}}
+  function v66CommonsPhoto(file){return file?'https://commons.wikimedia.org/wiki/Special:Redirect/file/'+encodeURIComponent(file)+'?width=960':''}
+  const v65ArenaThumbCache={};
+  async function v65LoadArenaImage(info){const card=q('deskArenaCard'),img=q('deskArenaImage'),credit=q('deskArenaCredit');if(!card||!img)return;card.classList.add('noImage');img.removeAttribute('src');if(credit)credit.textContent='ERA VENUE';const curated=v66CommonsPhoto(info?.photo);const setImage=(src,label)=>{if(!src)return false;img.onload=()=>{card.classList.remove('noImage');if(credit)credit.textContent=label||'Historical arena photo • Wikimedia Commons'};img.onerror=()=>{card.classList.add('noImage')};img.src=src;return true};if(curated){setImage(curated,`PHOTO ${info.photoYear||''} • ${info.credit||'Wikimedia Commons'}`);return}if(!info?.page)return;const key=info.page;if(v65ArenaThumbCache[key]){setImage(v65ArenaThumbCache[key],'Wikimedia/Wikipedia arena image');return}try{const url='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(info.page);const r=await fetch(url,{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('arena image unavailable');const j=await r.json();const src=j.thumbnail?.source||j.originalimage?.source;if(!src)throw new Error('no arena image');v65ArenaThumbCache[key]=src;setImage(src,'Wikimedia/Wikipedia arena image')}catch(e){card.classList.add('noImage');img.removeAttribute('src');if(credit)credit.textContent='ERA VENUE • IMAGE UNAVAILABLE'}}
+  function v65RenderArena(next){const p=state.player||{},year=Number(state.careerDate?.year||2004);let homeTeam=p.team||'';if(next&&safe(next.site).toLowerCase()==='away')homeTeam=next.opponent||'';else if(next&&safe(next.site).toLowerCase()==='home')homeTeam=p.team||'';const info=v65ArenaFor(homeTeam,year);text('deskArenaName',info.arena);text('deskArenaCity',info.city);text('deskArenaTeam',(info.team||homeTeam||'HOME VENUE').toUpperCase());text('deskArenaEra',`${year||2004} ERA ARENA`);v65LoadArenaImage(info)}
+  function v65RenderArenaGuide(){const root=q('arenaReferenceGrid');if(!root)return;root.innerHTML=Object.entries(V65_ARENAS_2004).map(([team,a])=>`<div class="arenaRef"><img loading="lazy" alt="${esc(a.arena)}" src="${esc(v66CommonsPhoto(a.photo))}" onerror="this.style.display='none'"><div class="arenaRefShade"></div><div class="arenaRefPhotoYear">${esc(a.photoYear||'ARCHIVE')}</div><div class="arenaRefCopy"><b>${esc(team.replace(/\b\w/g,c=>c.toUpperCase()))}</b><span>${esc(a.arena)}</span><em>${esc(a.city)}</em></div></div>`).join('')}
+
   function renderDesktopCareer(){
     if(typeof state==='undefined')return;
-    const p=state.player||{},m=state.meters||{},stage=getStage();
+    const p=state.player||{},m=state.meters||{},stage=getStage();v65RenderArenaGuide();
     const name=(p.name||q('pName')?.value||'Antonio Taylor').toUpperCase(),team=(p.team||q('pTeam')?.value||'Free Agent').toUpperCase(),pos=p.position||q('pPos')?.value||'SF',season=Number(p.season||q('pSeason')?.value||1);
     let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
     text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • SEASON ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);text('deskCareerDate',careerDateText());text('deskOvr',playerOvr());
     const trust=clamp(m.coach),fans=clamp(m.fans),sp=Number(state.sp||0);text('deskTrust',Math.round(trust)+'/100');text('deskFans',Math.round(fans)+'/100');text('deskSP',sp.toLocaleString());if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
-    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');text('deskGameMeta',next?`${next.date&&typeof formatCareerDate==='function'?formatCareerDate(next.date):'UPCOMING'}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');text('deskGameMeta',next?`${next.date&&typeof formatCareerDate==='function'?formatCareerDate(next.date):'UPCOMING'}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
     let story='Keep building your career. The next major story will appear here.';if(next){const ht=safe(p.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase(),opp=safe(next.opponent).toLowerCase();story=ht&&opp&&ht===opp?'HOMETOWN GAME: this matchup can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`)}text('deskStoryline',story);
     const ro=state.rotationOpportunity||{},rp=state.rotationProgress||{};text('deskStoryline2',ro.active?`${safe(ro.assignment||'Rotation opportunity')} • ${safe(ro.leash||'Normal')} leash`:`Current role: ${safe(rp.role||status)}${rp.minutes?' • '+rp.minutes+' MPG':''}`);const htName=safe(p.hometown||q('pHometown')?.value);text('deskStoryline3',htName?`Hometown: ${htName}. Local and homecoming context is active.`:'Set your hometown in Career Setup to unlock hometown story context.');
     const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
