@@ -900,6 +900,10 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   .deskLower{grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);align-items:start}
   .deskLower .deskInsiderCard{grid-column:auto}
   .deskBottom{grid-template-columns:1fr}
+  .deskLowerLanes{display:grid}
+  .deskLowerLane{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .deskCareerAveragesCard .deskPanelBar span{color:#e6bc3d}
+  .deskCareerAveragesCard .deskCardBody{padding-top:10px;padding-bottom:10px}
 
   /* City footer remains visible at every desktop height; no delayed "pop in" after scrolling. */
   .deskCityPanel{min-height:190px}
@@ -921,6 +925,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   .deskCoachWorkTop{grid-template-columns:66px minmax(0,1fr);gap:9px}.deskCoachTeamBadge{width:66px;height:66px}.deskCoachTeamBadge img{width:53px;height:53px}
   .deskCoachAssignment{padding-top:5px}.deskCoachAssignment h3{font-size:23px}.deskCoachAssignment p{font-size:10px}
   .deskCoachObjective{margin-top:7px}.deskCoachCard .deskMiniButton{margin-top:6px}
+  .deskLowerLanes{grid-template-columns:1fr 1fr}
   .deskCityTeamLogoWrap{bottom:45px!important}.deskCityLegacy{bottom:11px!important;font-size:9px}
 }
 </style>
@@ -1095,35 +1100,42 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     </article>
   </div>
 
-  <div class="deskLower">
-    <article class="deskCard">
-      <div class="deskPanelBar"><span>SEASON AVERAGES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
-      <div class="deskCardBody"><div class="deskAverages">
-        <div class="deskAvg"><b id="deskAvgPts">0.0</b><span>PPG</span></div><div class="deskAvg"><b id="deskAvgReb">0.0</b><span>RPG</span></div><div class="deskAvg"><b id="deskAvgAst">0.0</b><span>APG</span></div><div class="deskAvg"><b id="deskAvgStl">0.0</b><span>SPG</span></div><div class="deskAvg"><b id="deskAvgBlk">0.0</b><span>BPG</span></div><div class="deskAvg"><b id="deskAvgFG">—</b><span>FG%</span></div>
-      </div></div>
-    </article>
-    <article class="deskCard">
-      <div class="deskPanelBar"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">GAME LOG</button></div>
-      <div class="deskCardBody"><div id="deskRecentGames">No NBA games logged yet.</div></div>
-    </article>
-    <article class="deskCard deskObjectivesCard">
-      <div class="deskPanelBar"><span>CURRENT OBJECTIVES</span><button type="button" onclick="openPregameObjectivesFromHub()">VIEW ALL</button></div>
-      <div class="deskCardBody" id="deskObjectives"></div>
-    </article>
-    <article class="deskCard deskInsiderCard">
-      <div class="deskPanelBar"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
-      <div class="deskCardBody">
-        <div class="deskInsiderLead"><img src="2k-insider.png" alt="2K Insider"><div><small>LATEST HEADLINE</small><h3 id="deskInsiderHeadline">THE STORY IS JUST BEGINNING</h3><p id="deskInsiderDeck">Career news, milestones and role changes will surface here.</p></div></div>
-        <div class="deskHeadlineList" id="deskHeadlineList"></div>
-      </div>
-    </article>
-  </div>
-
-  <div class="deskBottom">
-    <article class="deskCard">
-      <div class="deskPanelBar"><span>ENDORSEMENTS</span><button type="button" onclick="openTab('rewards')">VIEW ALL</button></div>
-      <div class="deskCardBody" id="deskEndorsements"></div>
-    </article>
+  <div class="deskLower deskLowerLanes">
+    <div class="deskLowerLane deskLowerLaneLeft">
+      <article class="deskCard">
+        <div class="deskPanelBar"><span>SEASON AVERAGES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
+        <div class="deskCardBody"><div class="deskAverages">
+          <div class="deskAvg"><b id="deskAvgPts">0.0</b><span>PPG</span></div><div class="deskAvg"><b id="deskAvgReb">0.0</b><span>RPG</span></div><div class="deskAvg"><b id="deskAvgAst">0.0</b><span>APG</span></div><div class="deskAvg"><b id="deskAvgStl">0.0</b><span>SPG</span></div><div class="deskAvg"><b id="deskAvgBlk">0.0</b><span>BPG</span></div><div class="deskAvg"><b id="deskAvgFG">—</b><span>FG%</span></div>
+        </div></div>
+      </article>
+      <article class="deskCard deskCareerAveragesCard">
+        <div class="deskPanelBar"><span>CAREER AVERAGES</span><button type="button" onclick="openTab('stats')">CAREER STATS</button></div>
+        <div class="deskCardBody"><div class="deskAverages">
+          <div class="deskAvg"><b id="deskCareerAvgPts">0.0</b><span>PPG</span></div><div class="deskAvg"><b id="deskCareerAvgReb">0.0</b><span>RPG</span></div><div class="deskAvg"><b id="deskCareerAvgAst">0.0</b><span>APG</span></div><div class="deskAvg"><b id="deskCareerAvgStl">0.0</b><span>SPG</span></div><div class="deskAvg"><b id="deskCareerAvgBlk">0.0</b><span>BPG</span></div><div class="deskAvg"><b id="deskCareerAvgFG">—</b><span>FG%</span></div>
+        </div></div>
+      </article>
+      <article class="deskCard deskObjectivesCard">
+        <div class="deskPanelBar"><span>CURRENT OBJECTIVES</span><button type="button" onclick="openPregameObjectivesFromHub()">VIEW ALL</button></div>
+        <div class="deskCardBody" id="deskObjectives"></div>
+      </article>
+      <article class="deskCard deskEndorsementsCard">
+        <div class="deskPanelBar"><span>ENDORSEMENTS</span><button type="button" onclick="openTab('rewards')">VIEW ALL</button></div>
+        <div class="deskCardBody" id="deskEndorsements"></div>
+      </article>
+    </div>
+    <div class="deskLowerLane deskLowerLaneRight">
+      <article class="deskCard">
+        <div class="deskPanelBar"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">GAME LOG</button></div>
+        <div class="deskCardBody"><div id="deskRecentGames">No NBA games logged yet.</div></div>
+      </article>
+      <article class="deskCard deskInsiderCard">
+        <div class="deskPanelBar"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
+        <div class="deskCardBody">
+          <div class="deskInsiderLead"><img src="2k-insider.png" alt="2K Insider"><div><small>LATEST HEADLINE</small><h3 id="deskInsiderHeadline">THE STORY IS JUST BEGINNING</h3><p id="deskInsiderDeck">Career news, milestones and role changes will surface here.</p></div></div>
+          <div class="deskHeadlineList" id="deskHeadlineList"></div>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -6563,6 +6575,7 @@ function jumpCareerSection(id){
   function fmt1(v){return Number(v||0).toFixed(1)}
   function renderRecent(){const root=q('deskRecentGames');if(!root)return;const gs=(state.games||[]).slice(0,5);if(!gs.length){root.innerHTML='<div class="desktopEmpty">No NBA games logged yet.</div>';return}root.innerHTML=`<table class="deskRecentTable"><thead><tr><th>GAME</th><th>OPP</th><th>PTS</th><th>REB</th><th>AST</th><th>FG%</th></tr></thead><tbody>${gs.map(g=>{const x=g.stats||{},r=safe(x.result||'').toUpperCase();const fg=Number(x.fga)>0?Math.round(Number(x.fgm||0)/Number(x.fga)*100)+'%':'—';return `<tr><td class="${r==='W'?'deskWin':r==='L'?'deskLoss':''}">${esc(r||'—')}</td><td>${esc(g.opponent||'Opponent')}</td><td>${Number(x.pts||0)}</td><td>${Number(x.reb||0)}</td><td>${Number(x.ast||0)}</td><td>${fg}</td></tr>`}).join('')}</tbody></table>`}
   function renderAverages(){const gs=seasonGames(),t=totals(gs),n=gs.length||1;text('deskAvgPts',fmt1(t.pts/n));text('deskAvgReb',fmt1(t.reb/n));text('deskAvgAst',fmt1(t.ast/n));text('deskAvgStl',fmt1(t.stl/n));text('deskAvgBlk',fmt1(t.blk/n));text('deskAvgFG',t.fga?Math.round(t.fgm/t.fga*100)+'%':'—')}
+  function renderCareerAverages(){const gs=(state.games||[]),t=totals(gs),n=gs.length||1;text('deskCareerAvgPts',fmt1(t.pts/n));text('deskCareerAvgReb',fmt1(t.reb/n));text('deskCareerAvgAst',fmt1(t.ast/n));text('deskCareerAvgStl',fmt1(t.stl/n));text('deskCareerAvgBlk',fmt1(t.blk/n));text('deskCareerAvgFG',t.fga?Math.round(t.fgm/t.fga*100)+'%':'—')}
   function renderObjectives(){const root=q('deskObjectives');if(!root)return;const objs=Array.isArray(state.objectives)?state.objectives:[];if(!objs.length){root.innerHTML='<div class="desktopEmpty">No active pre-game objectives. Open Objectives before your next game.</div>';return}root.innerHTML=objs.slice(0,4).map((o,i)=>`<div class="deskObjectiveRow"><div class="deskCheck">${o.completed?'✓':'□'}</div><div class="deskRowText"><b>${esc(o.text||o.name||('Objective '+(i+1)))}</b><span>${esc(o.theme||'Pregame target')}</span></div><div class="deskRowReward">+100 SP</div></div>`).join('')}
   function renderEndorsements(){const root=q('deskEndorsements');if(!root)return;const es=(state.endorsements||[]).filter(e=>e.status!=='Completed').slice(0,4);if(!es.length){root.innerHTML='<div class="desktopEmpty">No active endorsement events yet. Fans and basketball credibility unlock opportunities.</div>';return}root.innerHTML=es.map(e=>`<div class="deskEndorseRow"><div class="deskEndorseLogo">AD</div><div class="deskRowText"><b>${esc(e.name||'Endorsement')}</b><span>${esc(e.status||'Scheduled')}${e.date?' • '+esc(e.date):''}</span></div><div class="deskRowReward">${Number(e.sp||0)?'+'+Number(e.sp).toLocaleString()+' SP':'ACTIVE'}</div></div>`).join('')}
   function nextStep(total,step){const n=Math.max(0,Number(total||0));return (Math.floor(n/step)+1)*step}
@@ -6755,7 +6768,7 @@ function jumpCareerSection(id){
     const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
     try{const goal=state.coachGoals?.active;const mins=ro.active?ro.currentMinutes:rp.minutes;const role=ro.active?(ro.assignment||'Temporary Assignment'):(rp.role||status);text('deskCoachGoal',goal?(goal.title||goal.name||'Active Coach Goal'):(ro.active?(ro.assignment||'Rotation Opportunity'):'No active Coach Goal'));text('deskCoachMeta',`${mins||0} MPG • ${Math.round(trust)} Coach Trust`);text('deskCoachMinutes',`${mins||0} MPG`);text('deskCoachTrustMini',Math.round(trust));text('deskCoachRoleMini',safe(role).toUpperCase());if(goal){const pr=typeof coachGoalProgress==='function'?coachGoalProgress(goal):{value:0,done:false,gamesPlayed:0,label:''};const target=Math.max(1,Number(goal.target||1));const value=Number(pr.value||0);const pct=pr.done?100:Math.max(0,Math.min(100,Math.round(value/target*100)));const left=Math.max(0,Number(goal.games||3)-Number(pr.gamesPlayed||0));text('deskCoachObjectiveText',goal.text||goal.objective||goal.description||goal.title||'Complete the coach assignment.');text('deskCoachProgressText',pr.label||`${value} / ${target}`);text('deskCoachGamesLeft',pr.done?'COMPLETE':(left?`${left} GAME${left===1?'':'S'} LEFT`:'EVALUATION DUE'));const bar=q('deskCoachObjectiveBar');if(bar)bar.style.width=pct+'%'}else{text('deskCoachObjectiveText',ro.active?(ro.reason||'Make the most of your current rotation opportunity.'):'No active objective. Meet with Coach for your next assignment.');text('deskCoachProgressText',ro.active?(ro.status||'Opportunity active'):'Waiting for next assignment');text('deskCoachGamesLeft','');const bar=q('deskCoachObjectiveBar');if(bar)bar.style.width='0%'}}catch(e){}
     const src=q('k11PlayerPhoto')?.getAttribute('src')||'';const img=q('deskPlayerPhoto'),visual=q('deskHeroVisual');if(img){if(src){img.src=src;visual?.classList.add('hasPhoto')}else{img.removeAttribute('src');visual?.classList.remove('hasPhoto')}}
-    renderAverages();renderRecent();renderObjectives();renderEndorsements();renderMilestones();renderHeadlines();
+    renderAverages();renderCareerAverages();renderRecent();renderObjectives();renderEndorsements();renderMilestones();renderHeadlines();
   }
   window.renderDesktopCareer=renderDesktopCareer;
   document.addEventListener('DOMContentLoaded',()=>{const ey=q('pEraYear');if(ey&&ey.dataset.bound!=="1"){ey.dataset.bound="1";const saveEra=()=>{const v=Math.max(1946,Math.min(2100,Number(ey.value)||2003));state.player.eraStartYear=v;const gy=q('gYear');if(gy)gy.value=eraYearFor(Number(q('gMonth')?.value||10),state.player?.season||1);if(typeof persist==='function')persist();renderDesktopCareer()};ey.addEventListener('change',saveEra);ey.addEventListener('blur',saveEra)}});
