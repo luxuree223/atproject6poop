@@ -1,5 +1,5 @@
-/* 2K27 Old School Career V71 — arena artwork persistent cache */
-const CACHE_NAME='2k27-oldschool-arena-art-v71';
+/* 2K27 Old School Career V75 — presentation artwork persistent cache */
+const CACHE_NAME='2k27-oldschool-presentation-v75';
 const ARENA_IMAGES=[
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Philips_Arena_outside.jpg?width=960',
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fleet_Center_from_old_Central_Artery.agr.jpg?width=960',
@@ -50,13 +50,14 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keys=await caches.keys();
-    await Promise.all(keys.filter(k=>k.startsWith('2k27-oldschool-arena-art-')&&k!==CACHE_NAME).map(k=>caches.delete(k)));
+    await Promise.all(keys.filter(k=>(k.startsWith('2k27-oldschool-arena-art-')||k.startsWith('2k27-oldschool-presentation-'))&&k!==CACHE_NAME).map(k=>caches.delete(k)));
     await self.clients.claim();
   })());
 });
 self.addEventListener('fetch',event=>{
   const u=event.request.url;
-  if(!PRESENTATION_IMAGES.includes(u)) return;
+  const isDynamicPresentation=/^https:\/\/(?:upload\.wikimedia\.org|commons\.wikimedia\.org)\//.test(u);
+  if(!PRESENTATION_IMAGES.includes(u) && !isDynamicPresentation) return;
   event.respondWith((async()=>{
     const cache=await caches.open(CACHE_NAME);
     const cached=await cache.match(event.request,{ignoreVary:true});

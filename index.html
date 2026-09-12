@@ -771,6 +771,43 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 
 </style>
 
+
+<style id="v75HubCoachLayout">
+@media (min-width:980px){
+  .deskFeatureRow{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(330px,.92fr);gap:10px;margin-top:10px}
+  .deskLower{grid-template-columns:1fr 1fr;margin-top:10px}
+  .deskLower .deskInsiderCard{grid-column:1/-1}
+  .deskBottom{grid-template-columns:1fr 1fr;margin-top:10px}
+  .deskCoachCard .deskCardBody{padding:14px}
+  .deskCoachSummary{display:grid;grid-template-columns:124px 1fr;gap:15px;align-items:start}
+  .deskCoachIdentity{min-width:0}
+  .deskCoachGraphic{position:relative;width:118px;height:118px;display:grid;place-items:center;background:linear-gradient(180deg,#172a36,#08131b);border:1px solid #426171;overflow:hidden}
+  .deskCoachGraphic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 15%;display:none}
+  .deskCoachGraphic.hasCoachPhoto img{display:block}
+  .deskCoachGraphic.hasCoachPhoto .deskCoachFallback{display:none}
+  .deskCoachFallback{width:100%;height:100%;display:grid;place-items:end center}
+  .deskCoachFallback svg{width:94px;height:94px;color:#d8e0e4;transform:translateY(7px)}
+  .deskCoachNameplate{text-align:center;padding:7px 3px 0}
+  .deskCoachNameplate b{display:block;color:#f3f6f7;font-size:10px;line-height:1.05;text-transform:uppercase}
+  .deskCoachNameplate span{display:block;margin-top:4px;color:#59c9f6;font-size:6px;font-weight:1000;letter-spacing:1.15px}
+  .deskCoachAssignment{padding-top:8px;min-width:0}
+  .deskCoachAssignment small{font-size:8px;color:#7f94a0;letter-spacing:1.15px}
+  .deskCoachAssignment h3{font-size:19px;line-height:1.05;margin:6px 0}
+  .deskCoachAssignment p{font-size:10px;color:#a2b2ba;line-height:1.35;margin:0}
+  .deskCoachObjective{margin-top:10px}
+  .deskCoachContext{margin-top:8px}
+  .deskMiniButton{margin-top:8px}
+  .deskMilestonesCard .deskCardBody{padding:14px 16px}
+  .deskCityTeamLogoWrap{position:absolute;left:50%;transform:translateX(-50%);bottom:45px;z-index:4;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:rgba(4,11,16,.72);border:1px solid rgba(255,255,255,.35);box-shadow:0 4px 14px rgba(0,0,0,.38)}
+  .deskCityTeamLogoWrap img{position:static!important;width:34px!important;height:34px!important;object-fit:contain!important;opacity:1!important;filter:none!important;display:none}
+  .deskCityTeamLogoWrap i{font-style:normal;font-size:8px;font-weight:1000;color:#fff}
+  .deskCityLegacy{bottom:12px;font-size:10px;font-weight:1000;letter-spacing:2px}
+}
+@media (min-width:980px) and (max-width:1180px){
+  .deskFeatureRow{grid-template-columns:1fr 1fr}
+  .deskCoachSummary{grid-template-columns:100px 1fr}.deskCoachGraphic{width:96px;height:96px}.deskCoachAssignment h3{font-size:16px}
+}
+</style>
 </head>
 <body>
 <header>
@@ -802,6 +839,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     <img id="deskCityImage" alt="Current game city presentation">
     <div class="deskCityShade"></div>
     <div class="deskCityCopy"><small>CURRENT TEAM CITY</small><b id="deskCityName">CAREER CITY</b><span id="deskCityVenue" class="deskCityVenue">HOME COURT</span><span id="deskCityTagline" class="deskCityTagline">Basketball lives here</span></div>
+    <div class="deskCityTeamLogoWrap"><img id="deskCityTeamLogo" alt="Current team logo"><i id="deskCityTeamLogoFallback">NBA</i></div>
     <div class="deskCityLegacy">LEGACY NEVER FADES</div>
   </div>
 </nav>
@@ -914,6 +952,31 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     </section>
   </div>
 
+  <div class="deskFeatureRow">
+    <article class="deskCard deskCoachCard">
+      <div class="deskPanelBar"><span>COACH'S OFFICE</span><button type="button" onclick="openCoachOffice()">ENTER</button></div>
+      <div class="deskCardBody">
+        <div class="deskCoachSummary">
+          <div class="deskCoachIdentity">
+            <div class="deskCoachGraphic">
+              <img id="deskCoachPhoto" alt="Head coach portrait">
+              <div id="deskCoachFallback" class="deskCoachFallback" aria-hidden="true"><svg viewBox="0 0 72 72" role="img"><circle cx="36" cy="22" r="12" fill="currentColor"/><path d="M14 63c1-17 9-28 22-28s21 11 22 28H14z" fill="currentColor"/><path d="M49 38l12 9-7 9-10-12z" fill="#e9bd42"/><rect x="54" y="45" width="12" height="17" rx="2" fill="#d9e2e7"/><path d="M57 49h6M57 53h6M57 57h4" stroke="#1a2a35" stroke-width="2" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="deskCoachNameplate"><b id="deskCoachName">HEAD COACH</b><span>HEAD COACH</span></div>
+          </div>
+          <div class="deskCoachAssignment"><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div>
+        </div>
+        <div class="deskCoachObjective"><div class="label">COACH OBJECTIVE</div><strong id="deskCoachObjectiveText">No active objective.</strong><div class="deskCoachProgressTrack"><i id="deskCoachObjectiveBar"></i></div><div class="deskCoachProgressMeta"><span id="deskCoachProgressText">Waiting for next assignment</span><span id="deskCoachGamesLeft"></span></div></div>
+        <div class="deskCoachContext"><div><span>MINUTES</span><b id="deskCoachMinutes">0 MPG</b></div><div><span>TRUST</span><b id="deskCoachTrustMini">0</b></div><div><span>ROLE</span><b id="deskCoachRoleMini">PLAYER</b></div></div>
+        <button class="deskMiniButton" type="button" onclick="openCoachOffice()">MEET WITH COACH</button>
+      </div>
+    </article>
+    <article class="deskCard deskMilestonesCard">
+      <div class="deskPanelBar"><span>UPCOMING MILESTONES</span><button type="button" onclick="openTab('milestones')">VIEW ALL</button></div>
+      <div class="deskCardBody" id="deskMilestones"></div>
+    </article>
+  </div>
+
   <div class="deskLower">
     <article class="deskCard">
       <div class="deskPanelBar"><span>SEASON AVERAGES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
@@ -921,12 +984,10 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
         <div class="deskAvg"><b id="deskAvgPts">0.0</b><span>PPG</span></div><div class="deskAvg"><b id="deskAvgReb">0.0</b><span>RPG</span></div><div class="deskAvg"><b id="deskAvgAst">0.0</b><span>APG</span></div><div class="deskAvg"><b id="deskAvgStl">0.0</b><span>SPG</span></div><div class="deskAvg"><b id="deskAvgBlk">0.0</b><span>BPG</span></div><div class="deskAvg"><b id="deskAvgFG">—</b><span>FG%</span></div>
       </div></div>
     </article>
-
     <article class="deskCard">
       <div class="deskPanelBar"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">GAME LOG</button></div>
       <div class="deskCardBody"><div id="deskRecentGames">No NBA games logged yet.</div></div>
     </article>
-
     <article class="deskCard deskInsiderCard">
       <div class="deskPanelBar"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
       <div class="deskCardBody">
@@ -944,14 +1005,6 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     <article class="deskCard">
       <div class="deskPanelBar"><span>ENDORSEMENTS</span><button type="button" onclick="openTab('rewards')">VIEW ALL</button></div>
       <div class="deskCardBody" id="deskEndorsements"></div>
-    </article>
-    <article class="deskCard">
-      <div class="deskPanelBar"><span>COACH'S OFFICE</span><button type="button" onclick="openCoachOffice()">ENTER</button></div>
-      <div class="deskCardBody"><div class="deskCoachSummary"><div class="deskCoachGraphic" aria-hidden="true"><svg viewBox="0 0 72 72" role="img"><circle cx="36" cy="22" r="12" fill="currentColor"/><path d="M14 63c1-17 9-28 22-28s21 11 22 28H14z" fill="currentColor"/><path d="M49 38l12 9-7 9-10-12z" fill="#e9bd42"/><rect x="54" y="45" width="12" height="17" rx="2" fill="#d9e2e7"/><path d="M57 49h6M57 53h6M57 57h4" stroke="#1a2a35" stroke-width="2" stroke-linecap="round"/></svg></div><div><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div></div><div class="deskCoachObjective"><div class="label">COACH OBJECTIVE</div><strong id="deskCoachObjectiveText">No active objective.</strong><div class="deskCoachProgressTrack"><i id="deskCoachObjectiveBar"></i></div><div class="deskCoachProgressMeta"><span id="deskCoachProgressText">Waiting for next assignment</span><span id="deskCoachGamesLeft"></span></div></div><div class="deskCoachContext"><div><span>MINUTES</span><b id="deskCoachMinutes">0 MPG</b></div><div><span>TRUST</span><b id="deskCoachTrustMini">0</b></div><div><span>ROLE</span><b id="deskCoachRoleMini">PLAYER</b></div></div><button class="deskMiniButton" type="button" onclick="openCoachOffice()">MEET WITH COACH</button></div>
-    </article>
-    <article class="deskCard">
-      <div class="deskPanelBar"><span>UPCOMING MILESTONES</span><button type="button" onclick="openTab('milestones')">VIEW ALL</button></div>
-      <div class="deskCardBody" id="deskMilestones"></div>
     </article>
   </div>
 </section>
@@ -6427,6 +6480,7 @@ function jumpCareerSection(id){
   const V65_ARENAS_2004={
     "atlanta hawks":{arena:"Philips Arena",city:"Atlanta, GA",page:"State Farm Arena",photo:"Philips_Arena_outside.jpg",photoYear:"2006",credit:"DerrickT • CC BY 2.0"},
     "boston celtics":{arena:"FleetCenter",city:"Boston, MA",page:"TD Garden",photo:"Fleet_Center_from_old_Central_Artery.agr.jpg",photoYear:"2003",credit:"ArnoldReinhold • CC BY-SA 4.0"},
+    "charlotte hornets":{arena:"Charlotte Coliseum",city:"Charlotte, NC",page:"Charlotte Coliseum",photo:"",photoYear:"2004-05",credit:"Wikimedia/Wikipedia"},
     "chicago bulls":{arena:"United Center",city:"Chicago, IL",page:"United Center",photo:"United_Center_Exterior.JPG",photoYear:"2014",credit:"Mr.Konerko • Wikimedia Commons"},
     "cleveland cavaliers":{arena:"Gund Arena",city:"Cleveland, OH",page:"Rocket Arena",photo:"Jacobs_Field_Cleveland.JPG",photoYear:"1999",credit:"Paul M. Walsh • Wikimedia Commons"},
     "dallas mavericks":{arena:"American Airlines Center",city:"Dallas, TX",page:"American Airlines Center",photo:"American_Airlines_Center_outside.jpg",photoYear:"2004",credit:"RadicalBender • Wikimedia Commons"},
@@ -6488,8 +6542,81 @@ function jumpCareerSection(id){
     text('deskCityName',info.city||'CAREER CITY');
     text('deskCityVenue',`HOME COURT • ${info.arena||'HOME ARENA'}`);
     text('deskCityTagline',v72CityTagline(info.city));
+    setTeamLogo('deskCityTeamLogo','deskCityTeamLogoFallback',team);
     v69LoadCitySkyline(info);
   }
+
+  /* V75 — historical Coach's Office presentation.
+     2003-04 uses the actual historical head coach for the player's team.
+     Teams with an in-season coaching change are date-aware. Charlotte is
+     represented by its 2004-05 expansion coach so all 30 franchise slots
+     have a coach mapping. Presentation only: no save-schema changes. */
+  const V75_COACH_TIMELINE_2004={
+    "atlanta hawks":[{name:"Terry Stotts"}],
+    "boston celtics":[{name:"Jim O'Brien",until:"2004-01-27"},{name:"John Carroll"}],
+    "charlotte hornets":[{name:"Bernie Bickerstaff"}],
+    "chicago bulls":[{name:"Bill Cartwright",until:"2003-11-24"},{name:"Pete Myers",until:"2003-11-28"},{name:"Scott Skiles"}],
+    "cleveland cavaliers":[{name:"Paul Silas"}],
+    "dallas mavericks":[{name:"Don Nelson"}],
+    "denver nuggets":[{name:"Jeff Bzdelik"}],
+    "detroit pistons":[{name:"Larry Brown"}],
+    "golden state warriors":[{name:"Eric Musselman"}],
+    "houston rockets":[{name:"Jeff Van Gundy"}],
+    "indiana pacers":[{name:"Rick Carlisle"}],
+    "los angeles clippers":[{name:"Mike Dunleavy Sr."}],
+    "los angeles lakers":[{name:"Phil Jackson"}],
+    "memphis grizzlies":[{name:"Hubie Brown"}],
+    "miami heat":[{name:"Stan Van Gundy"}],
+    "milwaukee bucks":[{name:"Terry Porter"}],
+    "minnesota timberwolves":[{name:"Flip Saunders"}],
+    "new jersey nets":[{name:"Byron Scott",until:"2004-01-26"},{name:"Lawrence Frank"}],
+    "new orleans hornets":[{name:"Tim Floyd"}],
+    "new york knicks":[{name:"Don Chaney",until:"2004-01-14"},{name:"Herb Williams",until:"2004-01-15"},{name:"Lenny Wilkens"}],
+    "orlando magic":[{name:"Doc Rivers",until:"2003-11-17"},{name:"Johnny Davis"}],
+    "philadelphia 76ers":[{name:"Randy Ayers",until:"2004-02-10"},{name:"Chris Ford"}],
+    "phoenix suns":[{name:"Frank Johnson",until:"2003-12-10"},{name:"Mike D'Antoni"}],
+    "portland trail blazers":[{name:"Maurice Cheeks"}],
+    "sacramento kings":[{name:"Rick Adelman"}],
+    "san antonio spurs":[{name:"Gregg Popovich"}],
+    "seattle supersonics":[{name:"Nate McMillan"}],
+    "toronto raptors":[{name:"Kevin O'Neill"}],
+    "utah jazz":[{name:"Jerry Sloan"}],
+    "washington wizards":[{name:"Eddie Jordan"}]
+  };
+  const V75_COACH_ALIASES={"brooklyn nets":"new jersey nets","new orleans pelicans":"new orleans hornets","oklahoma city thunder":"seattle supersonics","charlotte bobcats":"charlotte hornets"};
+  const v75CoachPhotoCache={};
+  function v75CoachTeamKey(team){const k=v65TeamKey(team);return V75_COACH_ALIASES[k]||V75_COACH_ALIASES[safe(team).toLowerCase()]||k}
+  function v75CareerIsoDate(){
+    const p=state.player||{},d=latestGameDate()||state.careerDate||{},month=Math.max(1,Math.min(12,Number(d.month||10))),day=Math.max(1,Math.min(31,Number(d.day||1))),year=eraYearFor(month,p.season||1);
+    return `${String(year).padStart(4,'0')}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  }
+  function v75CoachForTeam(team){
+    const key=v75CoachTeamKey(team),timeline=V75_COACH_TIMELINE_2004[key];
+    if(!timeline||!timeline.length)return {name:'Head Coach',team:key};
+    const iso=v75CareerIsoDate();
+    const pick=timeline.find(x=>!x.until||iso<=x.until)||timeline[timeline.length-1];
+    return {...pick,team:key};
+  }
+  async function v75LoadCoachPhoto(coach){
+    const img=q('deskCoachPhoto'),frame=img?.closest('.deskCoachGraphic');if(!img||!frame)return;
+    frame.classList.remove('hasCoachPhoto');img.removeAttribute('src');
+    if(!coach?.name||coach.name==='Head Coach')return;
+    const key=coach.name,stored=v75CoachPhotoCache[key]||localStorage.getItem('v75_coach_photo_'+key);
+    const setPhoto=src=>{if(!src)return false;img.onload=()=>frame.classList.add('hasCoachPhoto');img.onerror=()=>frame.classList.remove('hasCoachPhoto');img.src=src;return true};
+    if(stored){setPhoto(stored);return}
+    const pageName=coach.name==='Mike Dunleavy Sr.'?'Mike Dunleavy Sr.':coach.name;
+    try{
+      const u='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(pageName);
+      const r=await fetch(u,{headers:{'Accept':'application/json'}});if(!r.ok)throw 0;const j=await r.json();const src=j.thumbnail?.source||j.originalimage?.source;
+      if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v75_coach_photo_'+key,src)}catch(e){}setPhoto(src);return}
+    }catch(e){}
+    try{
+      const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(coach.name+' basketball coach')+'&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=360&format=json&origin=*';
+      const r=await fetch(api);if(!r.ok)throw 0;const j=await r.json(),pages=Object.values(j.query?.pages||{}),hit=pages.find(x=>x.imageinfo?.[0]?.thumburl)||pages[0],src=hit?.imageinfo?.[0]?.thumburl||hit?.imageinfo?.[0]?.url;
+      if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v75_coach_photo_'+key,src)}catch(e){}setPhoto(src)}
+    }catch(e){}
+  }
+  function v75RenderCoach(){const team=state.player?.team||q('pTeam')?.value||'',coach=v75CoachForTeam(team);text('deskCoachName',safe(coach.name).toUpperCase());v75LoadCoachPhoto(coach)}
   function v65RenderArenaGuide(){const root=q('arenaReferenceGrid');if(!root)return;root.innerHTML=Object.entries(V65_ARENAS_2004).map(([team,a])=>{const logo=teamLogoUrl(team),abbr=(V68_TEAM_LOGOS[team]||'NBA').toUpperCase();return `<div class="arenaRef"><img loading="lazy" alt="${esc(a.arena)}" src="${esc(v66CommonsPhoto(a.photo))}" onerror="this.style.display='none'"><div class="arenaRefShade"></div><div class="arenaRefLogoWrap"><i>${esc(abbr)}</i>${logo?`<img alt="${esc(team)} logo" src="${esc(logo)}" onerror="this.style.display='none'">`:''}</div><div class="arenaRefPhotoYear">${esc(a.photoYear||'ARCHIVE')}</div><div class="arenaRefCopy"><b>${esc(team.replace(/\b\w/g,c=>c.toUpperCase()))}</b><span>${esc(a.arena)}</span><em>${esc(a.city)}</em></div></div>`}).join('')}
 
   function renderDesktopCareer(){
@@ -6499,7 +6626,7 @@ function jumpCareerSection(id){
     let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
     text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • YEAR ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);const dateLabel=careerDateText();text('deskCareerDate',dateLabel);text('deskTopYear',`YEAR ${season}`);text('deskTopVC',Number(state.sp||0).toLocaleString()+' VC');text('deskHeaderYear',`YEAR ${season}`);text('deskHeaderDate',dateLabel);text('deskHeaderVC',Number(state.sp||0).toLocaleString()+' VC');setTeamLogo('deskTeamLogo','deskTeamLogoFallback',p.team||q('pTeam')?.value||'');const oi=q('deskOvrInput');if(oi&&document.activeElement!==oi)oi.value=playerOvr()==='—'?'':playerOvr();
     const trust=clamp(m.coach),fans=clamp(m.fans),sp=Number(state.sp||0);text('deskTrust',Math.round(trust)+'/100');text('deskFans',Math.round(fans)+'/100');text('deskSP',sp.toLocaleString());if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
-    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);v73RenderTeamCity();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);v73RenderTeamCity();v75RenderCoach();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
     let story='Keep building your career. The next major story will appear here.';if(next){const ht=safe(p.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase(),opp=safe(next.opponent).toLowerCase();story=ht&&opp&&ht===opp?'HOMETOWN GAME: this matchup can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`)}text('deskStoryline',story);
     const ro=state.rotationOpportunity||{},rp=state.rotationProgress||{};text('deskStoryline2',ro.active?`${safe(ro.assignment||'Rotation opportunity')} • ${safe(ro.leash||'Normal')} leash`:`Current role: ${safe(rp.role||status)}${rp.minutes?' • '+rp.minutes+' MPG':''}`);const htName=safe(p.hometown||q('pHometown')?.value);text('deskStoryline3',htName?`Hometown: ${htName}. Local and homecoming context is active.`:'Set your hometown in Career Setup to unlock hometown story context.');
     const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
