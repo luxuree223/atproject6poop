@@ -26,6 +26,7 @@ main{max-width:1180px;margin:0 auto;padding:20px}
 .postgameRewardOverlay{position:fixed;inset:0;z-index:10020;background:rgba(5,8,13,.78);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px)}
 .postgameRewardModal{width:min(560px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#111722;border:1px solid #3a4659;border-radius:18px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
 .postgameRewardModal h2{margin:0 0 4px;font-size:26px}.postgameRewardModal .rewardSub{color:#9ca8ba;margin-bottom:16px}.postgameRewardGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.postgameRewardCell{background:#181f2b;border:1px solid #313b4c;border-radius:12px;padding:12px}.postgameRewardCell span{display:block;color:#9ca8ba;font-size:13px;margin-bottom:4px}.postgameRewardCell b{font-size:20px}.postgameRewardTotal{margin:16px 0 0;padding:15px;border-radius:13px;background:#151d0f;border:1px solid rgba(214,255,51,.32);color:#d6ff33;font-size:25px;font-weight:800}.postgameMilestoneBox{margin-top:14px;padding:14px;border-radius:13px;background:#0f1c15;border:1px solid rgba(111,232,158,.28)}.postgameMilestoneBox h3{margin:0 0 9px;color:#75e7a1}.postgameMilestone{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}.postgameMilestone:first-of-type{border-top:0}.postgameMilestone b:last-child{white-space:nowrap;color:#75e7a1}.postgameRewardActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.postgameRewardActions button{flex:1 1 180px}.postgameKeyBonus{margin-top:12px;color:#ffd86b;font-weight:800}.postgameRewardNote{margin-top:12px;color:#c7d0df;font-size:14px;line-height:1.45}@media(max-width:520px){.postgameRewardGrid{grid-template-columns:1fr}.postgameRewardModal{padding:16px;border-radius:16px}.postgameRewardTotal{font-size:22px}}
+.allStarModal{width:min(720px,100%)}.allStarGroup{margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:13px;background:rgba(255,255,255,.035)}.allStarGroup h3{margin:0 0 10px;color:#ffd166}.allStarStatNote{margin-top:12px;padding:10px 12px;border-left:3px solid #52c8ff;background:rgba(24,92,150,.16);border-radius:7px;color:#ccecff;font-size:13px}.allStarPromptMark{font-size:42px;line-height:1;margin-bottom:8px;color:#ffd166;text-shadow:0 0 22px rgba(255,209,102,.45)}
 
 .combineStats{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .combineStats h3{margin:0 0 10px}.combineResult{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025)}
@@ -1031,6 +1032,15 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   /* Fans has always been blue. Team theming must never recolor it. */
   body.teamColorTheme .deskMeter.blue i,
   body.teamColorTheme #deskFansBar{background:#22b9ed!important;box-shadow:none!important}
+
+  /* V88 — temporary All-Star presentation. Only color treatment changes; the
+     Definitive Coach layout and the permanent team palette stay untouched. */
+  body.allStarWeekendTheme nav#nav{background:linear-gradient(180deg,#071b3d,#08111f 58%,#071018)}
+  body.allStarWeekendTheme .desktopBrand{background:radial-gradient(circle at 22% 10%,rgba(64,183,255,.24),transparent 45%),radial-gradient(circle at 82% 26%,rgba(232,39,66,.20),transparent 42%)}
+  body.allStarWeekendTheme .desktopCareerGrid{filter:drop-shadow(0 0 15px rgba(255,198,62,.09))}
+  body.allStarWeekendTheme .deskPanelBar:after{content:"★ ALL-STAR";margin-left:auto;color:#ffd166;font-size:8px;font-weight:1000;letter-spacing:1.4px}
+  body.allStarWeekendTheme .deskMeter.blue i,
+  body.allStarWeekendTheme #deskFansBar{background:#22b9ed!important;box-shadow:none!important}
 }
 </style>
 </head>
@@ -2005,7 +2015,20 @@ function canClaimManual(id){
 const ACCOMPLISHMENTS = [
   {id:"allstar",name:"All-Star Selection",sp:350,category:"honor"},
   {id:"allstar_mvp",name:"All-Star Game MVP",sp:500,category:"honor"},
+  {id:"allstar_win",name:"All-Star Game Win",sp:200,category:"event"},
+  {id:"allstar_15pts",name:"15+ Points in the All-Star Game",sp:150,category:"event"},
+  {id:"allstar_5threes",name:"5+ Threes in the All-Star Game",sp:200,category:"event"},
+  {id:"allstar_highlight3",name:"All-Star Highlight Reel — 3 Plays",sp:100,category:"event"},
+  {id:"allstar_highlight5",name:"All-Star Showstopper — 5 Plays",sp:200,category:"event"},
+  {id:"allstar_highlight8",name:"All-Star Spectacle — 8 Plays",sp:350,category:"event"},
+  {id:"rookie_selected",name:"Rookie Challenge / Rising Stars Selection",sp:250,category:"honor"},
+  {id:"rookie_win",name:"Rookie Challenge / Rising Stars Win",sp:200,category:"event"},
+  {id:"rookie_mvp",name:"Rookie Challenge / Rising Stars MVP",sp:450,category:"honor"},
+  {id:"threept_participant",name:"Three-Point Contest Participant",sp:150,category:"event"},
+  {id:"threept_runnerup",name:"Three-Point Contest Runner-Up",sp:250,category:"event"},
   {id:"threept",name:"Three-Point Contest Champion",sp:400,category:"event"},
+  {id:"dunk_participant",name:"Slam Dunk Contest Participant",sp:150,category:"event"},
+  {id:"dunk_runnerup",name:"Slam Dunk Contest Runner-Up",sp:250,category:"event"},
   {id:"dunk",name:"Slam Dunk Contest Champion",sp:400,category:"event"},
   {id:"nba_cup",name:"NBA Cup Champion",sp:650,category:"cup"},
   {id:"nba_cup_mvp",name:"NBA Cup MVP",sp:750,category:"cup"},
@@ -2504,6 +2527,7 @@ let state = {
  upgrades:[],
  schedule:[],
  specialEvents:[],
+ allStarWeekend:{seasons:{}},
  meters:{fans:15,chemistry:50,coach:25},
  pendingInterview:null,
  interviews:[],
@@ -2597,7 +2621,7 @@ function createFreshState(){
   return {
     player:{name:"",team:"",hometown:"",hometownTeam:"",position:"SF",season:1,gameNo:0,overall:null},
     ratings:Object.fromEntries(ATTRS.map(([a])=>[a,60])),
-    sp:0,objectives:[],completedMilestones:{},completedManual:{},manualAccomplishmentLog:[],manualRecurringMigrated:false,preNBAMilestones:{},games:[],upgrades:[],schedule:[],specialEvents:[],
+    sp:0,objectives:[],completedMilestones:{},completedManual:{},manualAccomplishmentLog:[],manualRecurringMigrated:false,preNBAMilestones:{},games:[],upgrades:[],schedule:[],specialEvents:[],allStarWeekend:{seasons:{}},
     meters:{fans:15,chemistry:50,coach:25},pendingInterview:null,interviews:[],lastInterviewGame:0,
     insiderFeed:[],insiderUnread:0,insiderPrologueSeen:false,
     combine:{active:false,game:0,total:4,objectives:[],completed:[],finished:false},
@@ -2658,6 +2682,8 @@ function ensureState(){
     if(x.date===undefined) x.date=null;
   });
   if(!state.specialEvents) state.specialEvents=[];
+  if(!state.allStarWeekend || typeof state.allStarWeekend!=="object") state.allStarWeekend={seasons:{}};
+  if(!state.allStarWeekend.seasons || typeof state.allStarWeekend.seasons!=="object") state.allStarWeekend.seasons={};
   if(!state.meters) state.meters={fans:15,chemistry:50,coach:25};
   delete state.meters.loyalty; if(state.meters.fans===undefined) state.meters.fans=15; if(state.meters.chemistry===undefined) state.meters.chemistry=50; if(state.meters.coach===undefined) state.meters.coach=25;
   if(!state.interviews) state.interviews=[];
@@ -3159,23 +3185,65 @@ function logAccomplishmentType(type){
   state.accomplishmentLog.unshift({id:"a_"+Date.now()+"_"+Math.floor(Math.random()*9999),type:def.id,name:def.name,sp:def.sp,season,ts:new Date().toISOString()});
   state.sp+=def.sp; checkStreakRewards(); return def.sp;
 }
+function allStarSeasonState(season=state.player?.season||1){
+  if(!state.allStarWeekend||typeof state.allStarWeekend!=="object")state.allStarWeekend={seasons:{}};
+  if(!state.allStarWeekend.seasons)state.allStarWeekend.seasons={};
+  const key=String(season);
+  if(!state.allStarWeekend.seasons[key])state.allStarWeekend.seasons[key]={promptResolved:false,risingSelection:null,themeActive:false,completed:false,askLaterGame:null};
+  return state.allStarWeekend.seasons[key];
+}
+function rookieChallengeLabel(season=state.player?.season||1,eventDate=null){
+  const y=Number(eventDate?.year)||((Number(state.player?.eraStartYear)||2003)+Math.max(0,Number(season)-1)+1);
+  return y<=2011?"Rookie Challenge":"Rising Stars";
+}
+function allStarEventForSeason(season=state.player?.season||1){return (state.specialEvents||[]).find(e=>+e.season===+season&&e.type==="allstar")||null}
+function ensureAllStarEvent(season=state.player?.season||1){
+  let e=allStarEventForSeason(season);if(e)return e;
+  const year=(Number(state.player?.eraStartYear)||2003)+Math.max(0,Number(season)-1)+1;
+  e={id:"se_allstar_auto_"+Date.now(),season,type:"allstar",name:"All-Star Weekend",date:{month:2,day:15,year},handled:false,result:null,automatic:true};
+  state.specialEvents.push(e);state.specialEvents.sort((a,b)=>compareDate(a.date,b.date));return e;
+}
+function maybePromptRookieChallenge(){
+  const season=Number(state.player?.season||1),cur=state.careerDate;
+  if(season>2||!cur?.day||Number(cur.month)<1||(typeof getCareerStage==="function"&&getCareerStage()!=="nba"))return false;
+  const promptYear=(Number(state.player?.eraStartYear)||2003)+Math.max(0,season-1)+1;
+  if(compareDate(cur,{month:1,day:26,year:promptYear})<0)return false;
+  const asw=allStarSeasonState(season),gameNo=Number(state.player?.gameNo||0),existingEvent=allStarEventForSeason(season);
+  if(asw.promptResolved||asw.completed||existingEvent?.handled||asw.askLaterGame===gameNo||document.getElementById("specialEventOverlay"))return false;
+  const label=rookieChallengeLabel(season),overlay=document.createElement("div");
+  overlay.id="specialEventOverlay";overlay.className="postgameRewardOverlay";overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");
+  overlay.innerHTML=`<div class="postgameRewardModal"><div class="allStarPromptMark">★</div><div class="kicker">ALL-STAR SELECTION CHECK • YEAR ${season}</div><h2>Were you selected for the ${escapeHtml(label)}?</h2><div class="rewardSub">This check appears near January 26 in Years 1 and 2 only. A selection activates the All-Star theme through the weekend.</div><div class="postgameRewardActions"><button class="secondary" id="rookieAskLater">Ask Me After My Next Game</button><button class="secondary" id="rookieNo">No</button><button class="primary" id="rookieYes">Yes — I Made It</button></div></div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("rookieAskLater").onclick=()=>{asw.askLaterGame=gameNo;persist();closeSpecialEventOverlay()};
+  document.getElementById("rookieNo").onclick=()=>{asw.promptResolved=true;asw.risingSelection="not_selected";asw.themeActive=false;persist();closeSpecialEventOverlay();if(typeof renderDesktopCareer==="function")renderDesktopCareer()};
+  document.getElementById("rookieYes").onclick=()=>{asw.promptResolved=true;asw.risingSelection="selected";asw.themeActive=true;asw.completed=false;const e=ensureAllStarEvent(season),earned=logAccomplishmentType("rookie_selected");persist();renderAll();closeSpecialEventOverlay();if(earned)showSimpleSpecialReward(label,"Selection confirmed • All-Star theme activated through "+formatCareerDate(e.date),earned)};
+  return true;
+}
 function closeSpecialEventOverlay(){document.getElementById("specialEventOverlay")?.remove()}
 function handleSpecialEvent(id){
   const e=(state.specialEvents||[]).find(x=>x.id===id); if(!e||e.handled)return;
   closeSpecialEventOverlay();
   const overlay=document.createElement("div");overlay.id="specialEventOverlay";overlay.className="postgameRewardOverlay";overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");
   if(e.type==="allstar"){
-    overlay.innerHTML=`<div class="postgameRewardModal"><div class="kicker">SEASON EVENT • ${escapeHtml(formatCareerDate(e.date))}</div><h2>All-Star Weekend Check-In</h2><div class="rewardSub">Tell the app what you qualified for. Results are saved to this season's career history.</div><div class="grid"><div><label>All-Star Team</label><select id="asTeam"><option value="no">No</option><option value="yes">Yes — Selected</option></select></div><div><label>Three-Point Contest</label><select id="asThree"><option value="none">Did not participate</option><option value="participant">Participant</option><option value="runnerup">Runner-Up</option><option value="champion">Champion</option></select></div><div><label>Dunk Contest</label><select id="asDunk"><option value="none">Did not participate</option><option value="participant">Participant</option><option value="runnerup">Runner-Up</option><option value="champion">Champion</option></select></div></div><div class="postgameRewardActions"><button class="primary" id="saveAllStarEvent">Save All-Star Weekend</button></div></div>`;
+    const season=Number(e.season||state.player?.season||1),asw=allStarSeasonState(season),rookieLabel=rookieChallengeLabel(season,e.date),rookieEligible=season<=2;
+    overlay.innerHTML=`<div class="postgameRewardModal allStarModal"><div class="kicker">SEASON EVENT • ${escapeHtml(formatCareerDate(e.date))}</div><h2>All-Star Weekend Check-In</h2><div class="rewardSub">Log the weekend once. Every number below stays separate from your regular-season and career stats.</div>${rookieEligible?`<div class="allStarGroup"><h3>${escapeHtml(rookieLabel)}</h3><div class="grid"><div><label>Selection</label><select id="asRookieSelected"><option value="no">Not Selected</option><option value="yes" ${asw.risingSelection==="selected"?"selected":""}>Selected</option></select></div><div><label>Game Result</label><select id="asRookieOutcome"><option value="none">Did Not Play / Not Entered</option><option value="loss">Played — Loss</option><option value="win">Played — Win</option></select></div><div><label>Game MVP</label><select id="asRookieMvp"><option value="no">No</option><option value="yes">Yes — MVP</option></select></div></div></div>`:""}<div class="allStarGroup"><h3>Saturday Night</h3><div class="grid"><div><label>Three-Point Contest</label><select id="asThree"><option value="none">Did not participate</option><option value="participant">Participant</option><option value="runnerup">Runner-Up</option><option value="champion">Champion</option></select></div><div><label>Dunk Contest</label><select id="asDunk"><option value="none">Did not participate</option><option value="participant">Participant</option><option value="runnerup">Runner-Up</option><option value="champion">Champion</option></select></div></div></div><div class="allStarGroup"><h3>All-Star Game</h3><div class="grid"><div><label>All-Star Team</label><select id="asTeam"><option value="no">No</option><option value="yes">Yes — Selected</option></select></div><div><label>Team Result</label><select id="asOutcome"><option value="none">Did Not Play / Not Entered</option><option value="loss">Loss</option><option value="win">Win</option></select></div><div><label>Points</label><input id="asPoints" type="number" inputmode="numeric" min="0" max="200" value="0"></div><div><label>Three-Pointers Made</label><input id="asThrees" type="number" inputmode="numeric" min="0" max="50" value="0"></div><div><label>Highlight Plays</label><input id="asHighlights" type="number" inputmode="numeric" min="0" max="50" value="0"><div class="small">Poster dunks, alley-oops, ankle breakers, flashy assists, chase-down blocks, and other showtime plays.</div></div><div><label>All-Star Game MVP</label><select id="asMvp"><option value="no">No</option><option value="yes">Yes — MVP</option></select></div></div><div class="allStarStatNote"><b>Exhibition-only stats:</b> points, threes, and highlight plays entered here do not touch games played, averages, milestones, contracts, or regular-season totals.<br><b>Highlight Reel rewards:</b> 3 plays +100 SP • 5 plays +200 SP • 8 plays +350 SP. Tiers stack.</div></div><div class="postgameRewardActions"><button class="secondary" id="allStarLater">Finish Later</button><button class="primary" id="saveAllStarEvent">Save Weekend & Return to Team Theme</button></div></div>`;
     document.body.appendChild(overlay);
+    document.getElementById("allStarLater")?.addEventListener("click",closeSpecialEventOverlay);
     document.getElementById("saveAllStarEvent").addEventListener("click",()=>{
-      const team=document.getElementById("asTeam")?.value||"no",three=document.getElementById("asThree")?.value||"none",dunk=document.getElementById("asDunk")?.value||"none";let earned=0,parts=[];
+      const team=document.getElementById("asTeam")?.value||"no",outcome=document.getElementById("asOutcome")?.value||"none",three=document.getElementById("asThree")?.value||"none",dunk=document.getElementById("asDunk")?.value||"none",points=Math.max(0,Number(document.getElementById("asPoints")?.value)||0),threesMade=Math.max(0,Number(document.getElementById("asThrees")?.value)||0),highlights=Math.max(0,Number(document.getElementById("asHighlights")?.value)||0),mvp=document.getElementById("asMvp")?.value||"no",rookieSelected=document.getElementById("asRookieSelected")?.value||"no",rookieOutcome=document.getElementById("asRookieOutcome")?.value||"none",rookieMvp=document.getElementById("asRookieMvp")?.value||"no";let earned=0,parts=[];
+      if(rookieEligible&&rookieSelected==="yes"){earned+=logAccomplishmentType("rookie_selected");parts.push(`${rookieLabel}: selected`);if(rookieOutcome==="win")earned+=logAccomplishmentType("rookie_win");if(rookieMvp==="yes")earned+=logAccomplishmentType("rookie_mvp");if(rookieOutcome!=="none")parts.push(`${rookieLabel}: ${rookieOutcome==="win"?"Win":"Loss"}${rookieMvp==="yes"?" + MVP":""}`)}
       if(team==="yes"){earned+=logAccomplishmentType("allstar");parts.push("All-Star selection")}
       if(three!=="none")parts.push(`3PT Contest: ${three==="runnerup"?"Runner-Up":three==="champion"?"Champion":"Participant"}`);
       if(dunk!=="none")parts.push(`Dunk Contest: ${dunk==="runnerup"?"Runner-Up":dunk==="champion"?"Champion":"Participant"}`);
+      if(three!=="none")earned+=logAccomplishmentType("threept_participant");if(three==="runnerup")earned+=logAccomplishmentType("threept_runnerup");
       if(three==="champion")earned+=logAccomplishmentType("threept");
+      if(dunk!=="none")earned+=logAccomplishmentType("dunk_participant");if(dunk==="runnerup")earned+=logAccomplishmentType("dunk_runnerup");
       if(dunk==="champion")earned+=logAccomplishmentType("dunk");
+      if(team==="yes"&&outcome==="win")earned+=logAccomplishmentType("allstar_win");if(team==="yes"&&points>=15)earned+=logAccomplishmentType("allstar_15pts");if(team==="yes"&&threesMade>=5)earned+=logAccomplishmentType("allstar_5threes");if(team==="yes"&&highlights>=3)earned+=logAccomplishmentType("allstar_highlight3");if(team==="yes"&&highlights>=5)earned+=logAccomplishmentType("allstar_highlight5");if(team==="yes"&&highlights>=8)earned+=logAccomplishmentType("allstar_highlight8");if(team==="yes"&&mvp==="yes")earned+=logAccomplishmentType("allstar_mvp");
+      if(team==="yes"&&outcome!=="none")parts.push(`All-Star Game: ${outcome==="win"?"Win":"Loss"} • ${points} PTS • ${threesMade} 3PM • ${highlights} Highlight${highlights===1?"":"s"}${mvp==="yes"?" • MVP":""}`);
       if(!parts.length)parts.push("No All-Star Weekend selections");
-      e.handled=true;e.result={allStar:team,threePoint:three,dunk,summary:parts.join(" • "),sp:earned};
+      asw.promptResolved=true;asw.risingSelection=rookieSelected==="yes"?"selected":"not_selected";asw.themeActive=false;asw.completed=true;
+      e.handled=true;e.result={allStar:team,threePoint:three,dunk,rookieChallenge:{label:rookieLabel,selected:rookieSelected,outcome:rookieOutcome,mvp:rookieMvp},exhibitionStats:{allStarGame:{outcome,points,threesMade,highlights,mvp}},summary:parts.join(" • "),sp:earned};
       persist();renderAll();closeSpecialEventOverlay();
       if(earned>0) showSimpleSpecialReward(e.name,parts.join(" • "),earned);
     });
@@ -3193,7 +3261,7 @@ function getDueSpecialEvents(){
   if(!state.careerDate?.day)return[];
   return (state.specialEvents||[]).filter(e=>+e.season===(state.player.season||1)&&!e.handled&&compareDate(state.careerDate,e.date)>=0).sort((a,b)=>compareDate(a.date,b.date));
 }
-function showNextDueSpecialEvent(){const e=getDueSpecialEvents()[0];if(e)handleSpecialEvent(e.id)}
+function showNextDueSpecialEvent(){if(maybePromptRookieChallenge())return;const e=getDueSpecialEvents()[0];if(e)handleSpecialEvent(e.id)}
 
 function getUpcomingSchedule(){
   const season=state.player.season||1;
@@ -5833,7 +5901,7 @@ function logManualCareerEvent(){
   const type=document.getElementById("manualEventType")?.value||"custom",result=document.getElementById("manualEventResult")?.value||"recorded",custom=(document.getElementById("manualEventName")?.value||"").trim();
   const month=+document.getElementById("manualEventMonth")?.value||state.careerDate?.month||2,year=+document.getElementById("manualEventYear")?.value||state.careerDate?.year||2026,day=+document.getElementById("manualEventDay")?.value||0;
   if(!day){alert("Enter the event day.");return}const md=daysInMonth(month,year);if(day<1||day>md){alert("Enter a valid event date.");return}
-  let sp=0;if(type==="allstar"&&result==="selected")sp+=logAccomplishmentType("allstar");if(type==="threept"&&result==="champion")sp+=logAccomplishmentType("threept");if(type==="dunk"&&result==="champion")sp+=logAccomplishmentType("dunk");if(type==="nba_cup"&&result==="champion")sp+=logAccomplishmentType("nba_cup");if(type==="nba_cup_mvp"&&result==="winner")sp+=logAccomplishmentType("nba_cup_mvp");
+  let sp=0;if(type==="allstar"&&result==="selected")sp+=logAccomplishmentType("allstar");if(type==="threept"&&result!=="none")sp+=logAccomplishmentType("threept_participant");if(type==="threept"&&result==="runnerup")sp+=logAccomplishmentType("threept_runnerup");if(type==="threept"&&result==="champion")sp+=logAccomplishmentType("threept");if(type==="dunk"&&result!=="none")sp+=logAccomplishmentType("dunk_participant");if(type==="dunk"&&result==="runnerup")sp+=logAccomplishmentType("dunk_runnerup");if(type==="dunk"&&result==="champion")sp+=logAccomplishmentType("dunk");if(type==="nba_cup"&&result==="champion")sp+=logAccomplishmentType("nba_cup");if(type==="nba_cup_mvp"&&result==="winner")sp+=logAccomplishmentType("nba_cup_mvp");
   const resultText={selected:"Selected",not_selected:"Not Selected",participant:"Participant",runnerup:"Runner-Up",champion:"Champion",finalist:"Finalist",winner:"Winner",recorded:"Recorded"}[result]||result;
   const name=manualEventLabel(type,result,custom),summary=`${name}: ${resultText}`;
   state.specialEvents.push({id:"manual_event_"+Date.now(),season:state.player.season||1,type:type==="allstar"?"allstar":"custom",name,date:{month,day,year},handled:true,result:{summary,sp,manual:true,eventType:type,eventResult:result}});
@@ -6810,6 +6878,56 @@ function jumpCareerSection(id){
     text('deskArenaEra',year<2016?`${eraStartYear()}–${String((eraStartYear()+1)%100).padStart(2,'0')} ERA`:`${year} ERA`);
     setTeamLogo('deskArenaLogo','deskArenaLogoFallback',homeTeam);v65LoadArenaImage(info);
   }
+  /* V90 — NBA All-Star host arena presentation, 2003–2026. Reuse an
+     existing curated arena asset whenever it is the same physical building. */
+  const V90_ALL_STAR_HOSTS={
+    2003:{arena:'Philips Arena',city:'Atlanta, GA',month:2,day:9,source:'era',key:'atlanta hawks'},
+    2004:{arena:'STAPLES Center',city:'Los Angeles, CA',month:2,day:15,source:'era',key:'los angeles lakers'},
+    2005:{arena:'Pepsi Center',city:'Denver, CO',month:2,day:20,source:'era',key:'denver nuggets'},
+    2006:{arena:'Toyota Center',city:'Houston, TX',month:2,day:19,source:'era',key:'houston rockets'},
+    2007:{arena:'Thomas & Mack Center',city:'Las Vegas, NV',month:2,day:18,page:'Thomas & Mack Center'},
+    2008:{arena:'New Orleans Arena',city:'New Orleans, LA',month:2,day:17,source:'era',key:'new orleans hornets'},
+    2009:{arena:'US Airways Center',city:'Phoenix, AZ',month:2,day:15,source:'era',key:'phoenix suns'},
+    2010:{arena:'Cowboys Stadium',city:'Arlington, TX',month:2,day:14,page:'AT&T Stadium'},
+    2011:{arena:'STAPLES Center',city:'Los Angeles, CA',month:2,day:20,source:'era',key:'los angeles lakers'},
+    2012:{arena:'Amway Center',city:'Orlando, FL',month:2,day:26,source:'current',key:'orlando magic'},
+    2013:{arena:'Toyota Center',city:'Houston, TX',month:2,day:17,source:'era',key:'houston rockets'},
+    2014:{arena:'New Orleans Arena',city:'New Orleans, LA',month:2,day:16,source:'era',key:'new orleans hornets'},
+    2015:{arena:'Madison Square Garden',city:'New York, NY',month:2,day:15,source:'era',key:'new york knicks'},
+    2016:{arena:'Air Canada Centre',city:'Toronto, ON',month:2,day:14,source:'era',key:'toronto raptors'},
+    2017:{arena:'Smoothie King Center',city:'New Orleans, LA',month:2,day:19,source:'era',key:'new orleans hornets'},
+    2018:{arena:'STAPLES Center',city:'Los Angeles, CA',month:2,day:18,source:'era',key:'los angeles lakers'},
+    2019:{arena:'Spectrum Center',city:'Charlotte, NC',month:2,day:17,source:'current',key:'charlotte hornets'},
+    2020:{arena:'United Center',city:'Chicago, IL',month:2,day:16,source:'era',key:'chicago bulls'},
+    2021:{arena:'State Farm Arena',city:'Atlanta, GA',month:3,day:7,source:'era',key:'atlanta hawks'},
+    2022:{arena:'Rocket Mortgage FieldHouse',city:'Cleveland, OH',month:2,day:20,source:'current',key:'cleveland cavaliers'},
+    2023:{arena:'Vivint Arena',city:'Salt Lake City, UT',month:2,day:19,source:'era',key:'utah jazz'},
+    2024:{arena:'Gainbridge Fieldhouse',city:'Indianapolis, IN',month:2,day:18,source:'era',key:'indiana pacers'},
+    2025:{arena:'Chase Center',city:'San Francisco, CA',month:2,day:16,source:'current',key:'golden state warriors'},
+    2026:{arena:'Intuit Dome',city:'Inglewood, CA',month:2,day:15,source:'current',key:'los angeles clippers'}
+  };
+  function v90AllStarActive(){const season=Number(state.player?.season||1),asw=state.allStarWeekend?.seasons?.[String(season)];return !!(asw?.themeActive&&!asw?.completed)}
+  function v90AllStarHostForYear(year){
+    const spec=V90_ALL_STAR_HOSTS[Number(year)];if(!spec)return null;
+    const base=spec.source==='era'?V65_ARENAS_2004[spec.key]:(spec.source==='current'?V69_ARENAS_CURRENT[spec.key]:null);
+    return {...(base||{}),...spec,team:'NBA ALL-STAR'};
+  }
+  function v90RenderAllStarHost(){
+    if(!v90AllStarActive()){
+      const panel=q('desktopCommandCenter')?.querySelector('.deskHeroNext .deskPanelBar'),panelLabel=panel?.querySelector('span'),panelButton=panel?.querySelector('button'),action=q('desktopCommandCenter')?.querySelector('.deskHeroNext .deskPrimaryAction');
+      if(panelLabel)panelLabel.textContent='NEXT GAME';if(panelButton){panelButton.textContent='KEY GAMES';panelButton.onclick=()=>openTab('schedule')}if(action){action.textContent='OPEN POSTGAME';action.onclick=()=>openPostgameTab()}
+      return false;
+    }
+    const season=Number(state.player?.season||1),event=typeof allStarEventForSeason==='function'?allStarEventForSeason(season):null;
+    const fallbackMonth=Number(event?.date?.month||2),year=Number(event?.date?.year)||eraYearFor(fallbackMonth,season),info=v90AllStarHostForYear(year);if(!info)return false;
+    text('deskArenaName',info.arena);text('deskArenaCity',info.city);text('deskArenaTeam',`${year} NBA ALL-STAR HOST`);text('deskArenaEra',`${year} ALL-STAR`);v65LoadArenaImage(info);
+    const logo=q('deskArenaLogo'),fb=q('deskArenaLogoFallback');if(logo)logo.style.display='none';if(fb){fb.style.display='block';fb.textContent='★'}
+    const panel=q('desktopCommandCenter')?.querySelector('.deskHeroNext .deskPanelBar'),panelLabel=panel?.querySelector('span'),panelButton=panel?.querySelector('button'),action=q('desktopCommandCenter')?.querySelector('.deskHeroNext .deskPrimaryAction');
+    if(panelLabel)panelLabel.textContent='ALL-STAR WEEKEND';if(panelButton){panelButton.textContent='HOST ARENA';panelButton.onclick=()=>openTab('schedule')}
+    text('deskNextLabel','ALL-STAR HOST CITY');text('deskOpponent',safe(info.city).toUpperCase());text('deskGameMeta',`${info.arena} • ${year} NBA All-Star Game`);
+    if(action){action.textContent='OPEN ALL-STAR WEEKEND';action.onclick=()=>{const e=typeof allStarEventForSeason==='function'?allStarEventForSeason(season):null;if(e)handleSpecialEvent(e.id);else openTab('schedule')}}
+    return true;
+  }
   function v73RenderTeamCity(){
     const p=state.player||{},team=p.team||q('pTeam')?.value||'';
     const raw=latestGameDate()||state.careerDate||{},month=Number(raw.month||10),year=eraYearFor(month,p.season||1);
@@ -6860,6 +6978,22 @@ function jumpCareerSection(id){
     "washington wizards":[{name:"Eddie Jordan"}]
   };
   const V75_COACH_ALIASES={"brooklyn nets":"new jersey nets","new orleans pelicans":"new orleans hornets","oklahoma city thunder":"seattle supersonics","charlotte bobcats":"charlotte hornets"};
+  /* V87 — audited Wikipedia identities. Explicit article titles prevent
+     ambiguous names from resolving to players, crowds, arenas, or unrelated
+     people (notably Larry Brown and Orlando coach Johnny Davis). */
+  const V87_COACH_WIKI_PAGES={
+    "Terry Stotts":"Terry Stotts","Jim O'Brien":"Jim O'Brien (basketball, born 1952)","John Carroll":"John Carroll (basketball)",
+    "Bernie Bickerstaff":"Bernie Bickerstaff","Bill Cartwright":"Bill Cartwright","Pete Myers":"Pete Myers","Scott Skiles":"Scott Skiles",
+    "Paul Silas":"Paul Silas","Don Nelson":"Don Nelson","Jeff Bzdelik":"Jeff Bzdelik","Larry Brown":"Larry Brown (basketball)",
+    "Eric Musselman":"Eric Musselman","Jeff Van Gundy":"Jeff Van Gundy","Rick Carlisle":"Rick Carlisle","Mike Dunleavy Sr.":"Mike Dunleavy Sr.",
+    "Phil Jackson":"Phil Jackson","Hubie Brown":"Hubie Brown","Stan Van Gundy":"Stan Van Gundy","Terry Porter":"Terry Porter",
+    "Flip Saunders":"Flip Saunders","Byron Scott":"Byron Scott","Lawrence Frank":"Lawrence Frank","Tim Floyd":"Tim Floyd",
+    "Don Chaney":"Don Chaney","Herb Williams":"Herb Williams","Lenny Wilkens":"Lenny Wilkens","Doc Rivers":"Doc Rivers",
+    "Johnny Davis":"Johnny Davis (basketball, born 1955)","Randy Ayers":"Randy Ayers","Chris Ford":"Chris Ford (basketball)",
+    "Frank Johnson":"Frank Johnson (basketball)","Mike D'Antoni":"Mike D'Antoni","Maurice Cheeks":"Maurice Cheeks","Rick Adelman":"Rick Adelman",
+    "Gregg Popovich":"Gregg Popovich","Nate McMillan":"Nate McMillan","Kevin O'Neill":"Kevin O'Neill (basketball)",
+    "Jerry Sloan":"Jerry Sloan","Eddie Jordan":"Eddie Jordan (basketball)"
+  };
   const v75CoachPhotoCache={};
   function v75CoachTeamKey(team){const k=v65TeamKey(team);return V75_COACH_ALIASES[k]||V75_COACH_ALIASES[safe(team).toLowerCase()]||k}
   function v75CareerIsoDate(){
@@ -6877,20 +7011,18 @@ function jumpCareerSection(id){
     const img=q('deskCoachPhoto'),frame=img?.closest('.deskCoachGraphic');if(!img||!frame)return;
     frame.classList.remove('hasCoachPhoto');img.removeAttribute('src');
     if(!coach?.name||coach.name==='Head Coach')return;
-    const key=coach.name,stored=v75CoachPhotoCache[key]||localStorage.getItem('v75_coach_photo_'+key);
+    const key=coach.name,stored=v75CoachPhotoCache[key]||localStorage.getItem('v87_verified_coach_photo_'+key);
     const setPhoto=src=>{if(!src)return false;img.onload=()=>frame.classList.add('hasCoachPhoto');img.onerror=()=>frame.classList.remove('hasCoachPhoto');img.src=src;return true};
     if(stored){setPhoto(stored);return}
-    const pageName=coach.name==='Mike Dunleavy Sr.'?'Mike Dunleavy Sr.':coach.name;
+    const pageName=V87_COACH_WIKI_PAGES[coach.name]||coach.name;
     try{
       const u='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(pageName);
       const r=await fetch(u,{headers:{'Accept':'application/json'}});if(!r.ok)throw 0;const j=await r.json();const src=j.thumbnail?.source||j.originalimage?.source;
-      if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v75_coach_photo_'+key,src)}catch(e){}setPhoto(src);return}
+      if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v87_verified_coach_photo_'+key,src)}catch(e){}setPhoto(src);return}
     }catch(e){}
-    try{
-      const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(coach.name+' basketball coach')+'&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=360&format=json&origin=*';
-      const r=await fetch(api);if(!r.ok)throw 0;const j=await r.json(),pages=Object.values(j.query?.pages||{}),hit=pages.find(x=>x.imageinfo?.[0]?.thumburl)||pages[0],src=hit?.imageinfo?.[0]?.thumburl||hit?.imageinfo?.[0]?.url;
-      if(src){v75CoachPhotoCache[key]=src;try{localStorage.setItem('v75_coach_photo_'+key,src)}catch(e){}setPhoto(src)}
-    }catch(e){}
+    /* Never accept the first result from a broad Commons search. If an exact,
+       identified article has no portrait, the designed HC fallback remains in
+       place instead of showing an unrelated basketball image. */
   }
   const V76_HERO_SLOGANS={discipline:["DISCIPLINE","BUILDS","FREEDOM"],earned:["EARN","EVERYTHING",""] ,different:["BUILT","DIFFERENT",""] ,ready:["STAY","READY",""] ,legacy:["LEGACY","OVER HYPE",""] ,work:["WORK","SPEAKS",""] ,none:["","",""]};
   function v76RenderMotto(){const key=state.player?.heroSlogan||q('pHeroSlogan')?.value||'discipline',parts=V76_HERO_SLOGANS[key]||V76_HERO_SLOGANS.discipline;['deskMotto1','deskMotto2','deskMotto3'].forEach((id,i)=>{const el=q(id);if(el){el.textContent=parts[i]||'';el.style.display=parts[i]?'block':'none'}});const wrap=q('deskHeroMotto');if(wrap)wrap.style.display=key==='none'?'none':'flex'}
@@ -6908,12 +7040,12 @@ function jumpCareerSection(id){
     let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
     text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • YEAR ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);const dateLabel=careerDateText();text('deskCareerDate',dateLabel);text('deskTopYear',`YEAR ${season}`);text('deskTopVC',Number(state.sp||0).toLocaleString()+' VC');text('deskHeaderYear',`YEAR ${season}`);text('deskHeaderDate',dateLabel);text('deskHeaderVC',Number(state.sp||0).toLocaleString()+' VC');setTeamLogo('deskTeamLogo','deskTeamLogoFallback',p.team||q('pTeam')?.value||'');const oi=q('deskOvrInput');if(oi&&document.activeElement!==oi)oi.value=playerOvr()==='—'?'':playerOvr();
     const trust=clamp(m.coach),fans=clamp(m.fans),sp=Number(state.sp||0);text('deskTrust',Math.round(trust)+'/100');text('deskFans',Math.round(fans)+'/100');text('deskSP',sp.toLocaleString());if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
-    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);v73RenderTeamCity();v75RenderCoach();v76RenderMotto();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;if(!v90AllStarActive())v65RenderArena(next);v73RenderTeamCity();v75RenderCoach();v76RenderMotto();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
     let story='Keep building your career. The next major story will appear here.';if(next){const ht=safe(p.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase(),opp=safe(next.opponent).toLowerCase();story=ht&&opp&&ht===opp?'HOMETOWN GAME: this matchup can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`)}text('deskStoryline',story);
     const ro=state.rotationOpportunity||{},rp=state.rotationProgress||{};text('deskStoryline2',ro.active?`${safe(ro.assignment||'Rotation opportunity')} • ${safe(ro.leash||'Normal')} leash`:`Current role: ${safe(rp.role||status)}${rp.minutes?' • '+rp.minutes+' MPG':''}`);const htName=safe(p.hometown||q('pHometown')?.value);text('deskStoryline3',htName?`Hometown: ${htName}. Local and homecoming context is active.`:'Set your hometown in Career Setup to unlock hometown story context.');
     const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
     try{const goal=state.coachGoals?.active;const mins=ro.active?ro.currentMinutes:rp.minutes;const role=ro.active?(ro.assignment||'Temporary Assignment'):(rp.role||status);text('deskCoachGoal',goal?(goal.title||goal.name||'Active Coach Goal'):(ro.active?(ro.assignment||'Rotation Opportunity'):'No active Coach Goal'));text('deskCoachMeta',`${mins||0} MPG • ${Math.round(trust)} Coach Trust`);text('deskCoachMinutes',`${mins||0} MPG`);text('deskCoachTrustMini',Math.round(trust));text('deskCoachRoleMini',safe(role).toUpperCase());if(goal){const pr=typeof coachGoalProgress==='function'?coachGoalProgress(goal):{value:0,done:false,gamesPlayed:0,label:''};const target=Math.max(1,Number(goal.target||1));const value=Number(pr.value||0);const pct=pr.done?100:Math.max(0,Math.min(100,Math.round(value/target*100)));const left=Math.max(0,Number(goal.games||3)-Number(pr.gamesPlayed||0));text('deskCoachObjectiveText',goal.text||goal.objective||goal.description||goal.title||'Complete the coach assignment.');text('deskCoachProgressText',pr.label||`${value} / ${target}`);text('deskCoachGamesLeft',pr.done?'COMPLETE':(left?`${left} GAME${left===1?'':'S'} LEFT`:'EVALUATION DUE'));const bar=q('deskCoachObjectiveBar');if(bar)bar.style.width=pct+'%'}else{text('deskCoachObjectiveText',ro.active?(ro.reason||'Make the most of your current rotation opportunity.'):'No active objective. Meet with Coach for your next assignment.');text('deskCoachProgressText',ro.active?(ro.status||'Opportunity active'):'Waiting for next assignment');text('deskCoachGamesLeft','');const bar=q('deskCoachObjectiveBar');if(bar)bar.style.width='0%'}}catch(e){}
-    const src=q('k11PlayerPhoto')?.getAttribute('src')||'';const img=q('deskPlayerPhoto'),visual=q('deskHeroVisual');if(img){if(src){img.src=src;visual?.classList.add('hasPhoto')}else{img.removeAttribute('src');visual?.classList.remove('hasPhoto')}}
+    const src=q('k11PlayerPhoto')?.getAttribute('src')||'';const img=q('deskPlayerPhoto'),visual=q('deskHeroVisual');if(img){if(src){img.src=src;visual?.classList.add('hasPhoto')}else{img.removeAttribute('src');visual?.classList.remove('hasPhoto')}}v90RenderAllStarHost();
     renderAverages();renderCareerAverages();renderRecent();renderObjectives();renderEndorsements();renderMilestones();renderHeadlines();
   }
   window.renderDesktopCareer=renderDesktopCareer;
@@ -6987,6 +7119,7 @@ function v84ApplyTeamTheme(team){
   body.style.setProperty('--team-glow',`rgba(${r},${g},${b},.30)`);body.style.setProperty('--team-wash',`rgba(${r},${g},${b},.18)`);
   body.style.setProperty('--team-border',`rgba(${sr},${sg},${sb},.66)`);body.style.setProperty('--team-surface',`rgba(${r},${g},${b},.16)`);
   body.style.setProperty('--team-deep',`rgb(${Math.round(r*.25)},${Math.round(g*.25)},${Math.round(b*.25)})`);
+  if(typeof v88ApplyAllStarTheme==='function')v88ApplyAllStarTheme();
 }
 function v84CurrentTeam(){return state?.player?.team||document.getElementById('pTeam')?.value||''}
 const v84OldRenderDesktopCareer=window.renderDesktopCareer;
@@ -6995,6 +7128,26 @@ document.addEventListener('DOMContentLoaded',()=>{try{v84ApplyTeamTheme(v84Curre
 window.addEventListener('load',()=>{try{v84ApplyTeamTheme(v84CurrentTeam())}catch(e){}});
 document.addEventListener('input',e=>{if(e.target?.id==='pTeam')try{v84ApplyTeamTheme(e.target.value)}catch(err){}});
 document.addEventListener('change',e=>{if(e.target?.id==='pTeam')try{v84ApplyTeamTheme(e.target.value)}catch(err){}});
+</script>
+
+<script id="v88AllStarWeekendJS">
+/* V88: an isolated All-Star Weekend layer. Exhibition data lives only in
+   specialEvents[].result.exhibitionStats and never enters state.games. */
+function v88ApplyAllStarTheme(){
+  const body=document.body;if(!body||typeof state==='undefined')return;
+  const season=Number(state.player?.season||1),asw=state.allStarWeekend?.seasons?.[String(season)],active=!!(asw?.themeActive&&!asw?.completed);
+  body.classList.toggle('allStarWeekendTheme',active);body.dataset.presentationTheme=active?'all-star':'team';
+  if(!active)return;
+  body.style.setProperty('--team-primary','#1d4ed8');body.style.setProperty('--team-secondary','#ffd166');
+  body.style.setProperty('--desk-gold','#ffd166');body.style.setProperty('--desk-gold2','#ffe39a');body.style.setProperty('--accent','#ffd166');body.style.setProperty('--k11-yellow','#ffd166');
+  body.style.setProperty('--team-on-accent','#ffffff');body.style.setProperty('--team-on-secondary','#071018');body.style.setProperty('--team-glow','rgba(66,173,255,.35)');body.style.setProperty('--team-wash','rgba(42,112,219,.20)');body.style.setProperty('--team-border','rgba(255,209,102,.72)');body.style.setProperty('--team-surface','rgba(38,102,190,.20)');body.style.setProperty('--team-deep','#071b3d');
+}
+const v88OldRenderDesktopCareer=window.renderDesktopCareer;
+if(typeof v88OldRenderDesktopCareer==='function')window.renderDesktopCareer=function(){const out=v88OldRenderDesktopCareer.apply(this,arguments);v88ApplyAllStarTheme();return out};
+document.addEventListener('DOMContentLoaded',()=>{try{v84ApplyTeamTheme(v84CurrentTeam());v88ApplyAllStarTheme();setTimeout(maybePromptRookieChallenge,450)}catch(e){}});
+window.addEventListener('load',()=>{try{v84ApplyTeamTheme(v84CurrentTeam());v88ApplyAllStarTheme()}catch(e){}});
+document.addEventListener('input',e=>{if(e.target?.id==='pTeam')setTimeout(v88ApplyAllStarTheme,0)});
+document.addEventListener('change',e=>{if(e.target?.id==='pTeam')setTimeout(v88ApplyAllStarTheme,0)});
 </script>
 </body>
 </html>
