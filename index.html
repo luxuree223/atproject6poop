@@ -870,6 +870,28 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 }
 </style>
 
+
+<style id="v81InsiderPolish">
+@media (min-width:980px){
+  /* Let the right lane use the same vertical footprint as the fuller left lane. */
+  .deskLowerLaneRight{height:100%}
+  .deskLowerLaneRight .deskInsiderCard{flex:1;min-height:360px;display:flex;flex-direction:column}
+  .deskLowerLaneRight .deskInsiderCard>.deskCardBody{flex:1;display:flex;flex-direction:column;padding:15px}
+  .deskLowerLaneRight .deskInsiderLead{grid-template-columns:138px 1fr;gap:15px;align-items:start}
+  .deskLowerLaneRight .deskInsiderLead img{width:138px;height:132px}
+  .deskLowerLaneRight .deskInsiderLead h3{font-size:20px;line-height:1.04;margin:6px 0 7px}
+  .deskLowerLaneRight .deskInsiderLead p{font-size:10px;line-height:1.5}
+  .deskLowerLaneRight .deskHeadlineList{flex:1;display:flex;flex-direction:column;justify-content:space-evenly;margin-top:13px}
+  .deskLowerLaneRight .deskHeadlineRow{padding:9px 0;font-size:9px}
+  .deskLowerLaneRight .deskHeadlineRow span:last-child{font-size:8px}
+}
+@media (min-width:980px) and (max-width:1180px){
+  .deskLowerLaneRight .deskInsiderCard{min-height:320px}
+  .deskLowerLaneRight .deskInsiderLead{grid-template-columns:112px 1fr;gap:11px}
+  .deskLowerLaneRight .deskInsiderLead img{width:112px;height:108px}
+  .deskLowerLaneRight .deskInsiderLead h3{font-size:16px}
+}
+</style>
 <style id="v79DashboardPolish">
 @media (min-width:980px){
   /* Coach Office: stable two-column composition. The coach owns the left column;
@@ -930,6 +952,24 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 }
 </style>
 
+
+<style id="v82TeamLogoPolish">
+@media (min-width:980px){
+  /* Do not let fallback initials show behind a successfully loaded logo. */
+  .deskTeamLogoWrap i,.deskCityTeamLogoWrap i{display:none}
+
+  /* Bottom-left team lockup: larger crest with nickname directly below it. */
+  .deskCityTeamLogoWrap{width:58px;height:58px;bottom:64px!important;border-radius:50%;background:rgba(4,11,16,.78);box-shadow:0 5px 16px rgba(0,0,0,.42)}
+  .deskCityTeamLogoWrap img{width:48px!important;height:48px!important}
+  .deskCityTeamName{position:absolute;left:8px;right:8px;bottom:42px;z-index:4;text-align:center;color:#fff;font-size:9px;line-height:1;font-weight:1000;letter-spacing:1.6px;text-transform:uppercase;text-shadow:0 2px 8px #000}
+  .deskCityLegacy{bottom:14px!important}
+}
+@media (min-width:980px) and (max-width:1180px){
+  .deskCityTeamLogoWrap{width:52px;height:52px;bottom:59px!important}.deskCityTeamLogoWrap img{width:43px!important;height:43px!important}
+  .deskCityTeamName{bottom:39px;font-size:8px;letter-spacing:1.35px}.deskCityLegacy{bottom:12px!important}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -962,6 +1002,7 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
     <div class="deskCityShade"></div>
     <div class="deskCityCopy"><small>CURRENT TEAM CITY</small><b id="deskCityName">CAREER CITY</b><span id="deskCityVenue" class="deskCityVenue">HOME COURT</span><span id="deskCityTagline" class="deskCityTagline">Basketball lives here</span></div>
     <div class="deskCityTeamLogoWrap"><img id="deskCityTeamLogo" alt="Current team logo"><i id="deskCityTeamLogoFallback">NBA</i></div>
+    <div id="deskCityTeamName" class="deskCityTeamName">NBA TEAM</div>
     <div class="deskCityLegacy">LEGACY NEVER FADES</div>
   </div>
 </nav>
@@ -6604,13 +6645,46 @@ function jumpCareerSection(id){
     const picks=candidates.slice(0,4);
     root.innerHTML=picks.map(m=>`<div class="deskMilestoneProgress"><div class="deskMilestoneIcon" aria-hidden="true">${milestoneIcon(m.label)}</div><div class="deskMilestoneProgressTop"><b>${esc(m.label)}</b><span>${Number(m.current).toLocaleString()} / ${Number(m.target).toLocaleString()}</span></div><div class="deskMilestoneTrack"><div class="deskMilestoneFill" style="width:${m.pct}%"></div></div><div class="deskMilestoneMeta"><span>${Number(m.remaining).toLocaleString()} away</span><span>Next: ${Number(m.target).toLocaleString()}</span></div></div>`).join('');
   }
-  function renderHeadlines(){const root=q('deskHeadlineList');if(!root)return;const pool=(state.insiderFeed||[]).slice(1,5);root.innerHTML=pool.map(x=>`<div class="deskHeadlineRow"><span>${esc(x.headline||x.title||'Career update')}</span><span>${esc(x.stage||('S'+(x.season||state.player?.season||1)))}</span></div>`).join('')}
+  function renderHeadlines(){
+    const root=q('deskHeadlineList');if(!root)return;
+    const feed=Array.isArray(state.insiderFeed)?state.insiderFeed:[];
+    const rows=[];
+    // Live Coach Watch is more useful than showing both an old COMPLETE and MISSED result at once.
+    try{
+      const goal=state.coachGoals?.active;
+      if(goal){
+        const pr=typeof coachGoalProgress==='function'?coachGoalProgress(goal):{value:0,gamesPlayed:0,label:''};
+        const left=Math.max(0,Number(goal.games||3)-Number(pr.gamesPlayed||0));
+        rows.push({headline:`COACH WATCH • ${safe(goal.title||goal.name||'ACTIVE OBJECTIVE').toUpperCase()}`,stage:pr.done?'COMPLETE':(left?`${left} GAME${left===1?'':'S'} LEFT`:(pr.label||'IN PROGRESS'))});
+      }
+    }catch(e){}
+    let coachResultUsed=false;
+    const seen=new Set(rows.map(r=>safe(r.headline).toLowerCase()));
+    for(let i=1;i<feed.length && rows.length<4;i++){
+      const x=feed[i]||{};
+      const h=safe(x.headline||x.title||'Career update').trim();
+      if(!h)continue;
+      const hl=h.toLowerCase();
+      const isCoachResult=/coach goal (complete|missed)|coach: impact still noticed/i.test(h) || /coach\s*•\s*evaluation/i.test(safe(x.stage));
+      if(isCoachResult){if(coachResultUsed)continue;coachResultUsed=true;}
+      const family=hl.replace(/(complete|missed|won|lost|win|loss)/g,'').replace(/\s+/g,' ').trim();
+      if(seen.has(hl)||seen.has(family))continue;
+      seen.add(hl);seen.add(family);
+      let stage=safe(x.stage||('S'+(x.season||state.player?.season||1)));
+      if(isCoachResult)stage='COACH • LATEST RESULT';
+      else if(/milestone/i.test(stage)||/career .*?(points|rebounds|assists|3-pointer|games played)/i.test(h))stage='CAREER • MILESTONE';
+      else if(/role|starter|rotation/i.test(stage+' '+h))stage='ROLE WATCH';
+      rows.push({headline:h,stage});
+    }
+    if(!rows.length)rows.push({headline:'YOUR CAREER STORY IS BUILDING',stage:'2K INSIDER'});
+    root.innerHTML=rows.slice(0,4).map(x=>`<div class="deskHeadlineRow"><span>${esc(x.headline)}</span><span>${esc(x.stage)}</span></div>`).join('');
+  }
 
   const V68_TEAM_LOGOS={
     "atlanta hawks":"atl","boston celtics":"bos","chicago bulls":"chi","cleveland cavaliers":"cle","dallas mavericks":"dal","denver nuggets":"den","detroit pistons":"det","golden state warriors":"gs","houston rockets":"hou","indiana pacers":"ind","los angeles clippers":"lac","los angeles lakers":"lal","memphis grizzlies":"mem","miami heat":"mia","milwaukee bucks":"mil","minnesota timberwolves":"min","new jersey nets":"nj","new orleans hornets":"no","new york knicks":"ny","orlando magic":"orl","philadelphia 76ers":"phi","phoenix suns":"phx","portland trail blazers":"por","sacramento kings":"sac","san antonio spurs":"sa","seattle supersonics":"sea","toronto raptors":"tor","utah jazz":"utah","washington wizards":"wsh"
   };
   function teamLogoUrl(team){const ab=V68_TEAM_LOGOS[v65TeamKey(team)];return ab?`https://a.espncdn.com/i/teamlogos/nba/500/${ab}.png`:''}
-  function setTeamLogo(imgId,fallbackId,team){const img=q(imgId),fb=q(fallbackId);if(!img)return;const key=v65TeamKey(team),abbr=(V68_TEAM_LOGOS[key]||safe(team).split(/\s+/).map(x=>x[0]).join('').slice(0,3)||'NBA').toUpperCase(),url=teamLogoUrl(team);if(fb)fb.textContent=abbr;img.style.display=url?'block':'none';if(url){img.onerror=()=>{img.style.display='none'};img.onload=()=>{img.style.display='block'};img.src=url}}
+  function setTeamLogo(imgId,fallbackId,team){const img=q(imgId),fb=q(fallbackId);if(!img)return;const key=v65TeamKey(team),abbr=(V68_TEAM_LOGOS[key]||safe(team).split(/\s+/).map(x=>x[0]).join('').slice(0,3)||'NBA').toUpperCase(),url=teamLogoUrl(team);if(fb){fb.textContent=abbr;fb.style.display=url?'none':'block'}img.style.display=url?'block':'none';if(url){img.onerror=()=>{img.style.display='none';if(fb)fb.style.display='block'};img.onload=()=>{img.style.display='block';if(fb)fb.style.display='none'};img.src=url}}
   const V65_ARENAS_2004={
     "atlanta hawks":{arena:"Philips Arena",city:"Atlanta, GA",page:"State Farm Arena",photo:"Philips_Arena_outside.jpg",photoYear:"2006",credit:"DerrickT • CC BY 2.0"},
     "boston celtics":{arena:"FleetCenter",city:"Boston, MA",page:"TD Garden",photo:"Fleet_Center_from_old_Central_Artery.agr.jpg",photoYear:"2003",credit:"ArnoldReinhold • CC BY-SA 4.0"},
@@ -6644,6 +6718,10 @@ function jumpCareerSection(id){
     "washington wizards":{arena:"MCI Center",city:"Washington, DC",page:"Capital One Arena",photo:"MCI_Center.jpg",photoYear:"2004",credit:"Postdlf • CC BY-SA 3.0"}
   };
   Object.assign(V68_TEAM_LOGOS,{"brooklyn nets":"bkn","charlotte hornets":"cha","new orleans pelicans":"no","oklahoma city thunder":"okc"});
+  const V82_TEAM_DISPLAY_NAMES={
+    "atlanta hawks":"HAWKS","boston celtics":"CELTICS","brooklyn nets":"NETS","charlotte hornets":"HORNETS","chicago bulls":"BULLS","cleveland cavaliers":"CAVALIERS","dallas mavericks":"MAVERICKS","denver nuggets":"NUGGETS","detroit pistons":"PISTONS","golden state warriors":"WARRIORS","houston rockets":"ROCKETS","indiana pacers":"PACERS","los angeles clippers":"CLIPPERS","los angeles lakers":"LAKERS","memphis grizzlies":"GRIZZLIES","miami heat":"HEAT","milwaukee bucks":"BUCKS","minnesota timberwolves":"TIMBERWOLVES","new jersey nets":"NETS","new orleans hornets":"HORNETS","new orleans pelicans":"PELICANS","new york knicks":"KNICKS","oklahoma city thunder":"THUNDER","orlando magic":"MAGIC","philadelphia 76ers":"76ERS","phoenix suns":"SUNS","portland trail blazers":"TRAIL BLAZERS","sacramento kings":"KINGS","san antonio spurs":"SPURS","seattle supersonics":"SUPERSONICS","toronto raptors":"RAPTORS","utah jazz":"JAZZ","washington wizards":"WIZARDS"
+  };
+  function teamDisplayName(team){const key=v65TeamKey(team);return V82_TEAM_DISPLAY_NAMES[key]||safe(team).toUpperCase()||'NBA TEAM'}
   const V65_TEAM_ALIASES={"lakers":"los angeles lakers","clippers":"los angeles clippers","sixers":"philadelphia 76ers","76ers":"philadelphia 76ers","sonics":"seattle supersonics","supersonics":"seattle supersonics","nets":"new jersey nets","hornets":"new orleans hornets","blazers":"portland trail blazers","trailblazers":"portland trail blazers","cavs":"cleveland cavaliers","wolves":"minnesota timberwolves","t-wolves":"minnesota timberwolves","mavs":"dallas mavericks","spurs":"san antonio spurs","warriors":"golden state warriors","knicks":"new york knicks","bulls":"chicago bulls","celtics":"boston celtics","grizzlies":"memphis grizzlies","heat":"miami heat","magic":"orlando magic","bucks":"milwaukee bucks","pistons":"detroit pistons","pacers":"indiana pacers","rockets":"houston rockets","nuggets":"denver nuggets","suns":"phoenix suns","kings":"sacramento kings","jazz":"utah jazz","raptors":"toronto raptors","wizards":"washington wizards","hawks":"atlanta hawks"};
   function v65TeamKey(name){const n=safe(name).toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();if(V65_ARENAS_2004[n])return n;if(V65_TEAM_ALIASES[n])return V65_TEAM_ALIASES[n];const hit=Object.keys(V65_ARENAS_2004).find(k=>k.includes(n)||n.includes(k));return hit||n}
   const V69_ARENAS_CURRENT={
@@ -6676,6 +6754,7 @@ function jumpCareerSection(id){
     text('deskCityName',info.city||'CAREER CITY');
     text('deskCityVenue',`HOME COURT • ${info.arena||'HOME ARENA'}`);
     text('deskCityTagline',v72CityTagline(info.city));
+    text('deskCityTeamName',teamDisplayName(team));
     setTeamLogo('deskCityTeamLogo','deskCityTeamLogoFallback',team);
     v69LoadCitySkyline(info);
   }
