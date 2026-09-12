@@ -648,6 +648,64 @@ body:not(.career-home) #k11Hub{display:none!important}
 </style>
 
 
+
+<style id="v62DesktopPresentation">
+/* V62 desktop presentation shell. Mobile layout remains untouched. */
+.desktopBrand,.desktopCommandCenter{display:none}
+body:not(.career-home) #desktopCommandCenter{display:none!important}
+@media (min-width:1100px){
+  :root{--desk-side:238px;--desk-top:78px;--desk-gold:#e3b33b;--desk-blue:#19a9ef;--desk-panel:#09131b;--desk-line:#314452}
+  html{background:#040a0f}
+  body{min-height:100vh;background:
+    radial-gradient(circle at 76% 0%,rgba(26,79,111,.20),transparent 28%),
+    linear-gradient(180deg,#050b10 0%,#08121a 48%,#050a0e 100%);padding-left:var(--desk-side)}
+  body:before{content:"";position:fixed;inset:0 0 0 var(--desk-side);pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px;z-index:-1}
+  header{position:fixed;left:var(--desk-side);right:0;top:0;height:var(--desk-top);padding:0 28px;background:rgba(5,11,16,.96);border-bottom:1px solid #263945;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:100}
+  header h1{font-size:18px;letter-spacing:1.1px;text-transform:uppercase} header .small{letter-spacing:.45px}
+  header .balance{font-size:22px;color:var(--desk-gold)}
+  #mobileNavToggle{display:none!important}
+  nav#nav{position:fixed!important;z-index:110;left:0;top:0;bottom:0;width:var(--desk-side);height:100vh;display:flex!important;flex-direction:column;flex-wrap:nowrap;gap:0;padding:0 0 22px;background:linear-gradient(180deg,#09131b,#081019 66%,#050a0f);border:0;border-right:1px solid #273844;overflow-y:auto;box-shadow:16px 0 45px rgba(0,0,0,.24)}
+  .desktopBrand{display:flex;min-height:112px;padding:22px 18px 16px;flex-direction:column;justify-content:center;border-bottom:1px solid #273844;background:radial-gradient(circle at 25% 10%,rgba(227,179,59,.11),transparent 48%)}
+  .desktopBrand .db2k{font-size:36px;line-height:.9;font-weight:1000;font-style:italic;letter-spacing:-2px;color:#fff}.desktopBrand .db2k::first-letter{color:#e11f35}
+  .desktopBrand strong{font-size:14px;letter-spacing:1.2px;margin-top:8px}.desktopBrand small{font-size:8px;letter-spacing:2.3px;color:#7f929e;margin-top:6px}
+  nav#nav button{position:relative;flex:0 0 auto;width:100%;height:50px;border:0;border-bottom:1px solid rgba(66,84,96,.34);border-radius:0;background:transparent;color:#c8d1d6;text-align:left;padding:0 18px 0 28px;font-size:13px;font-weight:800;letter-spacing:.35px;transition:.18s ease}
+  nav#nav button:hover{background:#101f2a;color:#fff;padding-left:32px}
+  nav#nav button.active{background:linear-gradient(90deg,#d7a82d,#f0c95b);color:#111;border:0;box-shadow:inset 4px 0 0 #fff,0 0 22px rgba(227,179,59,.18)}
+  nav#nav button.active:after{content:"›";position:absolute;right:16px;font-size:22px;top:12px}
+  main{max-width:none!important;margin:0!important;padding:calc(var(--desk-top) + 18px) 22px 42px!important}
+  .k11Hub{min-height:450px;grid-template-columns:minmax(560px,1.5fr) minmax(360px,.8fr);border-radius:2px;border-color:#3b4b55;box-shadow:0 18px 40px rgba(0,0,0,.28)}
+  .k11Left{min-height:450px}.k11PlayerTop{padding:28px 28px 20px;background:linear-gradient(115deg,#0b151e,#111a1e 58%,#181711)}
+  .k11Name{font-size:40px;letter-spacing:.2px}.k11Ovr{min-width:92px;padding:10px 16px}.k11Ovr strong{font-size:48px}
+  .k11Meta{gap:24px}.k11Meta .val{font-size:18px}.k11Summary{padding:20px 28px;grid-template-columns:150px 1fr}.k11Summary .v{font-size:16px}
+  .k11PanelTitle{padding:8px 28px}.k11Next{padding:20px 28px}.k11Next .opponent{font-size:28px}
+  .k11Right{min-height:450px}.k11PlayerPhoto{height:100%;max-height:450px;object-fit:cover;object-position:center top;filter:saturate(.92) contrast(1.04)}
+  .k11TeamStrip{left:18px;right:18px;bottom:16px;padding:12px 14px;background:rgba(5,11,16,.9);backdrop-filter:blur(6px)}
+  .k11Quick{display:none}.k11CoachDestination{left:18px;right:18px;bottom:76px}
+  #webAppBanner{display:none}
+  .desktopCommandCenter{display:block;margin-top:16px}
+  .desktopTopline{display:flex;justify-content:space-between;align-items:end;padding:0 3px 10px;border-bottom:1px solid #243744;margin-bottom:12px}
+  .desktopTopline span{display:block;font-size:9px;letter-spacing:2px;color:#7f949f;font-weight:900}.desktopTopline strong{display:block;font-size:16px;letter-spacing:.7px;margin-top:3px}.desktopDate{font-size:11px;letter-spacing:1px;color:#98aab4}
+  .desktopGrid{display:grid;grid-template-columns:1.05fr 1fr 1.05fr;gap:12px;align-items:stretch}
+  .desktopPanel{margin:0;background:linear-gradient(180deg,rgba(12,25,34,.98),rgba(7,15,21,.98));border:1px solid var(--desk-line);box-shadow:0 12px 28px rgba(0,0,0,.18);padding:14px;min-width:0}
+  .desktopPanelHead{height:32px;margin:-14px -14px 14px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;background:#081018;border-bottom:1px solid #314553}
+  .desktopPanelHead>span:first-child{font-size:11px;letter-spacing:1.3px;font-weight:1000;color:#fff}.desktopPanelHead button{border:0;background:transparent;color:#53c7ff;font-size:9px;font-weight:900;letter-spacing:.7px;padding:8px;cursor:pointer}.desktopPanelHead button:hover{color:#fff}.desktopLive{font-size:8px;color:#7ef3ad!important;letter-spacing:1.2px!important}
+  .desktopMetricHero{display:grid;grid-template-columns:86px 1fr;gap:14px;align-items:center;padding-bottom:13px;border-bottom:1px solid #273943;margin-bottom:12px}.desktopOvr{height:78px;display:grid;place-items:center;background:#0b1015;border:1px solid var(--desk-gold);box-shadow:inset 0 0 22px rgba(227,179,59,.06)}.desktopOvr span{font-size:8px;letter-spacing:1.4px;color:#9caab2}.desktopOvr b{font-size:36px;line-height:.8;color:#fff}.desktopMetricHero h2{font-size:21px;margin:0 0 3px}.desktopSub{font-size:11px;color:#95a7b1}.desktopRole{display:inline-block;margin-top:7px;border-left:3px solid var(--desk-gold);padding-left:7px;font-size:10px;font-weight:900;color:#dfe8ec;letter-spacing:.6px}
+  .desktopMeterRow{display:grid;grid-template-columns:86px 1fr 48px;gap:9px;align-items:center;margin:10px 0}.desktopMeterRow>span{font-size:10px;color:#b2bec5}.desktopMeterRow>b{font-size:11px;text-align:right}.desktopMeter{height:10px;background:#26333b;overflow:hidden}.desktopMeter i{display:block;height:100%;width:0;background:#34d17b;transition:width .3s}.desktopMeter.blue i{background:#24aef2}.desktopMeter.gold i{background:#e3b33b}
+  .desktopActions{display:flex;gap:8px;margin-top:14px}.desktopActions button{flex:1;border-radius:2px!important;padding:10px 12px!important;font-size:9px!important;letter-spacing:.7px!important;font-weight:1000!important}
+  .desktopNextGame{grid-column:2}.desktopVs{display:grid;grid-template-columns:1.2fr 36px .9fr;gap:10px;align-items:center;min-height:100px;padding:6px 0 12px}.desktopVs span{display:block;color:#8fa1ab;font-size:8px;letter-spacing:1.2px}.desktopVs strong{display:block;font-size:22px;line-height:1.05;margin-top:5px}.desktopVs em{font-style:normal;color:var(--desk-gold);font-weight:1000;text-align:center}.desktopGameMeta{font-size:10px;color:#abb8bf;line-height:1.45}.desktopStoryline{border-top:1px solid #273943;padding-top:11px}.desktopStoryline span{font-size:8px;letter-spacing:1.2px;color:var(--desk-gold);font-weight:1000}.desktopStoryline p{font-size:12px;line-height:1.45;color:#d4dde1;margin:5px 0 0}
+  .desktopInsiderLead{display:grid;grid-template-columns:112px 1fr;gap:13px}.desktopInsiderLead img{width:112px;height:112px;object-fit:cover;border:1px solid #3c4e59}.desktopInsiderLead small,.desktopCoachBody small{font-size:8px;letter-spacing:1.2px;color:var(--desk-gold);font-weight:1000}.desktopInsiderLead h3{font-size:18px;line-height:1.05;margin:5px 0}.desktopInsiderLead p{font-size:10px;line-height:1.45;color:#9fafb7;margin:0}
+  .desktopRecent{grid-column:1/3}.desktopRecentGames{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.desktopRecentGame{padding:10px;border:1px solid #2b3c46;background:#09141b}.desktopRecentGame small{font-size:8px;color:#8398a3}.desktopRecentGame b{display:block;font-size:15px;margin:3px 0}.desktopRecentGame span{font-size:9px;color:#bcc8ce}.desktopRecentGame.win{border-left:3px solid #42d681}.desktopRecentGame.loss{border-left:3px solid #f35d73}.desktopEmpty{color:#7f919b;font-size:11px;padding:20px 2px}
+  .desktopCoachBody{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;min-height:88px}.desktopCoachBadge{width:52px;height:52px;border-radius:50%;border:2px solid var(--desk-gold);display:grid;place-items:center;color:var(--desk-gold);font-weight:1000}.desktopCoachBody h3{font-size:16px;margin:4px 0}.desktopCoachBody p{font-size:10px;color:#94a6af;margin:0;line-height:1.35}
+  .desktopQuick{grid-column:1/4}.desktopQuickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.desktopQuickGrid button{min-height:66px;text-align:left;background:#0a151c;border:1px solid #30424e;color:#fff;padding:12px;cursor:pointer}.desktopQuickGrid button:hover{border-color:var(--desk-gold);background:#101b21}.desktopQuickGrid b{display:block;font-size:11px;letter-spacing:.6px}.desktopQuickGrid small{display:block;color:#8396a0;font-size:9px;margin-top:4px}
+  .tab.active{animation:deskFade .18s ease-out}@keyframes deskFade{from{opacity:.72;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .card{border-radius:3px}.careerPageLayout{grid-template-columns:235px 1fr}.careerSideNav{position:sticky;top:calc(var(--desk-top) + 16px);border-radius:2px}.careerContent>.card{box-shadow:0 12px 26px rgba(0,0,0,.14)}
+  .coachOfficeBackdrop{min-height:calc(100vh - var(--desk-top) - 36px)}
+}
+@media (min-width:1450px){
+  .desktopGrid{grid-template-columns:1.05fr .9fr 1.15fr}.k11Hub{grid-template-columns:1.6fr .72fr}.desktopPanel{padding:16px}.desktopPanelHead{margin:-16px -16px 16px}.desktopInsiderLead{grid-template-columns:132px 1fr}.desktopInsiderLead img{width:132px;height:120px}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -661,6 +719,7 @@ body:not(.career-home) #k11Hub{display:none!important}
 <button id="mobileNavToggle" class="mobileNavToggle" type="button" onclick="toggleMobileNav()" aria-expanded="false"><span>☰</span><b>MYCAREER MENU</b><span class="mobileNavCurrent" id="mobileNavCurrent">CAREER</span></button>
 
 <nav id="nav">
+  <div class="desktopBrand" aria-hidden="true"><span class="db2k">2K27</span><strong>OLD SCHOOL CAREER</strong><small>BUILD YOUR LEGACY</small></div>
   <button data-tab="career" class="active">Career</button>
   <button data-tab="game">Postgame</button>
   <button data-tab="insider">2K Insider <span id="insiderBadge" class="navBadge"></span></button>
@@ -724,6 +783,66 @@ body:not(.career-home) #k11Hub{display:none!important}
   </div>
 </div>
 
+<section id="desktopCommandCenter" class="desktopCommandCenter" aria-label="Desktop career dashboard">
+  <div class="desktopTopline">
+    <div><span>CAREER COMMAND CENTER</span><strong id="deskCareerLine">ROOKIE SEASON • NBA</strong></div>
+    <div class="desktopDate" id="deskCareerDate">CAREER DATE</div>
+  </div>
+  <div class="desktopGrid">
+    <article class="desktopPanel desktopMetrics">
+      <div class="desktopPanelHead"><span>PLAYER STATUS</span><button type="button" onclick="openTab('career')">EDIT PLAYER</button></div>
+      <div class="desktopMetricHero">
+        <div class="desktopOvr"><span>OVR</span><b id="deskOvr">—</b></div>
+        <div><h2 id="deskName">ANTONIO TAYLOR</h2><div class="desktopSub" id="deskPlayerMeta">SF • FREE AGENT</div><div class="desktopRole" id="deskRole">PROSPECT</div></div>
+      </div>
+      <div class="desktopMeterRow"><span>Coach Trust</span><div class="desktopMeter"><i id="deskTrustBar"></i></div><b id="deskTrust">0</b></div>
+      <div class="desktopMeterRow"><span>Fans</span><div class="desktopMeter blue"><i id="deskFansBar"></i></div><b id="deskFans">0</b></div>
+      <div class="desktopMeterRow"><span>Skill Points</span><div class="desktopMeter gold"><i id="deskSpBar"></i></div><b id="deskSP">0</b></div>
+      <div class="desktopActions"><button class="primary" onclick="openPostgameTab()">OPEN POSTGAME</button><button class="secondary" onclick="openTab('upgrades')">UPGRADES</button></div>
+    </article>
+
+    <article class="desktopPanel desktopNextGame">
+      <div class="desktopPanelHead"><span>NEXT CAREER MOMENT</span><button type="button" onclick="openTab('schedule')">KEY GAMES</button></div>
+      <div class="desktopVs">
+        <div><span>NEXT OPPONENT</span><strong id="deskOpponent">TBD</strong></div>
+        <em>VS</em>
+        <div class="desktopGameMeta" id="deskGameMeta">No key game scheduled</div>
+      </div>
+      <div class="desktopStoryline"><span>STORYLINE</span><p id="deskStoryline">Keep building your career. The next major story will appear here.</p></div>
+      <div class="desktopActions"><button class="primary" onclick="openTab('schedule')">VIEW GAME</button><button class="secondary" onclick="openPregameObjectivesFromHub()">OBJECTIVES</button></div>
+    </article>
+
+    <article class="desktopPanel desktopInsiderPanel">
+      <div class="desktopPanelHead"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
+      <div class="desktopInsiderLead">
+        <img src="2k-insider.png" alt="2K Insider">
+        <div><small>LATEST HEADLINE</small><h3 id="deskInsiderHeadline">THE STORY IS JUST BEGINNING</h3><p id="deskInsiderDeck">Career news, milestones and role changes will surface here.</p></div>
+      </div>
+    </article>
+
+    <article class="desktopPanel desktopRecent">
+      <div class="desktopPanelHead"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
+      <div id="deskRecentGames" class="desktopRecentGames"><div class="desktopEmpty">No NBA games logged yet.</div></div>
+    </article>
+
+    <article class="desktopPanel desktopCoach">
+      <div class="desktopPanelHead"><span>COACH'S OFFICE</span><button type="button" onclick="openCoachOffice()">ENTER</button></div>
+      <div class="desktopCoachBody"><div class="desktopCoachBadge">HC</div><div><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div></div>
+      <div class="desktopActions"><button class="primary" onclick="openCoachOffice()">MEET WITH COACH</button></div>
+    </article>
+
+    <article class="desktopPanel desktopQuick">
+      <div class="desktopPanelHead"><span>CAREER DESK</span><span class="desktopLive">LIVE</span></div>
+      <div class="desktopQuickGrid">
+        <button onclick="openTab('rewards')"><b>ENDORSEMENTS</b><small>Deals & opportunities</small></button>
+        <button onclick="openTab('milestones')"><b>MILESTONES</b><small>Awards & achievements</small></button>
+        <button onclick="openTab('media')"><b>MEDIA</b><small>Interviews & events</small></button>
+        <button onclick="openTab('history')"><b>HISTORY</b><small>Your career archive</small></button>
+      </div>
+    </article>
+  </div>
+</section>
+
 <div class="card" id="webAppBanner">
   <h2 style="margin-bottom:8px">Add to Your Phone</h2>
   <div class="note">
@@ -783,6 +902,8 @@ body:not(.career-home) #k11Hub{display:none!important}
     <div class="grid">
       <div><label>Name</label><input id="pName" placeholder="Antonio Taylor"></div>
       <div><label>Team</label><input id="pTeam" placeholder="Detroit Pistons"></div>
+      <div><label>Hometown</label><input id="pHometown" placeholder="Memphis, TN"></div>
+      <div><label>Hometown NBA Team</label><input id="pHometownTeam" placeholder="Memphis Grizzlies"></div>
       <div><label>Position</label><select id="pPos"><option>PG</option><option>SG</option><option selected>SF</option><option>PF</option><option>C</option></select></div>
       <div><label>Season</label><input id="pSeason" type="number" inputmode="numeric" min="1" value="1"></div>
       <div><label>Game #</label><input id="pGameNo" type="number" inputmode="numeric" min="0" value="0"></div>
@@ -957,6 +1078,7 @@ body:not(.career-home) #k11Hub{display:none!important}
       <div><label>FT Made</label><input id="gFTM" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>FT Attempted</label><input id="gFTA" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
       <div><label>Personal Fouls</label><input id="gPF" type="number" inputmode="numeric" autocomplete="off" enterkeyhint="next" placeholder="0" min="0"></div>
+      <div><label>Clutch Moment</label><select id="gClutch"><option value="none" selected>None</option><option value="game_winner">Game Winner</option><option value="go_ahead">Go-Ahead Basket</option><option value="game_tying">Game-Tying Basket</option><option value="clutch_defense">Clutch Defensive Play</option><option value="clutch_fts">Made Clutch Free Throws</option><option value="missed_fts">Missed Clutch Free Throws</option><option value="clutch_turnover">Clutch Turnover</option><option value="missed_winner">Missed Potential Game Winner</option></select><div class="small">Default is None every game. Clutch moments affect public reaction, not your box-score SP.</div></div>
       <div><label>Career Month</label>
         <select id="gMonth">
           <option value="1">January</option><option value="2">February</option><option value="3">March</option>
@@ -1071,6 +1193,18 @@ body:not(.career-home) #k11Hub{display:none!important}
     <p class="small">When you unlock an endorsement, the app schedules it on a random future in-career date and remembers that date permanently.</p>
     <div id="calendarStatus"></div>
     <div class="scroll"><table><thead><tr><th>Date</th><th>Event</th><th>Reward</th><th>Status</th><th></th></tr></thead><tbody id="calendarRows"></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h2>Off-Court Events</h2>
+    <p class="small">Career-driven opportunities, obligations, media choices and risk/reward moments. Events are occasional; quiet stretches are normal.</p>
+    <div id="offCourtPanel"></div>
+  </div>
+
+  <div class="card">
+    <h2>Fan Profile</h2>
+    <p class="small">Fans measure career popularity. Basketball moments matter most; small appearances matter less as your fame grows.</p>
+    <div id="fanProfilePanel"></div>
   </div>
 
   <div class="card">
@@ -1596,7 +1730,7 @@ function weightedShoeOffers(count=3){
 }
 function generateShoeOffers(){
   if(state.shoeCareer.signedBrand){alert("You are already signed with "+state.shoeCareer.signedBrand+".");return}
-  if(state.meters.fans<SHOE_OFFER_FANS){alert(`Shoe endorsement offers unlock at ${SHOE_OFFER_FANS} Fans.`);return}
+  if(!shoeCareerEligible("offer")){alert("Shoe offers require 65 Fans, 50+ Coach Trust, enough NBA experience, and real basketball credibility.");return}
   state.shoeCareer.offers=weightedShoeOffers(3);
   state.shoeCareer.offerGeneratedSeason=state.player.season;
   persist(); renderShoeCareer();
@@ -1621,7 +1755,7 @@ function scheduleShoeEvent(label,sp,minDays,maxDays){
 }
 function unlockCustomShoe(){
   if(!state.shoeCareer.signedBrand){alert("You need a shoe endorsement first.");return}
-  if(state.meters.fans<CUSTOM_SHOE_FANS){alert(`Create-a-Shoe unlocks at ${CUSTOM_SHOE_FANS} Fans.`);return}
+  if(!shoeCareerEligible("custom")){alert("Create-a-Shoe requires an existing shoe sponsor and 80 Fans.");return}
   if(state.shoeCareer.customShoe){alert("Custom shoe is already unlocked.");return}
   state.shoeCareer.customShoe=true;
   scheduleShoeEvent("Custom Shoe / Player Exclusive Reveal",shoeBrandByName(state.shoeCareer.signedBrand).eventSP+75,4,14);
@@ -1629,7 +1763,7 @@ function unlockCustomShoe(){
 }
 function unlockSignatureShoe(){
   if(!state.shoeCareer.customShoe){alert("Create your custom shoe first.");return}
-  if(state.meters.fans<SIGNATURE_SHOE_FANS){alert(`Signature Shoe eligibility unlocks at ${SIGNATURE_SHOE_FANS} Fans.`);return}
+  if(!shoeCareerEligible("signature")){alert("Signature Shoe requires 90 Fans plus sustained star-level basketball credibility and a major honor.");return}
   if(state.shoeCareer.signatureShoe){alert("Signature shoe is already unlocked.");return}
   state.shoeCareer.signatureShoe=true;
   scheduleShoeEvent("Signature Shoe Launch Commercial",shoeBrandByName(state.shoeCareer.signedBrand).eventSP+150,7,24);
@@ -1655,12 +1789,12 @@ function renderShoeCareer(){
     const b=shoeBrandByName(sc.signedBrand);
     el.innerHTML=`<div class="note"><b>Current Shoe Sponsor: ${b.name}</b><br><span class="small">${b.tier} • Calendar event base reward: +${b.eventSP} SP</span></div>
       <div class="row" style="margin-top:12px">
-       <button class="secondary" onclick="unlockCustomShoe()" ${sc.customShoe||fans<CUSTOM_SHOE_FANS?"disabled":""}>${sc.customShoe?"Custom Shoe Unlocked":`Unlock Create-a-Shoe (${CUSTOM_SHOE_FANS} Fans)`}</button>
-       <button class="secondary" onclick="unlockSignatureShoe()" ${sc.signatureShoe||!sc.customShoe||fans<SIGNATURE_SHOE_FANS?"disabled":""}>${sc.signatureShoe?"Signature Shoe Unlocked":`Unlock Signature Shoe (${SIGNATURE_SHOE_FANS} Fans)`}</button>
+       <button class="secondary" onclick="unlockCustomShoe()" ${sc.customShoe||!shoeCareerEligible("custom")?"disabled":""}>${sc.customShoe?"Custom Shoe Unlocked":`Unlock Create-a-Shoe (${CUSTOM_SHOE_FANS} Fans)`}</button>
+       <button class="secondary" onclick="unlockSignatureShoe()" ${sc.signatureShoe||!shoeCareerEligible("signature")?"disabled":""}>${sc.signatureShoe?"Signature Shoe Unlocked":`Unlock Signature Shoe (${SIGNATURE_SHOE_FANS} Fans)`}</button>
       </div>
       <p class="small">After Create-a-Shoe is unlocked, occasional ${b.name} shoe commercials/photo shoots can appear on the existing Career Calendar for SP. Only one shoe event can be pending at a time.</p>`;
-  } else if(fans<SHOE_OFFER_FANS){
-    el.innerHTML=`<div class="note"><b>Unsigned</b><br><span class="small">Shoe endorsement offers unlock at ${SHOE_OFFER_FANS} Fans. Current Fans: ${fans}.</span></div>`;
+  } else if(!shoeCareerEligible("offer")){
+    const c=careerCredibility(); el.innerHTML=`<div class="note"><b>Unsigned</b><br><span class="small">Shoe offers require 65 Fans + 50 Coach Trust + basketball credibility. Current: ${fans} Fans • ${clamp(state.meters.coach)} Trust • Credibility ${c.score}/100.</span></div>`;
   } else if(sc.offers?.length){
     el.innerHTML=`<div class="note"><b>Shoe Endorsement Offers</b><br><span class="small">Prestige brands pay less SP; smaller/challenger brands offer stronger SP incentives.</span></div>`+
       sc.offers.map(n=>{const b=shoeBrandByName(n);return `<div class="obj"><div><b>${b.name}</b><div class="small">${b.tier} • Signing reward +${b.signSP} SP • Event base +${b.eventSP} SP</div></div><button class="primary" onclick="signShoeBrand('${b.name.replace(/'/g,"\\'")}')">Sign</button></div>`}).join("")+
@@ -1953,7 +2087,7 @@ const INTERVIEWS = [
 let editingGameId = null;
 
 let state = {
- player:{name:"",team:"",position:"SF",season:1,gameNo:0},
+ player:{name:"",team:"",hometown:"",hometownTeam:"",position:"SF",season:1,gameNo:0},
  ratings:Object.fromEntries(ATTRS.map(([a])=>[a,60])),
  sp:0,
  objectives:[],
@@ -1986,6 +2120,9 @@ let state = {
  contractHistory:[],
  streakRewards:{},
  shoeCareer:{signedBrand:"",offers:[],customShoe:false,signatureShoe:false,signedSeason:null,signedDate:null},
+ fanSystem:{momentum:0,history:[],lastStreakReward:"",behavior:{professional:0,media:0,controversial:0}},
+ offCourt:{pending:null,history:[],lastEventGame:-99,cooldownGames:0},
+ franchiseInfluence:{unlocked:false,peakUnlocked:false,suspended:false},
  schemaVersion:11
 };
 
@@ -2048,12 +2185,12 @@ function renderCareerSlots(){
     const p=x.data?.player||{};
     const active=x.id===activeSlotId;
     const sp=Math.round(x.data?.sp||0).toLocaleString();
-    return `<div class="obj careerSlotCard${active?" currentSlot":""}"><div style="flex:1"><b>${p.name||"Unnamed Player"}</b><div class="small">${p.team||"No Team"} • ${p.position||"—"} • Season ${p.season||1} • Game ${p.gameNo||0} • ${sp} SP</div></div><div class="row">${active?'<span class="currentBadge">Current Career</span>':`<button class="primary" onclick="switchCareerSlot('${x.id}')">Play</button>`}<button class="secondary" onclick="deleteCareerSlot('${x.id}')">Delete</button></div></div>`;
+    return `<div class="obj careerSlotCard${active?" currentSlot":""}"><div style="flex:1"><b>${p.name||"Unnamed Player"}</b><div class="small">${p.team||"No Team"}${p.hometown?` • Hometown: ${escapeHtml(p.hometown)}`:""} • ${p.position||"—"} • Season ${p.season||1} • Game ${p.gameNo||0} • ${sp} SP</div></div><div class="row">${active?'<span class="currentBadge">Current Career</span>':`<button class="primary" onclick="switchCareerSlot('${x.id}')">Play</button>`}<button class="secondary" onclick="deleteCareerSlot('${x.id}')">Delete</button></div></div>`;
   }).join("");
 }
 function createFreshState(){
   return {
-    player:{name:"",team:"",position:"SF",season:1,gameNo:0},
+    player:{name:"",team:"",hometown:"",hometownTeam:"",position:"SF",season:1,gameNo:0},
     ratings:Object.fromEntries(ATTRS.map(([a])=>[a,60])),
     sp:0,objectives:[],completedMilestones:{},completedManual:{},manualAccomplishmentLog:[],manualRecurringMigrated:false,preNBAMilestones:{},games:[],upgrades:[],schedule:[],specialEvents:[],
     meters:{fans:15,chemistry:50,coach:25},pendingInterview:null,interviews:[],lastInterviewGame:0,
@@ -2064,6 +2201,7 @@ function createFreshState(){
     careerDate:{month:10,year:2026,day:null},endorsements:[],unlockedRewards:{},shoeBrand:"",
     appVersion:5,coachTrustHistory:[],lastTeam:"",accomplishmentLog:[],contractHistory:[],streakRewards:{},
     shoeCareer:{signedBrand:"",offers:[],customShoe:false,signatureShoe:false,signedSeason:null,signedDate:null},
+    homecoming:{arrivalTeam:"",arrivalAwarded:false,localOpportunityCount:0,lastHometownKeyGame:"",history:[]},
     schemaVersion:15
   };
 }
@@ -2088,7 +2226,12 @@ function load(){
   renderCareerSlots();
 }
 function ensureState(){
-  if(!state.player) state.player={name:"",team:"",position:"SF",season:1,gameNo:0};
+  if(!state.player) state.player={name:"",team:"",hometown:"",hometownTeam:"",position:"SF",season:1,gameNo:0};
+  if(state.player.hometown===undefined) state.player.hometown="";
+  if(state.player.hometownTeam===undefined) state.player.hometownTeam="";
+  if(!state.homecoming) state.homecoming={arrivalTeam:"",arrivalAwarded:false,localOpportunityCount:0,lastHometownKeyGame:"",history:[]};
+  if(!Array.isArray(state.homecoming.history)) state.homecoming.history=[];
+  if(state.homecoming.arrivalAwarded===undefined) state.homecoming.arrivalAwarded=false;
   if(!state.ratings) state.ratings={};
   ATTRS.forEach(([a])=>{if(state.ratings[a]===undefined) state.ratings[a]=60});
   if(state.sp===undefined) state.sp=0;
@@ -2166,6 +2309,14 @@ if(state.coachMeeting.seenKey===undefined) state.coachMeeting.seenKey="";
 if(state.coachMeeting.firstMeetingSeen===undefined) state.coachMeeting.firstMeetingSeen=false;
 if(!state.shoeCareer) state.shoeCareer={signedBrand:"",offers:[],customShoe:false,signatureShoe:false,signedSeason:null,signedDate:null};
 if(!state.shoeCareer.offers) state.shoeCareer.offers=[];
+if(!state.fanSystem) state.fanSystem={momentum:0,history:[],lastStreakReward:"",behavior:{professional:0,media:0,controversial:0}};
+if(!Array.isArray(state.fanSystem.history)) state.fanSystem.history=[];
+if(!state.fanSystem.behavior) state.fanSystem.behavior={professional:0,media:0,controversial:0};
+if(state.fanSystem.momentum===undefined) state.fanSystem.momentum=0;
+if(!state.offCourt) state.offCourt={pending:null,history:[],lastEventGame:-99,cooldownGames:0};
+if(!Array.isArray(state.offCourt.history)) state.offCourt.history=[];
+if(state.offCourt.lastEventGame===undefined) state.offCourt.lastEventGame=-99;
+if(!state.franchiseInfluence) state.franchiseInfluence={unlocked:false,peakUnlocked:false,suspended:false};
 if(!state.schemaVersion) state.schemaVersion=1;
   // V7 migration: old builds accidentally persisted Fans=50 and Coach Trust=50.
   // Correct that legacy default once. This runs only when upgrading a pre-V7 save.
@@ -2239,8 +2390,8 @@ function renderPrivileges(){
 }
 
 function saveCareer(){
-  state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.position=pPos.value;
-  state.player.season=+pSeason.value||1; state.player.gameNo=+pGameNo.value||0; persist();
+  state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.hometown=(document.getElementById("pHometown")?.value||"").trim(); state.player.hometownTeam=(document.getElementById("pHometownTeam")?.value||"").trim(); state.player.position=pPos.value;
+  state.player.season=+pSeason.value||1; state.player.gameNo=+pGameNo.value||0; checkHomecomingArrival(); persist();
   renderAll(); alert("Career saved.");
 }
 
@@ -2817,6 +2968,7 @@ function clearPostgameStatInputs(){
   });
   if(document.getElementById("gMatchupPerformance")) gMatchupPerformance.value="3";
   previewPerformanceGrade();
+  if(document.getElementById("gClutch")) document.getElementById("gClutch").value="none";
 }
 function statSP(s){
   const missedFG=Math.max(0,s.fga-s.fgm), missedFT=Math.max(0,s.fta-s.ftm);
@@ -3606,6 +3758,7 @@ function renderCoachOfficeOverview(){
       <strong>${escapeHtml(r.establishedStarter?"Established Starter":rotationRoleForMinutes(r.minutes))}</strong>
       <div class="next">${r.establishedStarter?"Normal coach-evaluation floor: 28 MPG.":r.starterProveIt?.active?"Starter Prove-It is active. Hold the role through the evaluation.":`Next opportunity: ${escapeHtml(next.role)} at ${next.at} MPG.`}</div>
     </div>
+    ${renderFranchiseInfluenceCard()}
     <div class="coachNoteQuiet"><div class="label">COACH'S NOTE</div><blockquote>“${escapeHtml(coachOfficeNote(goal))}”</blockquote></div>
     <button type="button" class="coachHistoryToggle" onclick="toggleCoachHistory()"><span>ROTATION HISTORY</span><span id="coachHistoryChevron">›</span></button>
     <div id="coachHistoryPanel" class="coachHistoryPanel">${historyHtml}</div>
@@ -3684,11 +3837,13 @@ function calculateAndPostGame(){
     fgm:num("gFGM"),fga:num("gFGA"),t3m:num("g3M"),t3a:num("g3A"),ftm:num("gFTM"),fta:num("gFTA"),
     to:num("gTO"),pf:num("gPF"),grade:"",result:gResult.value,highlights:num("gHighlights"),
     matchupPerformance:+(document.getElementById("gMatchupPerformance")?.value||3),
-    matchupPts:(document.getElementById("gMatchupPts")?.value===""?null:num("gMatchupPts"))
+    matchupPts:(document.getElementById("gMatchupPts")?.value===""?null:num("gMatchupPts")),
+    clutch:(document.getElementById("gClutch")?.value||"none")
   };
   const autoGrade=calculatePerformanceGrade(s,state.player.position||"SF");
   s.grade=autoGrade.grade;
   if(s.fgm>s.fga || s.t3m>s.t3a || s.ftm>s.fta){alert("Made shots cannot exceed attempts.");return}
+  const upcoming=editingGameId?null:getUpcomingSchedule();
   const opponent=gOpponent.value.trim() || upcoming?.opponent || "";
 
   const month=Math.max(1,Math.min(12,+gMonth.value||state.careerDate.month||10));
@@ -3700,7 +3855,6 @@ function calculateAndPostGame(){
   // A typo correction edits that historical game's date only. It must never rewind the
   // live career calendar or make an old Key Game become "next" again.
   if(!editingGameId) state.careerDate={...enteredGameDate};
-  const upcoming=editingGameId?null:getUpcomingSchedule();
 
   // Typo correction mode: replace the most recent game's stats/SP instead of creating another game.
   if(editingGameId){
@@ -3756,11 +3910,18 @@ function calculateAndPostGame(){
   const game={gameNo:state.player.gameNo,season:state.player.season,date:{...state.careerDate},opponent,keyGame,keyReason:upcoming?.reason||"",multiplier,minutesSPMult,coachMinutes:(state.preNBA?.stage==="nba"?(activeRotationMinutes()):null),minutesAdjustedRaw,stats:s,gradeSP:grade,autoGradeScore:autoGrade.score,performanceSP:performance,resultSP,highlightSP,objSP,milestoneSP,raw,total,completedObjs,newMilestones};
   state.games.unshift(game);
   const opportunityResult=evaluateRotationOpportunity(game);
+  game.rotationOpportunityResult=opportunityResult;
   const coachGoalResult=finalizeCoachGoalIfDue();
   const rotationChange=state.rotationOpportunity?.active?null:evaluateNBARotation(coachGoalResult);
-  if(rotationChange) rotationCoachMessage(rotationChange);
+  if(rotationChange){ rotationCoachMessage(rotationChange); if(rotationChange.to>=32&&rotationChange.from<32)addFans(3,"Moved into the starting lineup",{major:true}); }
+  if(newMilestones.length)addFans(Math.min(3,newMilestones.length),"Career milestone buzz",{major:newMilestones.length>=2});
   coachGoalResultMessage(coachGoalResult,rotationChange);
   if(coachGoalResult) assignCoachGoal(true);
+  processCareerPublicReaction(game);
+  processHometownGame(game);
+  checkHomecomingArrival();
+  maybeGenerateOffCourtEvent(game);
+  updateFranchiseInfluence();
   checkRewardUnlocks(); scheduleUnscheduledRewards();
   maybeQueueInterview(game);
   maybeQueueInsider(game);
@@ -3790,14 +3951,14 @@ function maybeShowInsiderPrologue(){
 }
 function enterCombineFromSetup(){
   if(state.careerStartPath==="historical_undrafted"){
-    state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.position=pPos.value;
+    state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.hometown=(document.getElementById("pHometown")?.value||"").trim(); state.player.hometownTeam=(document.getElementById("pHometownTeam")?.value||"").trim(); state.player.position=pPos.value;
     state.player.season=+pSeason.value||1; state.player.gameNo=+pGameNo.value||0;
     persist(); openTab("insider"); return;
   }
   if(state.combine?.active){openTab("insider");return;}
   if(state.combine?.finished){startDraftEvaluation();return;}
   // Capture the player's setup and ratings before the pre-draft journey begins.
-  state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.position=pPos.value;
+  state.player.name=pName.value.trim(); state.player.team=pTeam.value.trim(); state.player.hometown=(document.getElementById("pHometown")?.value||"").trim(); state.player.hometownTeam=(document.getElementById("pHometownTeam")?.value||"").trim(); state.player.position=pPos.value;
   state.player.season=+pSeason.value||1; state.player.gameNo=+pGameNo.value||0;
   ATTRS.forEach(([a])=>{const r=document.getElementById("r_"+slug(a)); if(r) state.ratings[a]=Math.max(25,Math.min(99,+r.value||25));});
   persist();
@@ -4604,9 +4765,12 @@ function insiderMeta(entry){
 function insiderStoryFor(game){
   const p=state.player||{},st=game.stats||{},name=p.name||"Your player",opp=game.opponent||"the opposition";
   const fans=clamp(state.meters?.fans||15),won=st.result==="W";
+  // V59: Rotation Opportunity stories own the narrative when Coach has just issued
+  // a warning/demotion. Do not immediately contradict them with a generic praise story.
+  if(["warning","demotion"].includes(game.rotationOpportunityResult?.type)) return null;
   if(game.newMilestones?.some(m=>m.id==="pts50")) return {category:"milestone",headline:"A NIGHT THE LEAGUE NOTICED",deck:"A career scoring explosion changes the conversation.",body:`${name} just crossed the 50-point mark. Whatever the scouting report said before tonight, teams around the league have a new problem to account for.`};
   if(game.newMilestones?.some(m=>m.id==="td")) return {category:"milestone",headline:"COMPLETE-GAME STATEMENT",deck:"Production in every column is becoming part of the story.",body:`A triple-double from ${name} is going to travel around the league. Production is one thing; controlling a game in multiple areas is another.`};
-  if(game.keyGame && won) return {category:"nba",headline:"BIG STAGE, STRONG ANSWER",deck:`${name} delivers when the lights shine brightest.`,body:`${name} delivered in a game that carried extra weight against ${opp}. These are the nights that change how a player is talked about.`};
+  if(game.keyGame && won && Number(game.autoGradeScore||0)>=62) return {category:"nba",headline:"BIG STAGE, STRONG ANSWER",deck:`${name} delivers when the lights shine brightest.`,body:`${name} delivered in a game that carried extra weight against ${opp}. These are the nights that change how a player is talked about.`};
   if(game.keyGame && !won) return {category:"nba",headline:"QUESTIONS AFTER A KEY LOSS",deck:"The spotlight stays on after a disappointing result.",body:`The result against ${opp} will sting. The next question for ${name} is how quickly he answers when the pressure follows him into the next game.`};
   if(st.pts>=30) return {category:"nba",headline:"SCORING IS BECOMING A STORY",deck:"Defenses may have to start treating this differently.",body:`${name} put 30-plus on the board. Defenses will start treating him differently if this keeps up.`};
   if(!won && (st.pts||0)<12) return {category:"nba",headline:"A ROUGH NIGHT UNDER THE MICROSCOPE",deck:"One rough game becomes a test of response.",body:`Not much came easy for ${name} tonight. One bad game does not define a career, but the response will matter more than the excuses.`};
@@ -4788,11 +4952,116 @@ function answerInterview(template,answer,game){
 }
 
 
+
+// V61 — Hometown / Homecoming Arc. Hometown is identity; Hometown NBA Team drives basketball context.
+function sameTeamName(a,b){return String(a||"").trim().toLowerCase()===String(b||"").trim().toLowerCase()&&String(a||"").trim().length>0;}
+function isHometownTeam(team=state.player?.team){return sameTeamName(team,state.player?.hometownTeam);}
+function hometownCareerStanding(){
+  const c=careerCredibility();
+  if(c.honors>=2||c.ppg>=24||c.score>=82)return 4; // star/superstar
+  if(c.honors>=1||c.ppg>=18||c.score>=68)return 3; // established name
+  if(state.rotationProgress?.establishedStarter||c.ppg>=13||c.score>=52)return 2; // starter/real rotation reputation
+  if(c.games>=8&&(Number(state.rotationProgress?.minutes||0)>=16||c.ppg>=8))return 1; // rotation player
+  return 0;
+}
+function hometownStandingLabel(v=hometownCareerStanding()){return ["Fringe / Unproven","Rotation Player","Established Starter","NBA Name","Star / Superstar"][Math.max(0,Math.min(4,v))];}
+function hometownLocalBoost(){
+  if(!isHometownTeam())return 0;
+  const rank=hometownCareerStanding();
+  return rank>=4?3:rank>=3?2:rank>=2?1:0;
+}
+function checkHomecomingArrival(){
+  if(!state.homecoming)return;
+  const ht=String(state.player?.hometownTeam||"").trim(),team=String(state.player?.team||"").trim();
+  if(!ht||!team||!sameTeamName(ht,team))return;
+  const rank=hometownCareerStanding();
+  if(rank<1)return; // signing at home is not a shortcut for an unproven player
+  if(state.homecoming.arrivalAwarded&&sameTeamName(state.homecoming.arrivalTeam,team))return;
+  const fanAward=rank>=4?4:rank>=3?3:rank>=2?2:1;
+  const actual=addFans(fanAward,`Homecoming: ${state.player?.hometown||ht}`,{major:rank>=3});
+  state.homecoming.arrivalTeam=team; state.homecoming.arrivalAwarded=true;
+  state.homecoming.history.unshift({type:"arrival",team,hometown:state.player?.hometown||"",rank,fanDelta:actual,season:state.player?.season||1,gameNo:state.player?.gameNo||0,date:state.careerDate?{...state.careerDate}:null});
+  const name=state.player?.name||"Your player",place=state.player?.hometown||"his hometown";
+  state.insiderFeed.unshift({id:"homecoming_"+Date.now(),season:state.player?.season||1,gameNo:state.player?.gameNo||0,date:state.careerDate?{...state.careerDate}:null,category:"nba",stage:"NBA • Homecoming",headline:"COMING HOME",deck:`${name} returns to play in front of the hometown crowd.`,body:`After building his name in the league, ${name} is bringing his career back to ${place}. The homecoming creates stronger local attention and more hometown media and endorsement opportunities, but basketball production will still determine how far that spotlight can carry him.`,read:false});
+  state.insiderFeed=state.insiderFeed.slice(0,60); state.insiderUnread=(state.insiderUnread||0)+1;
+}
+function processHometownGame(game){
+  const ht=String(state.player?.hometownTeam||"").trim(); if(!ht||!sameTeamName(game?.opponent,ht))return;
+  const key=`${game.season}:${game.gameNo}:${ht}`; if(state.homecoming.lastHometownKeyGame===key)return;
+  const name=state.player?.name||"Your player",place=state.player?.hometown||ht,score=Number(game.autoGradeScore||0),won=game.stats?.result==="W";
+  let fan=0;
+  if(game.keyGame){fan=score>=82?4:score>=68?2:0;if(fan)addFans(fan,`Hometown key game vs ${ht}`,{major:true});}
+  let headline="BACK WHERE IT STARTED",deck=`${name} faces the hometown team with a little more meaning attached.`;
+  if(game.keyGame&&score>=82) {headline="A HOMETOWN MOMENT";deck=`${name} delivers with the hometown spotlight on the game.`;}
+  else if(game.keyGame&&score<55){headline="HOMECOMING PRESSURE";deck=`The hometown matchup carried extra attention, but ${name} couldn't fully answer it.`;}
+  state.insiderFeed.unshift({id:"hometown_game_"+Date.now(),season:game.season,gameNo:game.gameNo,date:game.date?{...game.date}:null,category:"nba",stage:"NBA • Hometown",headline,deck,body:`Playing against ${ht}${place?` — the team tied to ${place}`:""} adds a different kind of attention. ${won?"The team got the win.":"The result went the other way."} ${score>=82?`${name} gave the hometown audience a performance to remember.`:score<55?`${name} will have another chance to write a better hometown chapter.`:`${name}'s performance became another piece of the career story.`}`,read:false});
+  state.insiderFeed=state.insiderFeed.slice(0,60);state.insiderUnread=(state.insiderUnread||0)+1;state.homecoming.lastHometownKeyGame=key;
+  state.homecoming.history.unshift({type:"hometown_game",opponent:ht,keyGame:!!game.keyGame,score,fanDelta:fan,season:game.season,gameNo:game.gameNo,date:game.date?{...game.date}:null});
+}
+
+// V60 — Fans, off-court career events, endorsement credibility, clutch/streak reactions and Franchise Influence.
+const TEAM_SPOTLIGHT_ELITE=["Los Angeles Lakers","New York Knicks","Boston Celtics","Chicago Bulls","Golden State Warriors"];
+const TEAM_SPOTLIGHT_HIGH=["Miami Heat","Philadelphia 76ers","Dallas Mavericks","Phoenix Suns","Brooklyn Nets","LA Clippers"];
+function teamSpotlightTier(){const t=String(state.player?.team||"");return TEAM_SPOTLIGHT_ELITE.includes(t)?3:TEAM_SPOTLIGHT_HIGH.includes(t)?2:1;}
+function fanTier(v=state.meters?.fans||0){v=clamp(v);if(v<20)return"Unknown";if(v<35)return"Local Buzz";if(v<50)return"Rising Player";if(v<65)return"Fan Favorite";if(v<78)return"NBA Name";if(v<88)return"Star";if(v<96)return"Superstar";return"Icon";}
+function addFans(amount,reason,{major=false,negative=false}={}){
+  let n=Number(amount||0),before=clamp(state.meters.fans||0);
+  if(n>0&&!major){if(before>=90)n=Math.ceil(n*.25);else if(before>=75)n=Math.ceil(n*.5);else if(before>=55)n=Math.ceil(n*.75);}
+  if(n>0&&major){const spot=teamSpotlightTier();if(spot===3)n+=2;else if(spot===2)n+=1;}
+  if(negative)n=-Math.abs(n);
+  state.meters.fans=clamp(before+n);const actual=state.meters.fans-before;
+  if(actual){state.fanSystem.history.unshift({gameNo:state.player?.gameNo||0,season:state.player?.season||1,date:state.careerDate?{...state.careerDate}:null,delta:actual,reason});state.fanSystem.history=state.fanSystem.history.slice(0,60);}
+  return actual;
+}
+function addCoachTrust(delta,reason){const before=clamp(state.meters.coach||0);state.meters.coach=clamp(before+Number(delta||0));const actual=state.meters.coach-before;if(actual){state.coachTrustHistory.unshift({gameNo:state.player?.gameNo||0,season:state.player?.season||1,delta:actual,reason,date:state.careerDate?{...state.careerDate}:null});state.coachTrustHistory=state.coachTrustHistory.slice(0,60);}return actual;}
+function recentWinLossStreak(){const gs=(state.games||[]).slice(0,12);if(!gs.length)return{type:"",count:0};const r=String(gs[0].stats?.result||"");let n=0;for(const g of gs){if(String(g.stats?.result||"")===r)n++;else break;}return{type:r,count:n};}
+function processCareerPublicReaction(game){
+  const s=game.stats||{},score=Number(game.autoGradeScore||0),key=!!game.keyGame;
+  const clutch={game_winner:[5,"Game-winning shot"],go_ahead:[3,"Go-ahead basket"],game_tying:[3,"Game-tying basket"],clutch_defense:[3,"Clutch defensive play"],clutch_fts:[2,"Made clutch free throws"],missed_fts:[2,"Missed clutch free throws",true],clutch_turnover:[3,"Clutch turnover",true],missed_winner:[2,"Missed potential game winner",true]}[s.clutch];
+  if(clutch){let amt=clutch[0]+(key?2:0);addFans(amt,clutch[1],{major:key||amt>=5,negative:!!clutch[2]});if(!clutch[2]&&["game_winner","clutch_defense"].includes(s.clutch))addCoachTrust(1,clutch[1]);}
+  if(score>=90||s.pts>=40)addFans(key?6:4,score>=90?"Elite game performance":"40-point performance",{major:true});
+  else if(s.pts>=30&&score>=77)addFans(key?4:2,"Major scoring performance",{major:key});
+  const st=recentWinLossStreak();const keySt=`${state.player?.season||1}:${st.type}:${st.count}`;
+  if([3,5,7,10].includes(st.count)&&state.fanSystem.lastStreakReward!==keySt){let d=st.type==="W"?({3:1,5:2,7:3,10:5}[st.count]):({3:-1,5:-2,7:-2,10:-3}[st.count]);if(st.type==="L"&&score>=77)d=0;if(st.type==="L"&&score>=86)d=1;if(d>0)addFans(d,`${st.count}-game ${st.type==="W"?"winning":"team"} streak`,{major:st.count>=7});else if(d<0)addFans(Math.abs(d),`${st.count}-game losing streak`,{negative:true});state.fanSystem.lastStreakReward=keySt;}
+  state.fanSystem.momentum=Math.max(-10,Math.min(10,Math.round((state.fanSystem.momentum||0)*.75)+(score>=82?1:score<55?-1:0)));
+}
+const MANUAL_FAN_REWARDS={rookie_month:2,pow:2,pom:3,allstar:6,allnba:7,alldef:4,roy:8,dpoy:8,mvp:10,playoff_debut:2,playoff_series_win:4,conf_finals:4,finals:6,champ:10,finals_mvp:10};
+function awardManualFans(id,name){const base=MANUAL_FAN_REWARDS[id]||0;if(base)addFans(base,name,{major:base>=4});}
+function careerCredibility(){
+  const gs=(state.games||[]),n=gs.length,avg=n?gs.reduce((a,g)=>a+Number(g.autoGradeScore||50),0)/n:0,ppg=n?gs.reduce((a,g)=>a+Number(g.stats?.pts||0),0)/n:0;
+  const role=state.rotationProgress?.establishedStarter?2:Number(state.rotationProgress?.minutes||10)>=25?1:0;
+  const honors=(state.manualAccomplishmentLog||[]).filter(x=>["allstar","allnba","roy","dpoy","mvp","champ","finals_mvp"].includes(x.id)).length;
+  return{games:n,avg,ppg,role,honors,score:Math.round(Math.min(100,n*.7+Math.max(0,avg-55)*.7+ppg*.7+role*10+honors*10))};
+}
+function endorsementEligible(r){const f=clamp(state.meters.fans),c=careerCredibility(),trust=clamp(state.meters.coach);if(f<r.fans)return false;if(["appearance25","dealer35"].includes(r.id))return true;if(r.id==="regional45")return c.games>=5&&(c.role>=1||c.ppg>=10);if(r.id==="national55")return c.games>=8&&(c.role>=1||c.ppg>=14||c.honors>=1);if(r.id==="major65")return c.games>=10&&trust>=50&&(c.role>=1||c.ppg>=16||c.honors>=1);if(r.id==="sportsdrink85")return c.games>=15&&trust>=50&&(c.ppg>=18||c.honors>=1);if(["premium95","icon100"].includes(r.id))return c.honors>=1&&c.games>=20;return true;}
+function shoeCareerEligible(kind="offer"){const c=careerCredibility(),fans=clamp(state.meters.fans),trust=clamp(state.meters.coach);if(kind==="offer")return fans>=65&&trust>=50&&c.games>=10&&(c.role>=1||c.ppg>=15||c.honors>=1);if(kind==="custom")return fans>=80&&!!state.shoeCareer.signedBrand;if(kind==="signature")return fans>=90&&!!state.shoeCareer.customShoe&&c.honors>=1&&c.games>=20&&(c.ppg>=18||c.score>=75);return false;}
+const HOMETOWN_LOCAL_EVENTS=[
+ {id:"hometown_radio",type:"Hometown Opportunity",title:"HOMETOWN RADIO FEATURE",text:"A hometown sports show wants to talk about your return and your path to the league.",minFans:20,choices:[["Do the interview",{fans:2,media:1}], ["Pass",{}]]},
+ {id:"hometown_dealer",type:"Hometown Opportunity",title:"LOCAL DEALERSHIP COMMERCIAL",text:"A business back home wants the hometown NBA player in a local commercial.",minFans:25,choices:[["Shoot the commercial",{fans:2,sp:150,media:1}], ["Pass",{}]]},
+ {id:"hometown_community",type:"Hometown Opportunity",title:"BACK HOME COMMUNITY EVENT",text:"A local organization invites you to make an appearance where people remember your path to the league.",minFans:20,choices:[["Make the appearance",{fans:2,media:1,professional:1}], ["Pass",{}]]}
+];
+const OFFCOURT_EVENTS=[
+ {id:"radio",type:"Optional Opportunity",title:"LOCAL RADIO INVITE",text:"A local sports show wants you on air after your recent run.",minFans:20,choices:[["Accept the interview",{fans:2,media:1}], ["Decline",{}]]},
+ {id:"autograph",type:"Optional Opportunity",title:"AUTOGRAPH APPEARANCE",text:"A local business wants you for a fan autograph session.",minFans:25,choices:[["Make the appearance",{fans:2,media:1}], ["Pass",{}]]},
+ {id:"charity",type:"Team Obligation",title:"TEAM COMMUNITY APPEARANCE",text:"The organization expects the team at a community event.",choices:[["Attend",{fans:2,coach:1,professional:1}], ["Skip it",{fans:-2,coach:-4,controversial:1}]]},
+ {id:"film",type:"Professional Opportunity",title:"OPTIONAL FILM SESSION",text:"Coach is holding extra film work. Attendance is optional.",choices:[["Attend",{coach:2,professional:1}], ["Skip",{}]]},
+ {id:"workout",type:"Professional Opportunity",title:"VETERAN WORKOUT INVITE",text:"A veteran offers to get extra work in with you.",choices:[["Accept",{coach:1,sp:125,professional:1}], ["Decline",{}]]},
+ {id:"night",type:"Risk / Reward",title:"NIGHT OUT WITH THE TEAM",text:"Teammates are going out. You have team work the next morning.",choices:[["Stay out late",{fans:5,coach:-6,media:1,controversial:1}], ["Make an appearance, then leave",{fans:2,media:1}], ["Head home",{coach:1,professional:1}]]},
+ {id:"coachquote",type:"Media / Risk",title:"REPORTER ASKS ABOUT COACH",text:"A reporter asks whether Coach should have given you this opportunity sooner.",choices:[["Coach had a plan. I stayed ready.",{fans:1,coach:2,professional:1}], ["I always believed I was ready.",{fans:3,media:1}], ["I should've been playing a long time ago.",{fans:8,coach:-8,media:1,controversial:2}]]}
+];
+function maybeGenerateOffCourtEvent(game){if(state.preNBA?.stage!=="nba"||state.offCourt.pending)return;const since=(state.player.gameNo||0)-(state.offCourt.lastEventGame||-99);if(since<3)return;let chance=.18;if(game.keyGame||game.rotationOpportunityResult)chance+=.12;const homeBoost=hometownLocalBoost();if(homeBoost)chance+=homeBoost*.025;if(Math.random()>chance)return;const fans=clamp(state.meters.fans);let pool=OFFCOURT_EVENTS.filter(e=>(e.minFans||0)<=fans);if(homeBoost){const local=HOMETOWN_LOCAL_EVENTS.filter(e=>(e.minFans||0)<=fans);for(let i=0;i<homeBoost;i++)pool=pool.concat(local);}const behavior=state.fanSystem.behavior||{};if((behavior.media||0)>3)pool=pool.concat(pool.filter(e=>/Media|Radio|AUTOGRAPH/i.test(e.type+e.title)));const ev=pool[Math.floor(Math.random()*pool.length)];if(!ev)return;state.offCourt.pending={...ev,createdGame:state.player.gameNo};state.offCourt.lastEventGame=state.player.gameNo;if(/^hometown_/i.test(ev.id||""))state.homecoming.localOpportunityCount=(state.homecoming.localOpportunityCount||0)+1;}
+function resolveOffCourtChoice(i){const ev=state.offCourt.pending;if(!ev)return;const ch=ev.choices[i];if(!ch)return;const fx=ch[1]||{},results=[];if(fx.fans){const d=addFans(Math.abs(fx.fans),ev.title,{major:Math.abs(fx.fans)>=6,negative:fx.fans<0});if(d)results.push(`Fans ${d>0?"+":""}${d}`);}if(fx.coach){const d=addCoachTrust(fx.coach,ev.title);if(d)results.push(`Coach Trust ${d>0?"+":""}${d}`);}if(fx.sp){state.sp+=fx.sp;results.push(`SP +${fx.sp}`);}for(const k of ["professional","media","controversial"])if(fx[k])state.fanSystem.behavior[k]=(state.fanSystem.behavior[k]||0)+fx[k];state.offCourt.history.unshift({title:ev.title,type:ev.type,choice:ch[0],results,season:state.player.season,gameNo:state.player.gameNo,date:state.careerDate?{...state.careerDate}:null});state.offCourt.history=state.offCourt.history.slice(0,40);if((fx.controversial||0)>0||Math.abs(fx.fans||0)>=5||Math.abs(fx.coach||0)>=5){state.insiderFeed.unshift({id:"offcourt_"+Date.now(),season:state.player.season,gameNo:state.player.gameNo,date:state.careerDate?{...state.careerDate}:null,category:"nba",stage:"NBA • Off-Court",headline:ev.title,deck:ch[0],body:`${state.player?.name||"Your player"} chose: ${ch[0]}. ${results.length?results.join(" • "):"The decision drew little immediate reaction."}`,read:false});state.insiderFeed=state.insiderFeed.slice(0,60);state.insiderUnread=(state.insiderUnread||0)+1;}state.offCourt.pending=null;updateFranchiseInfluence();checkRewardUnlocks();scheduleUnscheduledRewards();persist();renderAll();alert(results.length?results.join(" • "):"No meter change. You passed on the opportunity.");}
+function renderOffCourt(){const el=document.getElementById("offCourtPanel");if(!el)return;const ev=state.offCourt?.pending,h=(state.offCourt?.history||[]).slice(0,6);el.innerHTML=(ev?`<div class="note"><b>${escapeHtml(ev.type)} • ${escapeHtml(ev.title)}</b><br>${escapeHtml(ev.text)}</div><div class="row" style="margin-top:12px">${ev.choices.map((c,i)=>`<button class="${i===0?"primary":"secondary"}" onclick="resolveOffCourtChoice(${i})">${escapeHtml(c[0])}</button>`).join("")}</div>`:`<div class="note"><b>No active off-court event.</b><br><span class="small">Events are intentionally occasional and respond to your career context.</span></div>`)+(h.length?`<h3 style="margin-top:18px">Recent Off-Court History</h3>${h.map(x=>`<div class="obj"><div><b>${escapeHtml(x.title)}</b><div class="small">${escapeHtml(x.choice)}${x.results.length?" • "+escapeHtml(x.results.join(" • ")):" • no meter change"}</div></div></div>`).join("")}`:"");}
+function renderFanProfile(){const el=document.getElementById("fanProfilePanel");if(!el)return;const f=clamp(state.meters.fans),c=careerCredibility(),spot=teamSpotlightTier();const h=(state.fanSystem?.history||[]).slice(0,6),ht=state.player?.hometownTeam||"",home=isHometownTeam();el.innerHTML=`<div class="coachStatusStrip"><div><span>Fans</span><b>${f} • ${fanTier(f)}</b></div><div><span>Team Spotlight</span><b>${spot===3?"Global":spot===2?"High":"Standard"}</b></div><div><span>Basketball Credibility</span><b>${c.score}/100</b></div></div>${ht?`<div class="note" style="margin-top:12px"><b>Hometown: ${escapeHtml(state.player?.hometown||"Not entered")}</b><br>Hometown NBA Team: ${escapeHtml(ht)}${home?` • <b>Homecoming Arc Active</b> • ${escapeHtml(hometownStandingLabel())}`:""}</div>`:""}<p class="small">Credibility is calculated from games, performance, role and major honors. It is not another meter you manage. Hometown play increases local opportunity access only after you have built real NBA standing.</p>${h.length?`<h3>Recent Fan Movement</h3>${h.map(x=>`<div class="obj"><div><span class="pill">${x.delta>0?"+":""}${x.delta}</span></div><div><b>${escapeHtml(x.reason)}</b><div class="small">Season ${x.season} • Game ${x.gameNo}</div></div></div>`).join("")}`:""}`;}
+function franchiseInfluenceLevel(){const trust=clamp(state.meters.coach),seasons=Math.max(0,(state.player?.season||1)-1),c=careerCredibility();if(trust<50)return{level:"Player",text:"Keep earning organizational trust."};if(trust<70)return{level:"Trusted Voice",text:"Role and minutes conversations are available."};if(trust<85)return{level:"Role Influence",text:"You have meaningful input on your role."};if(trust<95)return{level:"Rotation Influence",text:"You may suggest reasonable rotation changes."};if(trust<100)return{level:"Personnel Input",text:"You may suggest roster needs and reasonable personnel ideas."};if(seasons<1)return{level:"Personnel Input",text:"Complete at least one NBA season before Franchise Control can unlock."};if(!state.rotationProgress?.establishedStarter&&c.honors<1&&c.ppg<16)return{level:"Personnel Input",text:"Your trust is elite, but your basketball stature must match it before full control."};return{level:"FRANCHISE CONTROL",text:"You may use your team's MyNBA front-office controls: trades, free agents, releases, waivers, rotation, draft and offseason roster moves."};}
+function updateFranchiseInfluence(){const x=franchiseInfluenceLevel();if(x.level==="FRANCHISE CONTROL"){state.franchiseInfluence.unlocked=true;state.franchiseInfluence.peakUnlocked=true;state.franchiseInfluence.suspended=false;}else if(state.franchiseInfluence.peakUnlocked){state.franchiseInfluence.suspended=clamp(state.meters.coach)<95;}}
+function renderFranchiseInfluenceCard(){updateFranchiseInfluence();const x=franchiseInfluenceLevel(),s=state.franchiseInfluence;if(s.peakUnlocked&&s.suspended)return `<div class="coachHeroGoal"><div class="eyebrow">ORGANIZATIONAL INFLUENCE</div><h3>FRANCHISE CONTROL SUSPENDED</h3><div class="objective">Restore Coach Trust to 95+ to regain personnel authority.</div></div>`;return `<div class="coachHeroGoal"><div class="eyebrow">ORGANIZATIONAL INFLUENCE</div><h3>${escapeHtml(x.level)}</h3><div class="objective">${escapeHtml(x.text)}</div><div class="coachMeta">Coach Trust ${clamp(state.meters.coach)} • ${Math.max(0,(state.player?.season||1)-1)} completed NBA season(s)</div></div>`;}
+
 function checkRewardUnlocks(){
   const fans=clamp(state.meters.fans);
   const base = state.careerDate && state.careerDate.day ? state.careerDate : null;
   REWARDS.filter(r=>!["shoe","customshoe","signature"].includes(r.type)).forEach(r=>{
-    if(fans>=r.fans && !state.unlockedRewards[r.id]){
+    if(endorsementEligible(r) && !state.unlockedRewards[r.id]){
       state.unlockedRewards[r.id]={unlocked:true,scheduled:false,completed:false};
       if(base){
         const date=addDaysToCareerDate(base,randomInt(r.minDays,r.maxDays));
@@ -4841,10 +5110,11 @@ function renderRewards(){
   const fans=clamp(state.meters.fans);
   rewardTrack.innerHTML=REWARDS.filter(r=>!["shoe","customshoe","signature"].includes(r.type)).map(r=>{
     const u=state.unlockedRewards[r.id]||{};
-    const status=u.completed?"Completed":(fans>=r.fans?"Unlocked":"Locked");
-    const cls=u.completed?"good":(fans>=r.fans?"accent":"");
+    const eligible=endorsementEligible(r);
+    const status=u.completed?"Completed":(eligible?"Unlocked":(fans>=r.fans?"Needs basketball credibility":"Locked"));
+    const cls=u.completed?"good":(eligible?"accent":"");
     const sponsorText=(r.type==="shoe" && state.shoeBrand)?` • Sponsor: ${state.shoeBrand}`:"";
-    return `<div class="obj"><div>${u.completed?"✓":(fans>=r.fans?"🔓":"🔒")}</div><div><b class="${cls}">${r.fans} Fans — ${r.name}</b><div class="small">+${r.sp.toLocaleString()} SP • ${status}${sponsorText}</div></div></div>`;
+    return `<div class="obj"><div>${u.completed?"✓":(eligible?"🔓":"🔒")}</div><div><b class="${cls}">${r.fans} Fans — ${r.name}</b><div class="small">+${r.sp.toLocaleString()} SP • ${status}${sponsorText}</div></div></div>`;
   }).join("");
   shoeBrand.value=state.shoeBrand||"";
   const current=state.careerDate && state.careerDate.day ? formatCareerDate(state.careerDate) : "Not set yet";
@@ -5020,7 +5290,10 @@ function claimManualAccomplishment(id,name,bonus){
       stage:`Season ${season} • Career Honor`,headline:name.toUpperCase(),deck:`${name} added to the career résumé.`,body:`${state.player?.name||"Your player"} earned ${name}${meta.frequency==="season"?` in Season ${season}`:""}.`,read:false};
     state.insiderFeed.unshift(entry);state.insiderFeed=state.insiderFeed.slice(0,60);state.insiderUnread=(state.insiderUnread||0)+1;
   }
-  persist();renderMilestones();renderHistory();
+  awardManualFans(id,name);
+  updateFranchiseInfluence();
+  checkRewardUnlocks(); scheduleUnscheduledRewards();
+  persist();renderMilestones();renderHistory();renderRewards();renderFanProfile();
 }
 function completeManual(id,name,bonus,el){
   // Backward-compatible wrapper for old saved/browser markup.
@@ -5141,7 +5414,9 @@ function bindSpecialEventButton(){
 function bindLiveCareerInputs(){
   const map=[
     ["pName",()=>state.player.name=pName.value],
-    ["pTeam",()=>state.player.team=pTeam.value],
+    ["pTeam",()=>{state.player.team=pTeam.value;checkHomecomingArrival();}],
+    ["pHometown",()=>state.player.hometown=(document.getElementById("pHometown")?.value||"").trim()],
+    ["pHometownTeam",()=>{state.player.hometownTeam=(document.getElementById("pHometownTeam")?.value||"").trim();checkHomecomingArrival();}],
     ["pPos",()=>{state.player.position=pPos.value;if(state.combine?.active){state.combine.objectives=combineObjectivesFor(state.player.position,state.combine.game||1);}}],
     ["pSeason",()=>state.player.season=Math.max(1,Number(pSeason.value)||1)],
     ["pGameNo",()=>state.player.gameNo=Math.max(0,Number(pGameNo.value)||0)]
@@ -5202,13 +5477,13 @@ function renderCombineEntryButton(){
 }
 function renderAll(){
   renderHeader();
-  pName.value=state.player.name||""; pTeam.value=state.player.team||""; pPos.value=state.player.position||"SF"; pSeason.value=state.player.season||1; pGameNo.value=state.player.gameNo||0;
+  pName.value=state.player.name||""; pTeam.value=state.player.team||""; if(document.getElementById("pHometown")) pHometown.value=state.player.hometown||""; if(document.getElementById("pHometownTeam")) pHometownTeam.value=state.player.hometownTeam||""; pPos.value=state.player.position||"SF"; pSeason.value=state.player.season||1; pGameNo.value=state.player.gameNo||0;
   normalizeCareerDate();
 
   if(document.getElementById("pedYears") && pedYears.value==="") pedYears.value=Math.max(0,(state.player.season||1)-1);
   if(document.getElementById("coachBaselinePreview")) previewCoachBaseline();
   gMonth.value=state.careerDate.month; gYear.value=state.careerDate.year; gDay.value="";
-  renderMeters(); renderPrivileges(); renderRatings(); renderSchedule(); renderCareerHubCoachAssignment(); renderCoachOffice(); renderSpecialEvents(); renderStats(); renderCurrentGame(); renderObjectives(); renderUpgrades(); renderMilestones(); renderHistory(); renderMedia(); renderInsider(); renderCombineEntryButton(); renderRewards(); renderShoeCareer(); renderContracts();
+  renderMeters(); renderPrivileges(); renderRatings(); renderSchedule(); renderCareerHubCoachAssignment(); renderCoachOffice(); renderSpecialEvents(); renderStats(); renderCurrentGame(); renderObjectives(); renderUpgrades(); renderMilestones(); renderHistory(); renderMedia(); renderInsider(); renderCombineEntryButton(); renderRewards(); renderShoeCareer(); renderOffCourt(); renderFanProfile(); renderContracts();
   bindLiveCareerInputs(); bindSpecialEventButton(); bindManualCareerEventButton();
   if(typeof renderK11PlayerPhoto==="function") renderK11PlayerPhoto();
   if(typeof updateK11Hub==="function") updateK11Hub();
@@ -5261,6 +5536,21 @@ load();
   const el=document.getElementById(id);
   if(el) el.addEventListener("input",previewPerformanceGrade);
   if(el) el.addEventListener("change",previewPerformanceGrade);
+});
+
+// V59 — fast mobile box-score entry. Once two digits are typed, advance to the
+// next stat field. Personal Fouls is the hard stop so focus never jumps into date fields.
+const postgameTwoDigitFlow=["gMin","gPts","gReb","gAst","gStl","gBlk","gTO","gFGM","gFGA","g3M","g3A","gFTM","gFTA","gPF"];
+postgameTwoDigitFlow.forEach((id,i)=>{
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener("input",()=>{
+    const digits=String(el.value??"").replace(/\D/g,"");
+    if(digits.length>=2 && i<postgameTwoDigitFlow.length-1){
+      const next=document.getElementById(postgameTwoDigitFlow[i+1]);
+      if(next){requestAnimationFrame(()=>{next.focus();try{next.select();}catch(err){}});}
+    }
+  });
 });
 
 previewPerformanceGrade();
@@ -5927,6 +6217,86 @@ function jumpCareerSection(id){
   document.addEventListener('DOMContentLoaded',install);
 })();
 
+</script>
+
+
+<script id="v62DesktopPresentationJS">
+(function(){
+  function q(id){return document.getElementById(id)}
+  function text(id,v){const e=q(id);if(e)e.textContent=(v??'')}
+  function clamp01(v){v=Number(v||0);return Math.max(0,Math.min(100,v))}
+  function safe(s){return String(s??'')}
+  function playerOvr(){
+    try{
+      const vals=Object.values((window.state&&state.ratings)||{}).map(Number).filter(Number.isFinite);
+      if(!vals.length)return '—';
+      return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+    }catch(e){return '—'}
+  }
+  function latestInsider(){
+    const pool=(window.state&&Array.isArray(state.insiderFeed))?state.insiderFeed:[];
+    const x=pool&&pool[0];
+    if(!x)return null;
+    return {title:x.headline||x.title||x.name||'LATEST CAREER UPDATE',deck:x.deck||x.body||x.summary||x.text||''};
+  }
+  function careerDateText(){
+    try{
+      const d=state.careerDate||{};
+      if(!d.month||!d.year)return `SEASON ${state.player?.season||1}`;
+      const names=['','JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+      return `${names[+d.month]||d.month} ${d.day?d.day+', ':''}${d.year}`;
+    }catch(e){return 'CAREER DATE'}
+  }
+  function renderDesktopCareer(){
+    if(!window.state)return;
+    const p=state.player||{}, meters=state.meters||{};
+    const name=(p.name||q('pName')?.value||'Antonio Taylor').toUpperCase();
+    const team=(p.team||q('pTeam')?.value||'Free Agent').toUpperCase();
+    const pos=p.position||q('pPos')?.value||'SF';
+    const season=Number(p.season||q('pSeason')?.value||1);
+    const stage=(typeof getCareerStage==='function'?getCareerStage():'nba');
+    const status=(typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT'));
+    text('deskName',name); text('deskPlayerMeta',`${pos} • ${team}`); text('deskRole',status);
+    text('deskCareerLine',`SEASON ${season} • ${stage==='nba'?'NBA':'ROAD TO THE NBA'}`); text('deskCareerDate',careerDateText());
+    const ovr=playerOvr(); text('deskOvr',ovr);
+    const trust=clamp01(meters.coach), fans=clamp01(meters.fans), sp=Number(state.sp||0);
+    text('deskTrust',Math.round(trust));text('deskFans',Math.round(fans));text('deskSP',sp.toLocaleString());
+    if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
+    const next=(typeof getNextKeyGame==='function'?getNextKeyGame():null);
+    text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');
+    text('deskGameMeta',next?`${next.date&&typeof formatCareerDate==='function'?formatCareerDate(next.date):'Upcoming'}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    let story='Keep building your career. The next major story will appear here.';
+    if(next){
+      const ht=safe(state.player?.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase();
+      const opp=safe(next.opponent).toLowerCase();
+      story=ht&&opp&&ht===opp?'Homecoming pressure: your hometown team is on the schedule. This one can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`);
+    }
+    text('deskStoryline',story);
+    const ins=latestInsider(); if(ins){text('deskInsiderHeadline',safe(ins.title).toUpperCase());text('deskInsiderDeck',safe(ins.deck).slice(0,190));}
+    const recent=q('deskRecentGames'); if(recent){
+      const gs=(state.games||[]).slice(0,3);
+      recent.innerHTML=gs.length?gs.map(g=>{const st=g.stats||{};const r=safe(st.result||'').toUpperCase();return `<div class="desktopRecentGame ${r==='W'?'win':r==='L'?'loss':''}"><small>${g.date&&typeof formatCareerDate==='function'?formatCareerDate(g.date):'GAME '+safe(g.gameNo||'')}</small><b>${r||'—'} ${safe(g.opponent||'Opponent')}</b><span>${Number(st.pts||0)} PTS • ${Number(st.reb||0)} REB • ${Number(st.ast||0)} AST</span></div>`}).join(''):'<div class="desktopEmpty">No NBA games logged yet.</div>';
+    }
+    try{
+      const goal=state.coachGoals&&state.coachGoals.active;
+      text('deskCoachGoal',goal?(goal.title||goal.name||goal.objective||'Active Coach Goal'):'No active Coach Goal');
+      const mins=state.rotationOpportunity?.active?state.rotationOpportunity.currentMinutes:state.rotationProgress?.minutes;
+      text('deskCoachMeta',goal?(goal.objective||goal.description||`${mins||0} MPG • ${Math.round(trust)} Coach Trust`):`${mins||0} MPG • ${Math.round(trust)} Coach Trust • Keep earning your role.`);
+    }catch(e){}
+    const src=q('k11PlayerPhoto')?.getAttribute('src');
+    document.body.classList.toggle('desktop-has-player-photo',!!src);
+  }
+  window.renderDesktopCareer=renderDesktopCareer;
+  document.addEventListener('DOMContentLoaded',()=>{renderDesktopCareer();setTimeout(renderDesktopCareer,350);setTimeout(renderDesktopCareer,1200)});
+  document.addEventListener('input',e=>{if(e.target&&['pName','pTeam','pHometown','pHometownTeam','pPos','pSeason','pGameNo'].includes(e.target.id))renderDesktopCareer()});
+  document.addEventListener('change',()=>setTimeout(renderDesktopCareer,0));
+  const obs=new MutationObserver(()=>renderDesktopCareer());
+  document.addEventListener('DOMContentLoaded',()=>{const sp=q('spHeader');if(sp)obs.observe(sp,{childList:true,subtree:true,characterData:true})});
+  const oldUpdate=window.updateK11Hub;
+  if(typeof oldUpdate==='function')window.updateK11Hub=function(){oldUpdate.apply(this,arguments);renderDesktopCareer()};
+  const oldOpen=window.openTab;
+  if(typeof oldOpen==='function')window.openTab=function(){const r=oldOpen.apply(this,arguments);setTimeout(renderDesktopCareer,0);return r};
+})();
 </script>
 
 </body>
