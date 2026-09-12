@@ -827,6 +827,104 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 @media (min-width:1350px){.deskHero{grid-template-columns:minmax(340px,.88fr) minmax(410px,1.02fr) minmax(440px,1.18fr)}.deskIdentityMeta h1{font-size:29px}}
 @media (min-width:980px) and (max-width:1180px){.deskHero{grid-template-columns:minmax(245px,.82fr) minmax(315px,1fr) minmax(330px,1.08fr)}.deskHeroMotto{left:13px;top:96px}.deskHeroMotto span{font-size:15px}.deskCoachSummary{grid-template-columns:158px 64px minmax(0,1fr);gap:8px}.deskCoachGraphic{width:140px;height:140px}.deskCoachNameplate{width:140px}.deskCoachNameplate b{font-size:11px}.deskCoachTeamBadge{width:60px;height:60px;margin-top:12px}.deskCoachTeamBadge img{width:49px;height:49px}.deskCoachObjective{margin-left:166px;margin-top:-54px}.deskCoachContext{margin-left:166px}.deskCoachCard .deskMiniButton{margin-left:166px;width:calc(100% - 166px)}.deskCoachAssignment{padding-top:12px}.deskCoachAssignment h3{font-size:21px}.deskCoachAssignment p{font-size:10px}}
 </style>
+
+<style id="v78LayoutPolish">
+@media (min-width:980px){
+  /* Coach office: larger coach identity, tighter right-side stack. */
+  .deskFeatureRow{grid-template-columns:minmax(0,1.48fr) minmax(300px,.82fr)}
+  .deskCoachCard .deskCardBody{padding:13px 14px 12px}
+  .deskCoachSummary{grid-template-columns:232px 88px minmax(0,1fr);gap:12px;align-items:start}
+  .deskCoachGraphic{width:202px;height:202px}
+  .deskCoachGraphic img{object-position:center 10%}
+  .deskCoachNameplate{width:202px;padding-top:8px}
+  .deskCoachNameplate b{font-size:14px}
+  .deskCoachNameplate span{font-size:7px;letter-spacing:1.4px}
+  .deskCoachTeamBadge{width:84px;height:84px;margin-top:13px}
+  .deskCoachTeamBadge img{width:68px;height:68px}
+  .deskCoachAssignment{padding-top:14px}
+  .deskCoachAssignment small{font-size:9px}
+  .deskCoachAssignment h3{font-size:30px;margin:6px 0 4px}
+  .deskCoachAssignment p{font-size:13px}
+  .deskCoachObjective{margin-left:244px;margin-top:-142px;padding:11px 12px 10px}
+  .deskCoachContext{margin-left:244px;margin-top:7px}
+  .deskCoachCard .deskMiniButton{margin-left:244px;width:calc(100% - 244px);margin-top:7px}
+
+  /* Lower dashboard: left column = averages/objectives, right = recent/Insider. */
+  .deskLower{grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);align-items:start}
+  .deskLower .deskInsiderCard{grid-column:auto}
+  .deskBottom{grid-template-columns:1fr}
+
+  /* Keep the legacy lockup visible instead of anchoring it to the very bottom of a tall flex panel. */
+  .deskCityLegacy{top:178px;bottom:auto;left:8px;right:8px;font-size:10px;font-weight:1000;letter-spacing:2px}
+  .deskCityTeamLogoWrap{top:128px;bottom:auto}
+}
+@media (min-width:980px) and (max-width:1180px){
+  .deskFeatureRow{grid-template-columns:minmax(0,1.4fr) minmax(285px,.8fr)}
+  .deskCoachSummary{grid-template-columns:184px 68px minmax(0,1fr);gap:9px}
+  .deskCoachGraphic{width:162px;height:162px}.deskCoachNameplate{width:162px}
+  .deskCoachTeamBadge{width:64px;height:64px;margin-top:11px}.deskCoachTeamBadge img{width:52px;height:52px}
+  .deskCoachAssignment{padding-top:11px}.deskCoachAssignment h3{font-size:23px}
+  .deskCoachObjective{margin-left:193px;margin-top:-110px}
+  .deskCoachContext{margin-left:193px}.deskCoachCard .deskMiniButton{margin-left:193px;width:calc(100% - 193px)}
+  .deskCityLegacy{top:160px;font-size:9px}.deskCityTeamLogoWrap{top:114px}
+}
+</style>
+
+<style id="v79DashboardPolish">
+@media (min-width:980px){
+  /* Coach Office: stable two-column composition. The coach owns the left column;
+     every interactive/assignment element shares one clean left edge on the right. */
+  .deskCoachCard .deskCardBody{padding:12px 14px 12px}
+  .deskCoachSummary{display:grid;grid-template-columns:228px minmax(0,1fr);gap:18px;align-items:start}
+  .deskCoachIdentity{display:flex;flex-direction:column;align-items:center;min-width:0}
+  .deskCoachGraphic{width:220px;height:220px}
+  .deskCoachGraphic img{object-position:center 10%}
+  .deskCoachNameplate{width:220px;padding-top:8px;text-align:center}
+  .deskCoachNameplate b{font-size:15px;line-height:1.02}
+  .deskCoachNameplate span{font-size:7px;letter-spacing:1.45px;margin-top:4px}
+  .deskCoachWork{min-width:0;padding-top:2px}
+  .deskCoachWorkTop{display:grid;grid-template-columns:88px minmax(0,1fr);gap:13px;align-items:start}
+  .deskCoachTeamBadge{width:88px;height:88px;margin:0;display:grid;place-items:center;border:1px solid #2e4b5a;background:#07141c;box-shadow:inset 0 0 22px rgba(255,255,255,.025)}
+  .deskCoachTeamBadge img{width:70px;height:70px;object-fit:contain;display:none}
+  .deskCoachAssignment{padding-top:8px}
+  .deskCoachAssignment small{font-size:9px;letter-spacing:1.3px}
+  .deskCoachAssignment h3{font-size:31px;line-height:1;margin:6px 0 4px}
+  .deskCoachAssignment p{font-size:13px;line-height:1.25}
+  .deskCoachObjective{margin:9px 0 0;padding:10px 11px 9px}
+  .deskCoachObjective .label{font-size:8px}.deskCoachObjective strong{font-size:12px;line-height:1.25}
+  .deskCoachProgressTrack{margin-top:7px}.deskCoachProgressMeta{font-size:8px;margin-top:4px}
+  .deskCoachContext{margin:7px 0 0}.deskCoachContext span{font-size:7px}.deskCoachContext b{font-size:9px}
+  .deskCoachCard .deskMiniButton{width:100%;margin:7px 0 0;padding:9px;font-size:10px}
+
+  /* Lower hub: left lane = season averages + objectives, right lane = recent games + Insider. */
+  .deskLower{grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);align-items:start}
+  .deskLower .deskInsiderCard{grid-column:auto}
+  .deskBottom{grid-template-columns:1fr}
+
+  /* City footer remains visible at every desktop height; no delayed "pop in" after scrolling. */
+  .deskCityPanel{min-height:190px}
+  .deskCityTeamLogoWrap{top:auto!important;bottom:48px!important}
+  .deskCityLegacy{top:auto!important;bottom:13px!important;left:8px;right:8px;font-size:10px;font-weight:1000;letter-spacing:2px;position:absolute!important}
+
+  /* Milestone icon treatment inspired by the dashboard reference. */
+  .deskMilestoneProgress{display:grid;grid-template-columns:38px minmax(0,1fr);column-gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #1e303b}
+  .deskMilestoneProgress:last-child{border-bottom:0}
+  .deskMilestoneIcon{grid-row:1/4;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#e5b92f;color:#071018;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28),0 3px 12px rgba(0,0,0,.2)}
+  .deskMilestoneIcon svg{width:21px;height:21px;display:block;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .deskMilestoneProgressTop,.deskMilestoneTrack,.deskMilestoneMeta{grid-column:2}
+  .deskMilestoneProgressTop b{font-size:11px}.deskMilestoneProgressTop span{font-size:9px}
+  .deskMilestoneTrack{height:9px;margin-top:6px}.deskMilestoneMeta{font-size:7px}
+}
+@media (min-width:980px) and (max-width:1180px){
+  .deskCoachSummary{grid-template-columns:182px minmax(0,1fr);gap:12px}
+  .deskCoachGraphic{width:174px;height:174px}.deskCoachNameplate{width:174px}.deskCoachNameplate b{font-size:12px}
+  .deskCoachWorkTop{grid-template-columns:66px minmax(0,1fr);gap:9px}.deskCoachTeamBadge{width:66px;height:66px}.deskCoachTeamBadge img{width:53px;height:53px}
+  .deskCoachAssignment{padding-top:5px}.deskCoachAssignment h3{font-size:23px}.deskCoachAssignment p{font-size:10px}
+  .deskCoachObjective{margin-top:7px}.deskCoachCard .deskMiniButton{margin-top:6px}
+  .deskCityTeamLogoWrap{bottom:45px!important}.deskCityLegacy{bottom:11px!important;font-size:9px}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -979,12 +1077,16 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
             </div>
             <div class="deskCoachNameplate"><b id="deskCoachName">HEAD COACH</b><span>HEAD COACH</span></div>
           </div>
-          <div class="deskCoachTeamBadge" aria-label="Current team"><img id="deskCoachTeamLogo" alt="Current team logo"><i id="deskCoachTeamLogoFallback">NBA</i></div>
-          <div class="deskCoachAssignment"><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div>
+          <div class="deskCoachWork">
+            <div class="deskCoachWorkTop">
+              <div class="deskCoachTeamBadge" aria-label="Current team"><img id="deskCoachTeamLogo" alt="Current team logo"><i id="deskCoachTeamLogoFallback">NBA</i></div>
+              <div class="deskCoachAssignment"><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div>
+            </div>
+            <div class="deskCoachObjective"><div class="label">COACH OBJECTIVE</div><strong id="deskCoachObjectiveText">No active objective.</strong><div class="deskCoachProgressTrack"><i id="deskCoachObjectiveBar"></i></div><div class="deskCoachProgressMeta"><span id="deskCoachProgressText">Waiting for next assignment</span><span id="deskCoachGamesLeft"></span></div></div>
+            <div class="deskCoachContext"><div><span>MINUTES</span><b id="deskCoachMinutes">0 MPG</b></div><div><span>TRUST</span><b id="deskCoachTrustMini">0</b></div><div><span>ROLE</span><b id="deskCoachRoleMini">PLAYER</b></div></div>
+            <button class="deskMiniButton" type="button" onclick="openCoachOffice()">MEET WITH COACH</button>
+          </div>
         </div>
-        <div class="deskCoachObjective"><div class="label">COACH OBJECTIVE</div><strong id="deskCoachObjectiveText">No active objective.</strong><div class="deskCoachProgressTrack"><i id="deskCoachObjectiveBar"></i></div><div class="deskCoachProgressMeta"><span id="deskCoachProgressText">Waiting for next assignment</span><span id="deskCoachGamesLeft"></span></div></div>
-        <div class="deskCoachContext"><div><span>MINUTES</span><b id="deskCoachMinutes">0 MPG</b></div><div><span>TRUST</span><b id="deskCoachTrustMini">0</b></div><div><span>ROLE</span><b id="deskCoachRoleMini">PLAYER</b></div></div>
-        <button class="deskMiniButton" type="button" onclick="openCoachOffice()">MEET WITH COACH</button>
       </div>
     </article>
     <article class="deskCard deskMilestonesCard">
@@ -1004,6 +1106,10 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
       <div class="deskPanelBar"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">GAME LOG</button></div>
       <div class="deskCardBody"><div id="deskRecentGames">No NBA games logged yet.</div></div>
     </article>
+    <article class="deskCard deskObjectivesCard">
+      <div class="deskPanelBar"><span>CURRENT OBJECTIVES</span><button type="button" onclick="openPregameObjectivesFromHub()">VIEW ALL</button></div>
+      <div class="deskCardBody" id="deskObjectives"></div>
+    </article>
     <article class="deskCard deskInsiderCard">
       <div class="deskPanelBar"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
       <div class="deskCardBody">
@@ -1014,10 +1120,6 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   </div>
 
   <div class="deskBottom">
-    <article class="deskCard">
-      <div class="deskPanelBar"><span>CURRENT OBJECTIVES</span><button type="button" onclick="openPregameObjectivesFromHub()">VIEW ALL</button></div>
-      <div class="deskCardBody" id="deskObjectives"></div>
-    </article>
     <article class="deskCard">
       <div class="deskPanelBar"><span>ENDORSEMENTS</span><button type="button" onclick="openTab('rewards')">VIEW ALL</button></div>
       <div class="deskCardBody" id="deskEndorsements"></div>
@@ -6464,6 +6566,7 @@ function jumpCareerSection(id){
   function renderObjectives(){const root=q('deskObjectives');if(!root)return;const objs=Array.isArray(state.objectives)?state.objectives:[];if(!objs.length){root.innerHTML='<div class="desktopEmpty">No active pre-game objectives. Open Objectives before your next game.</div>';return}root.innerHTML=objs.slice(0,4).map((o,i)=>`<div class="deskObjectiveRow"><div class="deskCheck">${o.completed?'✓':'□'}</div><div class="deskRowText"><b>${esc(o.text||o.name||('Objective '+(i+1)))}</b><span>${esc(o.theme||'Pregame target')}</span></div><div class="deskRowReward">+100 SP</div></div>`).join('')}
   function renderEndorsements(){const root=q('deskEndorsements');if(!root)return;const es=(state.endorsements||[]).filter(e=>e.status!=='Completed').slice(0,4);if(!es.length){root.innerHTML='<div class="desktopEmpty">No active endorsement events yet. Fans and basketball credibility unlock opportunities.</div>';return}root.innerHTML=es.map(e=>`<div class="deskEndorseRow"><div class="deskEndorseLogo">AD</div><div class="deskRowText"><b>${esc(e.name||'Endorsement')}</b><span>${esc(e.status||'Scheduled')}${e.date?' • '+esc(e.date):''}</span></div><div class="deskRowReward">${Number(e.sp||0)?'+'+Number(e.sp).toLocaleString()+' SP':'ACTIVE'}</div></div>`).join('')}
   function nextStep(total,step){const n=Math.max(0,Number(total||0));return (Math.floor(n/step)+1)*step}
+  function milestoneIcon(label){const k=safe(label).toLowerCase();if(k.includes('points'))return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4.8 8.2c3.8 1 6.5 3.7 7.4 7.7M19.2 8.2c-3.8 1-6.5 3.7-7.4 7.7M12 4v16"/></svg>';if(k.includes('rebound'))return '<svg viewBox="0 0 24 24"><path d="M5 4h14v6H5zM7 20c1-4 2.8-6 5-6s4 2 5 6"/><circle cx="12" cy="11" r="2.5"/></svg>';if(k.includes('assist'))return '<svg viewBox="0 0 24 24"><circle cx="7" cy="12" r="3"/><path d="M10 12h9m-3-3 3 3-3 3"/></svg>';if(k.includes('games'))return '<svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M8 3v4m8-4v4M8 11h3m2 0h3m-8 4h3m2 0h3"/></svg>';if(k.includes('3-pointer'))return '<svg viewBox="0 0 24 24"><path d="M5 19c0-7 3-12 8-14M16 5h3v3"/><circle cx="8" cy="16" r="2.5"/></svg>';if(k.includes('steal'))return '<svg viewBox="0 0 24 24"><path d="M4 14c4-4 7-4 10-1l2 2m-8 4 5-5m1-5 5-2-2 5"/></svg>';if(k.includes('block'))return '<svg viewBox="0 0 24 24"><path d="M6 20V9m4 11V5m4 15V7m4 13V10"/></svg>';return '<svg viewBox="0 0 24 24"><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg>'}
   function renderMilestones(){
     const root=q('deskMilestones');if(!root)return;
     const gs=state.games||[],t=totals(gs);
@@ -6486,7 +6589,7 @@ function jumpCareerSection(id){
     });
     candidates.sort((a,b)=>b.pct-a.pct||a.remaining-b.remaining||a.target-b.target);
     const picks=candidates.slice(0,4);
-    root.innerHTML=picks.map(m=>`<div class="deskMilestoneProgress"><div class="deskMilestoneProgressTop"><b>${esc(m.label)}</b><span>${Number(m.current).toLocaleString()} / ${Number(m.target).toLocaleString()}</span></div><div class="deskMilestoneTrack"><div class="deskMilestoneFill" style="width:${m.pct}%"></div></div><div class="deskMilestoneMeta"><span>${Number(m.remaining).toLocaleString()} away</span><span>Next: ${Number(m.target).toLocaleString()}</span></div></div>`).join('');
+    root.innerHTML=picks.map(m=>`<div class="deskMilestoneProgress"><div class="deskMilestoneIcon" aria-hidden="true">${milestoneIcon(m.label)}</div><div class="deskMilestoneProgressTop"><b>${esc(m.label)}</b><span>${Number(m.current).toLocaleString()} / ${Number(m.target).toLocaleString()}</span></div><div class="deskMilestoneTrack"><div class="deskMilestoneFill" style="width:${m.pct}%"></div></div><div class="deskMilestoneMeta"><span>${Number(m.remaining).toLocaleString()} away</span><span>Next: ${Number(m.target).toLocaleString()}</span></div></div>`).join('');
   }
   function renderHeadlines(){const root=q('deskHeadlineList');if(!root)return;const pool=(state.insiderFeed||[]).slice(1,5);root.innerHTML=pool.map(x=>`<div class="deskHeadlineRow"><span>${esc(x.headline||x.title||'Career update')}</span><span>${esc(x.stage||('S'+(x.season||state.player?.season||1)))}</span></div>`).join('')}
 
@@ -6538,7 +6641,7 @@ function jumpCareerSection(id){
   const v65ArenaThumbCache={};
   async function v65LoadArenaImage(info){const card=q('deskArenaCard'),img=q('deskArenaImage'),credit=q('deskArenaCredit');if(!card||!img)return;card.classList.add('noImage');img.removeAttribute('src');if(credit)credit.textContent='ERA VENUE';const curated=v66CommonsPhoto(info?.photo);const setImage=(src,label)=>{if(!src)return false;img.onload=()=>{card.classList.remove('noImage');if(credit)credit.textContent=label||'Historical arena photo • Wikimedia Commons'};img.onerror=()=>{card.classList.add('noImage')};img.src=src;return true};if(curated){setImage(curated,`PHOTO ${info.photoYear||''} • ${info.credit||'Wikimedia Commons'}`);return}if(!info?.page)return;const key=info.page;if(v65ArenaThumbCache[key]){setImage(v65ArenaThumbCache[key],'Wikimedia/Wikipedia arena image');return}try{const url='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(info.page);const r=await fetch(url,{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('arena image unavailable');const j=await r.json();const src=j.thumbnail?.source||j.originalimage?.source;if(!src)throw new Error('no arena image');v65ArenaThumbCache[key]=src;setImage(src,'Wikimedia/Wikipedia arena image')}catch(e){card.classList.add('noImage');img.removeAttribute('src');if(credit)credit.textContent='ERA VENUE • IMAGE UNAVAILABLE'}}
   const v69SkylineCache={};
-  async function v69LoadCitySkyline(info){const img=q('deskCityImage');if(!img||!info?.city)return;const city=safe(info.city).split(',')[0].trim();img.removeAttribute('src');const cached=v69SkylineCache[city]||localStorage.getItem('v69_skyline_'+city);if(cached){img.src=cached;return}try{const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(city+' skyline')+'&gsrnamespace=6&gsrlimit=6&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&origin=*';const r=await fetch(api);if(!r.ok)throw 0;const j=await r.json();const pages=Object.values(j.query?.pages||{});const hit=pages.find(x=>x.imageinfo?.[0]?.thumburl)||pages[0];const url=hit?.imageinfo?.[0]?.thumburl||hit?.imageinfo?.[0]?.url;if(url){v69SkylineCache[city]=url;try{localStorage.setItem('v69_skyline_'+city,url)}catch(e){}img.src=url}}catch(e){img.removeAttribute('src')}}
+  async function v69LoadCitySkyline(info){const img=q('deskCityImage');if(!img||!info?.city)return;const city=safe(info.city).split(',')[0].trim();img.removeAttribute('src');const cacheKey='v79_skyline_'+city;const curatedCityImages={'Los Angeles':'https://commons.wikimedia.org/wiki/Special:Redirect/file/Echo_park_lake_with_lotus_flowers_and_Los_Angeles_skyline_in_the_background.jpg?width=900'};const curated=curatedCityImages[city];if(curated){v69SkylineCache[cacheKey]=curated;try{localStorage.setItem(cacheKey,curated)}catch(e){}img.src=curated;return}const cached=v69SkylineCache[cacheKey]||localStorage.getItem(cacheKey);if(cached){img.src=cached;return}try{const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(city+' skyline')+'&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=900&format=json&origin=*';const r=await fetch(api);if(!r.ok)throw 0;const j=await r.json();const pages=Object.values(j.query?.pages||{});const hit=pages.find(x=>x.imageinfo?.[0]?.thumburl)||pages[0];const url=hit?.imageinfo?.[0]?.thumburl||hit?.imageinfo?.[0]?.url;if(url){v69SkylineCache[cacheKey]=url;try{localStorage.setItem(cacheKey,url)}catch(e){}img.src=url}}catch(e){img.removeAttribute('src')}}
   const V72_CITY_TAGLINES={
     "Atlanta":"Peach State Hoops","Boston":"Banner Town","Chicago":"Windy City Basketball","Cleveland":"The Land Loves Hoops","Dallas":"Big D Basketball","Denver":"Mile High Basketball","Auburn Hills":"Motor City Basketball","Detroit":"Motor City Basketball","Oakland":"Bay Area Basketball","San Francisco":"Bay Area Basketball","Houston":"Clutch City","Indianapolis":"Hoosier Basketball","Los Angeles":"Showtime Lives Here","Inglewood":"L.A. Basketball","Memphis":"Grind City Roots","Miami":"Heat Culture","Milwaukee":"Brew City Basketball","Minneapolis":"North Star Hoops","East Rutherford":"Jersey Basketball","Brooklyn":"Brooklyn Basketball","New Orleans":"Crescent City Hoops","New York":"Basketball Never Sleeps","Orlando":"Magic in the City","Philadelphia":"City of Brotherly Hoops","Phoenix":"Valley Basketball","Portland":"Rip City","Sacramento":"Capital City Kings","San Antonio":"Spurs Country","Seattle":"Sonics Territory","Toronto":"North Side Basketball","Salt Lake City":"Mountain West Hoops","Washington":"Capital Basketball","Charlotte":"Queen City Hoops","Oklahoma City":"Thunder Country"
   };
