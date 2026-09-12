@@ -6816,10 +6816,10 @@ function jumpCareerSection(id){
   };
   function teamLogoUrl(team){
     const key=v65TeamKey(team);
-    /* V97: retired/legacy teams need explicit era-logo sources because ESPN's current-team CDN has no NJ/SEA assets. */
+    /* V99: NJ/SEA use full, padded transparent logo assets from the approved mockup. */
     const legacy={
-      "new jersey nets":"https://www.kindpng.com/picc/m/206-2062437_new-jersey-nets-logo-png-transparent-brooklyn-nets.png",
-      "seattle supersonics":"https://p7.hiclipart.com/preview/979/193/110/5bbc0699801ed.jpg"
+      "new jersey nets":"team-logos/new-jersey-nets.png",
+      "seattle supersonics":"team-logos/seattle-supersonics.png"
     };
     if(legacy[key])return legacy[key];
     const ab=V68_TEAM_LOGOS[key];return ab?`https://a.espncdn.com/i/teamlogos/nba/500/${ab}.png`:''
@@ -6991,7 +6991,7 @@ function jumpCareerSection(id){
      No runtime search is allowed: it previously produced player/crowd images. */
   const V91_COACH_PHOTOS={
     "Bernie Bickerstaff":"coach-photos/bernie-bickerstaff.jpg","Bill Cartwright":"coach-photos/bill-cartwright.jpg",
-    "Byron Scott":"https://ca-times.brightspotcdn.com/dims4/default/04f8a57/2147483647/strip/true/crop/2000x1125%2B0%2B0/resize/1440x810%21/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fc3%2F7f%2F2961428f532cfd0b5427746bdb1a%2Flat-sp-scott-5-20140716","Chris Ford":"coach-photos/chris-ford.jpg","Doc Rivers":"coach-photos/doc-rivers.jpg",
+    "Byron Scott":"coach-photos/byron-scott.jpg","Chris Ford":"coach-photos/chris-ford.jpg","Doc Rivers":"coach-photos/doc-rivers.jpg",
     "Don Chaney":"coach-photos/don-chaney.jpg","Don Nelson":"coach-photos/don-nelson.jpg","Eddie Jordan":"https://upload.wikimedia.org/wikipedia/commons/2/24/Eddie_Jordan.jpg",
     "Eric Musselman":"coach-photos/eric-musselman.jpg","Flip Saunders":"coach-photos/flip-saunders.jpg","Frank Johnson":"coach-photos/frank-johnson.jpg",
     "Gregg Popovich":"coach-photos/gregg-popovich.jpg","Herb Williams":"coach-photos/herb-williams.jpg","Hubie Brown":"coach-photos/hubie-brown.jpg",
