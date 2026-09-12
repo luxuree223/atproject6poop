@@ -1,5 +1,5 @@
 /* 2K27 Old School Career V91 — presentation artwork + audited coach photos */
-const CACHE_NAME='2k27-oldschool-presentation-v91';
+const CACHE_NAME='2k27-oldschool-presentation-v95';
 const ARENA_IMAGES=[
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Philips_Arena_outside.jpg?width=960',
 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fleet_Center_from_old_Central_Artery.agr.jpg?width=960',
