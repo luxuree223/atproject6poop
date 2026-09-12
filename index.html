@@ -971,21 +971,51 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 </style>
 
 
-<style id="v83DynamicTeamColors">
-/* V83 — team-color skin only. No layout/structure changes from V82 Definitive Coach Version. */
+<style id="v84DynamicTeamColors">
+/* V84 — corrected team-color skin. V82 Definitive Coach Version geometry is untouched. */
 @media (min-width:980px){
-  body.teamColorTheme{--desk-gold:var(--team-primary,#e9bd42);--desk-gold2:var(--team-secondary,#ffd86e);--desk-blue:var(--team-secondary,#29b6f6);}
+  body.teamColorTheme{
+    --desk-gold:var(--team-secondary,#e9bd42);
+    --desk-gold2:var(--team-secondary,#ffd86e);
+    --team-panel-line:var(--team-border,rgba(233,189,66,.55));
+  }
+  /* Strong enough to read as the current team without changing any box geometry. */
+  body.teamColorTheme nav#nav{background:linear-gradient(180deg,var(--team-deep,#0b151d),#071018 58%,#071018)}
+  body.teamColorTheme nav#nav button{border-color:var(--team-border)}
   body.teamColorTheme nav#nav button.active{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary));color:var(--team-on-accent,#071018);box-shadow:inset 4px 0 0 rgba(255,255,255,.92),0 0 24px var(--team-glow)}
-  body.teamColorTheme .desktopBrand{background:radial-gradient(circle at 28% 8%,var(--team-wash),transparent 52%)}
-  body.teamColorTheme .deskOvrBox{border-color:var(--team-primary);box-shadow:inset 0 0 26px var(--team-wash)}
+  body.teamColorTheme .desktopBrand{background:radial-gradient(circle at 28% 8%,var(--team-wash),transparent 58%)}
+  body.teamColorTheme .desktopCareerGrid>*,
+  body.teamColorTheme .deskPanel,
+  body.teamColorTheme .deskCoachCard,
+  body.teamColorTheme .deskAverages,
+  body.teamColorTheme .deskObjectivesCard,
+  body.teamColorTheme .deskEndorsementsCard,
+  body.teamColorTheme .deskRecentCard,
+  body.teamColorTheme .deskInsiderCard{border-color:var(--team-panel-line)!important}
+  body.teamColorTheme .deskPanelBar,
+  body.teamColorTheme .deskCoachCard>.deskPanelBar{border-bottom-color:var(--team-panel-line)!important;background:linear-gradient(90deg,var(--team-surface),rgba(7,16,24,.72))}
+  body.teamColorTheme .deskOvrBox{border-color:var(--team-secondary);box-shadow:inset 0 0 26px var(--team-wash),0 0 10px var(--team-glow)}
   body.teamColorTheme .deskOvrBox input:focus{color:var(--team-secondary);text-shadow:0 0 14px var(--team-glow)}
-  body.teamColorTheme .deskRoleBadge{border-left-color:var(--team-primary)}
+  body.teamColorTheme .deskRoleBadge{border-left-color:var(--team-secondary)}
   body.teamColorTheme .deskPrimaryAction{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary));color:var(--team-on-accent,#071018)}
   body.teamColorTheme .deskPanelBar button{color:var(--team-secondary)}
-  body.teamColorTheme .deskCoachObjective .label,.teamColorTheme .deskStoryList .label,.teamColorTheme .deskNextLabel,.teamColorTheme .deskHeroIdentity .eyebrow,.teamColorTheme .deskIdentityMeta .deskTeam,.teamColorTheme .deskCityCopy small{color:var(--team-secondary)}
-  body.teamColorTheme .deskCoachProgressTrack i,.teamColorTheme .deskMilestoneFill{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary))}
-  body.teamColorTheme .deskMilestoneProgressTop span{color:var(--team-secondary)}
-  body.teamColorTheme .deskArenaLogoWrap,.teamColorTheme .arenaRefLogoWrap{border-color:var(--team-border)}
+  body.teamColorTheme .deskCoachObjective .label,
+  body.teamColorTheme .deskStoryList .label,
+  body.teamColorTheme .deskNextLabel,
+  body.teamColorTheme .deskHeroIdentity .eyebrow,
+  body.teamColorTheme .deskIdentityMeta .deskTeam,
+  body.teamColorTheme .deskCityCopy small,
+  body.teamColorTheme .deskCoachAssignment small{color:var(--team-secondary)!important}
+  body.teamColorTheme .deskCoachProgressTrack i,
+  body.teamColorTheme .deskMilestoneFill{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary))!important}
+  body.teamColorTheme .deskMilestoneIcon{background:var(--team-secondary)!important;color:var(--team-on-secondary,#071018)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),0 3px 12px var(--team-glow)}
+  body.teamColorTheme .deskMilestoneProgressTop span{color:var(--team-secondary)!important}
+  body.teamColorTheme .deskArenaLogoWrap,body.teamColorTheme .arenaRefLogoWrap,body.teamColorTheme .deskCoachTeamBadge{border-color:var(--team-border)!important}
+  body.teamColorTheme .deskCityPanel{box-shadow:inset 0 0 0 1px var(--team-border),inset 0 32px 60px var(--team-wash)}
+
+  /* Fans has always been blue. Team theming must never recolor it. */
+  body.teamColorTheme .deskMeter.blue i,
+  body.teamColorTheme #deskFansBar{background:#22b9ed!important;box-shadow:none!important}
 }
 </style>
 </head>
@@ -6855,6 +6885,10 @@ function jumpCareerSection(id){
   function renderDesktopCareer(){
     if(typeof state==='undefined')return;
     const p=state.player||{},m=state.meters||{},stage=getStage();
+    /* V85: apply the visual skin from the live career state on every hub render.
+       Imports and slot switches call this local renderer directly, so relying only
+       on the window wrapper could leave the previous/default colors on screen. */
+    try{v84ApplyTeamTheme(p.team||q('pTeam')?.value||'')}catch(e){}
     const name=(p.name||q('pName')?.value||'Antonio Taylor').toUpperCase(),team=(p.team||q('pTeam')?.value||'Free Agent').toUpperCase(),pos=p.position||q('pPos')?.value||'SF',season=Number(p.season||q('pSeason')?.value||1);
     let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
     text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • YEAR ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);const dateLabel=careerDateText();text('deskCareerDate',dateLabel);text('deskTopYear',`YEAR ${season}`);text('deskTopVC',Number(state.sp||0).toLocaleString()+' VC');text('deskHeaderYear',`YEAR ${season}`);text('deskHeaderDate',dateLabel);text('deskHeaderVC',Number(state.sp||0).toLocaleString()+' VC');setTeamLogo('deskTeamLogo','deskTeamLogoFallback',p.team||q('pTeam')?.value||'');const oi=q('deskOvrInput');if(oi&&document.activeElement!==oi)oi.value=playerOvr()==='—'?'':playerOvr();
@@ -6885,31 +6919,66 @@ if('serviceWorker' in navigator && location.protocol !== 'file:'){
 }
 </script>
 
-<script id="v83DynamicTeamColorsJS">
-// V83 team palettes: visual theme only; career state/schema remain untouched.
-const V83_TEAM_THEMES={
-  "atlanta hawks":["#E03A3E","#C1D32F"],"boston celtics":["#007A33","#BA9653"],"brooklyn nets":["#FFFFFF","#A7A9AC"],
-  "charlotte hornets":["#1D1160","#00788C"],"chicago bulls":["#CE1141","#000000"],"cleveland cavaliers":["#860038","#FDBB30"],
+<script id="v84DynamicTeamColorsJS">
+// V84: robust team resolver + visual theme only; career state/schema remain untouched.
+const V84_TEAM_THEMES={
+  "atlanta hawks":["#E03A3E","#FDB927"],"boston celtics":["#007A33","#BA9653"],"brooklyn nets":["#FFFFFF","#A7A9AC"],
+  "charlotte hornets":["#1D1160","#00A7B5"],"chicago bulls":["#CE1141","#FFFFFF"],"cleveland cavaliers":["#860038","#FDBB30"],
   "dallas mavericks":["#00538C","#B8C4CA"],"denver nuggets":["#0E2240","#FEC524"],"detroit pistons":["#C8102E","#1D42BA"],
   "golden state warriors":["#1D428A","#FFC72C"],"houston rockets":["#CE1141","#C4CED4"],"indiana pacers":["#002D62","#FDBB30"],
   "los angeles clippers":["#C8102E","#1D428A"],"los angeles lakers":["#552583","#FDB927"],"memphis grizzlies":["#12173F","#5D76A9"],
   "miami heat":["#98002E","#F9A01B"],"milwaukee bucks":["#00471B","#EEE1C6"],"minnesota timberwolves":["#0C2340","#78BE20"],
   "new jersey nets":["#002A60","#CD1041"],"new orleans hornets":["#00778B","#E8A934"],"new york knicks":["#006BB6","#F58426"],
   "orlando magic":["#0077C0","#C4CED4"],"philadelphia 76ers":["#006BB6","#ED174C"],"phoenix suns":["#1D1160","#E56020"],
-  "portland trail blazers":["#E03A3E","#000000"],"sacramento kings":["#5A2D81","#63727A"],"san antonio spurs":["#C4CED4","#000000"],
+  "portland trail blazers":["#E03A3E","#FFFFFF"],"sacramento kings":["#5A2D81","#A7A9AC"],"san antonio spurs":["#C4CED4","#FFFFFF"],
   "seattle supersonics":["#00653A","#FFC200"],"toronto raptors":["#CE1141","#A1A1A4"],"utah jazz":["#002B5C","#F9A01B"],
   "washington wizards":["#002B5C","#E31837"],"new orleans pelicans":["#0C2340","#C8102E"],"oklahoma city thunder":["#007AC1","#EF3B24"]
 };
-function v83HexRgb(hex){hex=String(hex||'').replace('#','');if(hex.length===3)hex=[...hex].map(x=>x+x).join('');const n=parseInt(hex,16);return [(n>>16)&255,(n>>8)&255,n&255]}
-function v83Contrast(hex){const [r,g,b]=v83HexRgb(hex);return ((r*299+g*587+b*114)/1000)>155?'#071018':'#ffffff'}
-function v83ApplyTeamTheme(team){
-  const body=document.body;if(!body)return;let key='';try{key=v65TeamKey(team)}catch(e){key=String(team||'').toLowerCase()}
-  const pal=V83_TEAM_THEMES[key]||["#e9bd42","#ffd86e"];const [p,s]=pal,[r,g,b]=v83HexRgb(p);
-  body.classList.add('teamColorTheme');body.style.setProperty('--team-primary',p);body.style.setProperty('--team-secondary',s);body.style.setProperty('--team-on-accent',v83Contrast(p));body.style.setProperty('--team-glow',`rgba(${r},${g},${b},.24)`);body.style.setProperty('--team-wash',`rgba(${r},${g},${b},.14)`);body.style.setProperty('--team-border',`rgba(${r},${g},${b},.58)`);
+const V84_TEAM_TOKEN_MAP={
+  atl:"atlanta hawks",hawks:"atlanta hawks",bos:"boston celtics",celtics:"boston celtics",bkn:"brooklyn nets",brooklyn:"brooklyn nets",
+  cha:"charlotte hornets",hornets:"charlotte hornets",chi:"chicago bulls",bulls:"chicago bulls",cle:"cleveland cavaliers",cavs:"cleveland cavaliers",
+  dal:"dallas mavericks",mavs:"dallas mavericks",den:"denver nuggets",nuggets:"denver nuggets",det:"detroit pistons",pistons:"detroit pistons",
+  gs:"golden state warriors",gsw:"golden state warriors",warriors:"golden state warriors",hou:"houston rockets",rockets:"houston rockets",ind:"indiana pacers",pacers:"indiana pacers",
+  lac:"los angeles clippers",clippers:"los angeles clippers",lal:"los angeles lakers",lakers:"los angeles lakers",mem:"memphis grizzlies",grizzlies:"memphis grizzlies",
+  mia:"miami heat",heat:"miami heat",mil:"milwaukee bucks",bucks:"milwaukee bucks",min:"minnesota timberwolves",wolves:"minnesota timberwolves",timberwolves:"minnesota timberwolves",
+  nj:"new jersey nets",njn:"new jersey nets",nets:"new jersey nets",no:"new orleans hornets",noh:"new orleans hornets",ny:"new york knicks",nyk:"new york knicks",knicks:"new york knicks",
+  orl:"orlando magic",magic:"orlando magic",phi:"philadelphia 76ers",sixers:"philadelphia 76ers",phx:"phoenix suns",suns:"phoenix suns",
+  por:"portland trail blazers",blazers:"portland trail blazers",sac:"sacramento kings",kings:"sacramento kings",sa:"san antonio spurs",sas:"san antonio spurs",spurs:"san antonio spurs",
+  sea:"seattle supersonics",sonics:"seattle supersonics",tor:"toronto raptors",raptors:"toronto raptors",utah:"utah jazz",uta:"utah jazz",jazz:"utah jazz",
+  wsh:"washington wizards",was:"washington wizards",wizards:"washington wizards",nop:"new orleans pelicans",pelicans:"new orleans pelicans",okc:"oklahoma city thunder",thunder:"oklahoma city thunder"
+};
+function v84HexRgb(hex){hex=String(hex||'').replace('#','');if(hex.length===3)hex=[...hex].map(x=>x+x).join('');const n=parseInt(hex,16);return [(n>>16)&255,(n>>8)&255,n&255]}
+function v84Contrast(hex){const [r,g,b]=v84HexRgb(hex);return ((r*299+g*587+b*114)/1000)>155?'#071018':'#ffffff'}
+function v84ResolveTeamKey(team){
+  let raw=String(team||'').toLowerCase().trim();
+  let clean=raw.replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  if(V84_TEAM_THEMES[clean])return clean;
+  if(V84_TEAM_TOKEN_MAP[clean])return V84_TEAM_TOKEN_MAP[clean];
+  try{const k=v65TeamKey(clean);if(V84_TEAM_THEMES[k])return k;if(V84_TEAM_TOKEN_MAP[k])return V84_TEAM_TOKEN_MAP[k]}catch(e){}
+  for(const [k,v] of Object.entries(V84_TEAM_TOKEN_MAP)){if(clean===k||clean.includes(' '+k+' ')||clean.endsWith(' '+k)||clean.startsWith(k+' '))return v}
+  const hit=Object.keys(V84_TEAM_THEMES).find(k=>k.includes(clean)||clean.includes(k));
+  return hit||clean;
 }
-const v83OldRenderDesktopCareer=window.renderDesktopCareer;
-if(typeof v83OldRenderDesktopCareer==='function')window.renderDesktopCareer=function(){const out=v83OldRenderDesktopCareer.apply(this,arguments);try{v83ApplyTeamTheme(state?.player?.team||q('pTeam')?.value||'')}catch(e){}return out};
-document.addEventListener('DOMContentLoaded',()=>{try{v83ApplyTeamTheme(state?.player?.team||q('pTeam')?.value||'')}catch(e){}});
+function v84ApplyTeamTheme(team){
+  const body=document.body;if(!body)return;const key=v84ResolveTeamKey(team);
+  const pal=V84_TEAM_THEMES[key]||["#e9bd42","#ffd86e"];const [p,s]=pal,[r,g,b]=v84HexRgb(p),[sr,sg,sb]=v84HexRgb(s);
+  body.dataset.teamTheme=key||'default';body.classList.add('teamColorTheme');
+  body.style.setProperty('--team-primary',p);body.style.setProperty('--team-secondary',s);
+  /* Set the legacy desktop accent tokens inline as well. This guarantees the
+     definitive V82 layout's existing gold accents actually inherit team colors. */
+  body.style.setProperty('--desk-gold',s);body.style.setProperty('--desk-gold2',s);body.style.setProperty('--desk-blue','#22b9ed');
+  body.style.setProperty('--team-on-accent',v84Contrast(p));body.style.setProperty('--team-on-secondary',v84Contrast(s));
+  body.style.setProperty('--team-glow',`rgba(${r},${g},${b},.30)`);body.style.setProperty('--team-wash',`rgba(${r},${g},${b},.18)`);
+  body.style.setProperty('--team-border',`rgba(${sr},${sg},${sb},.66)`);body.style.setProperty('--team-surface',`rgba(${r},${g},${b},.16)`);
+  body.style.setProperty('--team-deep',`rgb(${Math.round(r*.25)},${Math.round(g*.25)},${Math.round(b*.25)})`);
+}
+function v84CurrentTeam(){return state?.player?.team||document.getElementById('pTeam')?.value||''}
+const v84OldRenderDesktopCareer=window.renderDesktopCareer;
+if(typeof v84OldRenderDesktopCareer==='function')window.renderDesktopCareer=function(){const out=v84OldRenderDesktopCareer.apply(this,arguments);try{v84ApplyTeamTheme(v84CurrentTeam())}catch(e){}return out};
+document.addEventListener('DOMContentLoaded',()=>{try{v84ApplyTeamTheme(v84CurrentTeam())}catch(e){}});
+window.addEventListener('load',()=>{try{v84ApplyTeamTheme(v84CurrentTeam())}catch(e){}});
+document.addEventListener('input',e=>{if(e.target?.id==='pTeam')try{v84ApplyTeamTheme(e.target.value)}catch(err){}});
+document.addEventListener('change',e=>{if(e.target?.id==='pTeam')try{v84ApplyTeamTheme(e.target.value)}catch(err){}});
 </script>
 </body>
 </html>
