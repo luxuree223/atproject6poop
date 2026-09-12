@@ -970,6 +970,24 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 }
 </style>
 
+
+<style id="v83DynamicTeamColors">
+/* V83 — team-color skin only. No layout/structure changes from V82 Definitive Coach Version. */
+@media (min-width:980px){
+  body.teamColorTheme{--desk-gold:var(--team-primary,#e9bd42);--desk-gold2:var(--team-secondary,#ffd86e);--desk-blue:var(--team-secondary,#29b6f6);}
+  body.teamColorTheme nav#nav button.active{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary));color:var(--team-on-accent,#071018);box-shadow:inset 4px 0 0 rgba(255,255,255,.92),0 0 24px var(--team-glow)}
+  body.teamColorTheme .desktopBrand{background:radial-gradient(circle at 28% 8%,var(--team-wash),transparent 52%)}
+  body.teamColorTheme .deskOvrBox{border-color:var(--team-primary);box-shadow:inset 0 0 26px var(--team-wash)}
+  body.teamColorTheme .deskOvrBox input:focus{color:var(--team-secondary);text-shadow:0 0 14px var(--team-glow)}
+  body.teamColorTheme .deskRoleBadge{border-left-color:var(--team-primary)}
+  body.teamColorTheme .deskPrimaryAction{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary));color:var(--team-on-accent,#071018)}
+  body.teamColorTheme .deskPanelBar button{color:var(--team-secondary)}
+  body.teamColorTheme .deskCoachObjective .label,.teamColorTheme .deskStoryList .label,.teamColorTheme .deskNextLabel,.teamColorTheme .deskHeroIdentity .eyebrow,.teamColorTheme .deskIdentityMeta .deskTeam,.teamColorTheme .deskCityCopy small{color:var(--team-secondary)}
+  body.teamColorTheme .deskCoachProgressTrack i,.teamColorTheme .deskMilestoneFill{background:linear-gradient(90deg,var(--team-primary),var(--team-secondary))}
+  body.teamColorTheme .deskMilestoneProgressTop span{color:var(--team-secondary)}
+  body.teamColorTheme .deskArenaLogoWrap,.teamColorTheme .arenaRefLogoWrap{border-color:var(--team-border)}
+}
+</style>
 </head>
 <body>
 <header>
@@ -6865,6 +6883,33 @@ function jumpCareerSection(id){
 if('serviceWorker' in navigator && location.protocol !== 'file:'){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
+</script>
+
+<script id="v83DynamicTeamColorsJS">
+// V83 team palettes: visual theme only; career state/schema remain untouched.
+const V83_TEAM_THEMES={
+  "atlanta hawks":["#E03A3E","#C1D32F"],"boston celtics":["#007A33","#BA9653"],"brooklyn nets":["#FFFFFF","#A7A9AC"],
+  "charlotte hornets":["#1D1160","#00788C"],"chicago bulls":["#CE1141","#000000"],"cleveland cavaliers":["#860038","#FDBB30"],
+  "dallas mavericks":["#00538C","#B8C4CA"],"denver nuggets":["#0E2240","#FEC524"],"detroit pistons":["#C8102E","#1D42BA"],
+  "golden state warriors":["#1D428A","#FFC72C"],"houston rockets":["#CE1141","#C4CED4"],"indiana pacers":["#002D62","#FDBB30"],
+  "los angeles clippers":["#C8102E","#1D428A"],"los angeles lakers":["#552583","#FDB927"],"memphis grizzlies":["#12173F","#5D76A9"],
+  "miami heat":["#98002E","#F9A01B"],"milwaukee bucks":["#00471B","#EEE1C6"],"minnesota timberwolves":["#0C2340","#78BE20"],
+  "new jersey nets":["#002A60","#CD1041"],"new orleans hornets":["#00778B","#E8A934"],"new york knicks":["#006BB6","#F58426"],
+  "orlando magic":["#0077C0","#C4CED4"],"philadelphia 76ers":["#006BB6","#ED174C"],"phoenix suns":["#1D1160","#E56020"],
+  "portland trail blazers":["#E03A3E","#000000"],"sacramento kings":["#5A2D81","#63727A"],"san antonio spurs":["#C4CED4","#000000"],
+  "seattle supersonics":["#00653A","#FFC200"],"toronto raptors":["#CE1141","#A1A1A4"],"utah jazz":["#002B5C","#F9A01B"],
+  "washington wizards":["#002B5C","#E31837"],"new orleans pelicans":["#0C2340","#C8102E"],"oklahoma city thunder":["#007AC1","#EF3B24"]
+};
+function v83HexRgb(hex){hex=String(hex||'').replace('#','');if(hex.length===3)hex=[...hex].map(x=>x+x).join('');const n=parseInt(hex,16);return [(n>>16)&255,(n>>8)&255,n&255]}
+function v83Contrast(hex){const [r,g,b]=v83HexRgb(hex);return ((r*299+g*587+b*114)/1000)>155?'#071018':'#ffffff'}
+function v83ApplyTeamTheme(team){
+  const body=document.body;if(!body)return;let key='';try{key=v65TeamKey(team)}catch(e){key=String(team||'').toLowerCase()}
+  const pal=V83_TEAM_THEMES[key]||["#e9bd42","#ffd86e"];const [p,s]=pal,[r,g,b]=v83HexRgb(p);
+  body.classList.add('teamColorTheme');body.style.setProperty('--team-primary',p);body.style.setProperty('--team-secondary',s);body.style.setProperty('--team-on-accent',v83Contrast(p));body.style.setProperty('--team-glow',`rgba(${r},${g},${b},.24)`);body.style.setProperty('--team-wash',`rgba(${r},${g},${b},.14)`);body.style.setProperty('--team-border',`rgba(${r},${g},${b},.58)`);
+}
+const v83OldRenderDesktopCareer=window.renderDesktopCareer;
+if(typeof v83OldRenderDesktopCareer==='function')window.renderDesktopCareer=function(){const out=v83OldRenderDesktopCareer.apply(this,arguments);try{v83ApplyTeamTheme(state?.player?.team||q('pTeam')?.value||'')}catch(e){}return out};
+document.addEventListener('DOMContentLoaded',()=>{try{v83ApplyTeamTheme(state?.player?.team||q('pTeam')?.value||'')}catch(e){}});
 </script>
 </body>
 </html>
