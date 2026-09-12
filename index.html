@@ -758,15 +758,15 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   .deskCityPanel:after{content:"";position:absolute;left:0;right:0;top:0;height:44px;z-index:2;pointer-events:none;background:linear-gradient(180deg,#0d2332 0%,rgba(13,35,50,.92) 28%,rgba(13,35,50,.38) 68%,transparent 100%);}
   .deskCityPanel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 48%;opacity:.9;filter:saturate(.78) brightness(.8) contrast(1.08)}
   .deskCityShade{position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 50% 54%,rgba(20,58,80,.08),rgba(2,8,12,.36) 72%)}
-  .deskCityCopy{position:absolute;left:14px;right:12px;bottom:34px;z-index:3;text-shadow:0 2px 10px #000,0 0 18px rgba(2,7,12,.72)}
+  .deskCityCopy{position:absolute;left:14px;right:12px;top:62px;bottom:auto;z-index:3;text-shadow:0 2px 10px #000,0 0 18px rgba(2,7,12,.72)}
   .deskCityCopy small{display:block;font-size:6px;color:#f0c653;letter-spacing:1.8px;font-weight:1000;text-transform:uppercase}
   .deskCityCopy b{display:block;margin-top:4px;font-size:15px;line-height:1;letter-spacing:1px;color:#fff;text-transform:uppercase}
   .deskCityCopy .deskCityVenue{display:block;margin-top:4px;font-size:6px;color:#b7c8d2;letter-spacing:.75px;text-transform:uppercase}
-  .deskCityCopy .deskCityTagline{display:block;margin-top:8px;font-family:"Brush Script MT","Segoe Script","Lucida Handwriting",cursive;font-size:14px;line-height:1;color:#f3f5f5;font-weight:400;letter-spacing:.1px;transform:rotate(-2deg);transform-origin:left center;text-shadow:0 2px 7px #000}
+  .deskCityCopy .deskCityTagline{display:block;margin-top:9px;font-family:"Brush Script MT","Segoe Script","Lucida Handwriting",cursive;font-size:20px;line-height:1.04;color:#fff;font-weight:500;letter-spacing:.15px;transform:rotate(-2deg);transform-origin:left center;text-shadow:0 3px 10px #000,0 0 16px rgba(255,255,255,.10)}
   .deskCityLegacy{position:absolute;left:14px;bottom:10px;z-index:3;color:#91a2ab;font-size:6px;font-weight:900;letter-spacing:2px;text-shadow:0 1px 5px #000}
   .arenaRefLogoWrap{position:absolute;left:7px;top:7px;z-index:3;width:34px;height:34px;display:grid;place-items:center;background:rgba(3,9,13,.82);border:1px solid rgba(233,189,66,.4)}.arenaRefLogoWrap img{position:relative;width:100%;height:100%;object-fit:contain;opacity:1;filter:none;padding:3px}.arenaRefLogoWrap i{position:absolute;color:#fff;font-size:8px;font-style:normal;font-weight:1000}
 }
-@media (min-width:980px) and (max-height:780px){nav#nav button{height:36px}.desktopBrand{min-height:80px}.deskCityPanel{height:auto;min-height:145px;flex:1 1 145px;margin-top:0}.deskCityCopy{bottom:24px}}
+@media (min-width:980px) and (max-height:780px){nav#nav button{height:36px}.desktopBrand{min-height:80px}.deskCityPanel{height:auto;min-height:145px;flex:1 1 145px;margin-top:0}.deskCityCopy{top:44px;bottom:auto}.deskCityCopy .deskCityTagline{font-size:17px}}
 
 </style>
 
@@ -797,10 +797,10 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
   <button data-tab="contracts">Contracts</button>
   <button data-tab="history">History</button>
   <button data-tab="cloud">Cloud Sync</button>
-  <div id="deskCityPanel" class="deskCityPanel" aria-label="Current game city">
+  <div id="deskCityPanel" class="deskCityPanel" aria-label="Current team home city">
     <img id="deskCityImage" alt="Current game city presentation">
     <div class="deskCityShade"></div>
-    <div class="deskCityCopy"><small>CURRENT GAME CITY</small><b id="deskCityName">CAREER CITY</b><span id="deskCityVenue" class="deskCityVenue">NEXT VENUE</span><span id="deskCityTagline" class="deskCityTagline">Basketball lives here</span></div>
+    <div class="deskCityCopy"><small>CURRENT TEAM CITY</small><b id="deskCityName">CAREER CITY</b><span id="deskCityVenue" class="deskCityVenue">HOME COURT</span><span id="deskCityTagline" class="deskCityTagline">Basketball lives here</span></div>
     <div class="deskCityLegacy">LEGACY NEVER FADES</div>
   </div>
 </nav>
@@ -6385,14 +6385,37 @@ function jumpCareerSection(id){
   function getStage(){try{return typeof getCareerStage==='function'?getCareerStage():'nba'}catch(e){return 'nba'}}
   function latestInsider(){const pool=(typeof state!=='undefined'&&Array.isArray(state.insiderFeed))?state.insiderFeed:[];return pool[0]||null}
   function seasonGames(){const s=Number(state.player?.season||1);return (state.games||[]).filter(g=>!g.season||Number(g.season)===s)}
-  function totals(gs){const out={pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0};gs.forEach(g=>{const x=g.stats||{};for(const k in out)out[k]+=Number(x[k]||0)});return out}
+  function totals(gs){const out={pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,t3m:0,t3a:0,ftm:0,fta:0};gs.forEach(g=>{const x=g.stats||{};for(const k in out)out[k]+=Number(x[k]||0)});return out}
   function fmt1(v){return Number(v||0).toFixed(1)}
   function renderRecent(){const root=q('deskRecentGames');if(!root)return;const gs=(state.games||[]).slice(0,5);if(!gs.length){root.innerHTML='<div class="desktopEmpty">No NBA games logged yet.</div>';return}root.innerHTML=`<table class="deskRecentTable"><thead><tr><th>GAME</th><th>OPP</th><th>PTS</th><th>REB</th><th>AST</th><th>FG%</th></tr></thead><tbody>${gs.map(g=>{const x=g.stats||{},r=safe(x.result||'').toUpperCase();const fg=Number(x.fga)>0?Math.round(Number(x.fgm||0)/Number(x.fga)*100)+'%':'—';return `<tr><td class="${r==='W'?'deskWin':r==='L'?'deskLoss':''}">${esc(r||'—')}</td><td>${esc(g.opponent||'Opponent')}</td><td>${Number(x.pts||0)}</td><td>${Number(x.reb||0)}</td><td>${Number(x.ast||0)}</td><td>${fg}</td></tr>`}).join('')}</tbody></table>`}
   function renderAverages(){const gs=seasonGames(),t=totals(gs),n=gs.length||1;text('deskAvgPts',fmt1(t.pts/n));text('deskAvgReb',fmt1(t.reb/n));text('deskAvgAst',fmt1(t.ast/n));text('deskAvgStl',fmt1(t.stl/n));text('deskAvgBlk',fmt1(t.blk/n));text('deskAvgFG',t.fga?Math.round(t.fgm/t.fga*100)+'%':'—')}
   function renderObjectives(){const root=q('deskObjectives');if(!root)return;const objs=Array.isArray(state.objectives)?state.objectives:[];if(!objs.length){root.innerHTML='<div class="desktopEmpty">No active pre-game objectives. Open Objectives before your next game.</div>';return}root.innerHTML=objs.slice(0,4).map((o,i)=>`<div class="deskObjectiveRow"><div class="deskCheck">${o.completed?'✓':'□'}</div><div class="deskRowText"><b>${esc(o.text||o.name||('Objective '+(i+1)))}</b><span>${esc(o.theme||'Pregame target')}</span></div><div class="deskRowReward">+100 SP</div></div>`).join('')}
   function renderEndorsements(){const root=q('deskEndorsements');if(!root)return;const es=(state.endorsements||[]).filter(e=>e.status!=='Completed').slice(0,4);if(!es.length){root.innerHTML='<div class="desktopEmpty">No active endorsement events yet. Fans and basketball credibility unlock opportunities.</div>';return}root.innerHTML=es.map(e=>`<div class="deskEndorseRow"><div class="deskEndorseLogo">AD</div><div class="deskRowText"><b>${esc(e.name||'Endorsement')}</b><span>${esc(e.status||'Scheduled')}${e.date?' • '+esc(e.date):''}</span></div><div class="deskRowReward">${Number(e.sp||0)?'+'+Number(e.sp).toLocaleString()+' SP':'ACTIVE'}</div></div>`).join('')}
   function nextStep(total,step){const n=Math.max(0,Number(total||0));return (Math.floor(n/step)+1)*step}
-  function renderMilestones(){const root=q('deskMilestones');if(!root)return;const gs=state.games||[];const t=totals(gs);const specs=[['Career Points',t.pts,500],['Career Rebounds',t.reb,250],['Career Assists',t.ast,250],['Games Played',gs.length,50]];root.innerHTML=specs.map(([label,current,step])=>{const target=nextStep(current,step),floor=Math.max(0,target-step),pct=Math.max(0,Math.min(100,((current-floor)/step)*100));return `<div class="deskMilestoneProgress"><div class="deskMilestoneProgressTop"><b>${esc(label)}</b><span>${Number(current).toLocaleString()} / ${Number(target).toLocaleString()}</span></div><div class="deskMilestoneTrack"><div class="deskMilestoneFill" style="width:${pct}%"></div></div><div class="deskMilestoneMeta"><span>${Math.round(pct)}% to next milestone</span><span>Next: ${Number(target).toLocaleString()}</span></div></div>`}).join('')}
+  function renderMilestones(){
+    const root=q('deskMilestones');if(!root)return;
+    const gs=state.games||[],t=totals(gs);
+    const milestoneSets=[
+      {label:'Career Points',current:t.pts,targets:[25,50,100,250,500,750,1000,1500,2000,2500,3000,4000,5000,7500,10000,15000,20000,25000,30000]},
+      {label:'Career Rebounds',current:t.reb,targets:[10,25,50,100,250,500,750,1000,1500,2000,2500,5000,7500,10000]},
+      {label:'Career Assists',current:t.ast,targets:[10,25,50,100,250,500,750,1000,1500,2000,2500,5000,7500,10000]},
+      {label:'Games Played',current:gs.length,targets:[5,10,15,25,50,82,100,150,250,500,750,1000,1250,1500]},
+      {label:'Career 3-Pointers',current:t.t3m,targets:[10,25,50,100,250,500,750,1000,1500,2000,2500,3000]},
+      {label:'Career Steals',current:t.stl,targets:[10,25,50,100,250,500,750,1000,1500,2000]},
+      {label:'Career Blocks',current:t.blk,targets:[10,25,50,100,250,500,750,1000,1500,2000]}
+    ];
+    const candidates=milestoneSets.map(spec=>{
+      const current=Math.max(0,Number(spec.current||0));
+      let target=spec.targets.find(v=>v>current);
+      if(!target){const last=spec.targets[spec.targets.length-1]||1;target=Math.ceil((current+1)/last)*last}
+      const prev=[0,...spec.targets.filter(v=>v<target)].pop()||0;
+      const span=Math.max(1,target-prev),progress=Math.max(0,current-prev),pct=Math.max(0,Math.min(100,progress/span*100));
+      return {...spec,current,target,prev,pct,remaining:Math.max(0,target-current)};
+    });
+    candidates.sort((a,b)=>b.pct-a.pct||a.remaining-b.remaining||a.target-b.target);
+    const picks=candidates.slice(0,4);
+    root.innerHTML=picks.map(m=>`<div class="deskMilestoneProgress"><div class="deskMilestoneProgressTop"><b>${esc(m.label)}</b><span>${Number(m.current).toLocaleString()} / ${Number(m.target).toLocaleString()}</span></div><div class="deskMilestoneTrack"><div class="deskMilestoneFill" style="width:${m.pct}%"></div></div><div class="deskMilestoneMeta"><span>${Number(m.remaining).toLocaleString()} away</span><span>Next: ${Number(m.target).toLocaleString()}</span></div></div>`).join('');
+  }
   function renderHeadlines(){const root=q('deskHeadlineList');if(!root)return;const pool=(state.insiderFeed||[]).slice(1,5);root.innerHTML=pool.map(x=>`<div class="deskHeadlineRow"><span>${esc(x.headline||x.title||'Career update')}</span><span>${esc(x.stage||('S'+(x.season||state.player?.season||1)))}</span></div>`).join('')}
 
   const V68_TEAM_LOGOS={
@@ -6447,7 +6470,25 @@ function jumpCareerSection(id){
     "Atlanta":"Peach State Hoops","Boston":"Banner Town","Chicago":"Windy City Basketball","Cleveland":"The Land Loves Hoops","Dallas":"Big D Basketball","Denver":"Mile High Basketball","Auburn Hills":"Motor City Basketball","Detroit":"Motor City Basketball","Oakland":"Bay Area Basketball","San Francisco":"Bay Area Basketball","Houston":"Clutch City","Indianapolis":"Hoosier Basketball","Los Angeles":"Showtime Lives Here","Inglewood":"L.A. Basketball","Memphis":"Grind City Roots","Miami":"Heat Culture","Milwaukee":"Brew City Basketball","Minneapolis":"North Star Hoops","East Rutherford":"Jersey Basketball","Brooklyn":"Brooklyn Basketball","New Orleans":"Crescent City Hoops","New York":"Basketball Never Sleeps","Orlando":"Magic in the City","Philadelphia":"City of Brotherly Hoops","Phoenix":"Valley Basketball","Portland":"Rip City","Sacramento":"Capital City Kings","San Antonio":"Spurs Country","Seattle":"Sonics Territory","Toronto":"North Side Basketball","Salt Lake City":"Mountain West Hoops","Washington":"Capital Basketball","Charlotte":"Queen City Hoops","Oklahoma City":"Thunder Country"
   };
   function v72CityTagline(city){const name=safe(city).split(',')[0].trim();return V72_CITY_TAGLINES[name]||'Basketball Lives Here'}
-  function v65RenderArena(next){const p=state.player||{},month=Number(next?.date?.month||(latestGameDate()||state.careerDate||{}).month||10),year=eraYearFor(month,next?.season||p.season||1);let homeTeam=p.team||'';if(next&&safe(next.site).toLowerCase()==='away')homeTeam=next.opponent||'';else if(next&&safe(next.site).toLowerCase()==='home')homeTeam=p.team||'';const info=v65ArenaFor(homeTeam,year);text('deskArenaName',info.arena);text('deskArenaCity',info.city);text('deskArenaTeam',(info.team||homeTeam||'HOME VENUE').toUpperCase());text('deskArenaEra',year<2016?`${eraStartYear()}–${String((eraStartYear()+1)%100).padStart(2,'0')} ERA`:`${year} ERA`);setTeamLogo('deskArenaLogo','deskArenaLogoFallback',homeTeam);text('deskCityName',info.city||'CAREER CITY');text('deskCityVenue',`NEXT STOP • ${info.arena||'NEXT VENUE'}`);text('deskCityTagline',v72CityTagline(info.city));v65LoadArenaImage(info);v69LoadCitySkyline(info)}
+  function v65RenderArena(next){
+    const p=state.player||{},month=Number(next?.date?.month||(latestGameDate()||state.careerDate||{}).month||10),year=eraYearFor(month,next?.season||p.season||1);
+    let homeTeam=p.team||'';
+    if(next&&safe(next.site).toLowerCase()==='away')homeTeam=next.opponent||'';
+    else if(next&&safe(next.site).toLowerCase()==='home')homeTeam=p.team||'';
+    const info=v65ArenaFor(homeTeam,year);
+    text('deskArenaName',info.arena);text('deskArenaCity',info.city);text('deskArenaTeam',(info.team||homeTeam||'HOME VENUE').toUpperCase());
+    text('deskArenaEra',year<2016?`${eraStartYear()}–${String((eraStartYear()+1)%100).padStart(2,'0')} ERA`:`${year} ERA`);
+    setTeamLogo('deskArenaLogo','deskArenaLogoFallback',homeTeam);v65LoadArenaImage(info);
+  }
+  function v73RenderTeamCity(){
+    const p=state.player||{},team=p.team||q('pTeam')?.value||'';
+    const raw=latestGameDate()||state.careerDate||{},month=Number(raw.month||10),year=eraYearFor(month,p.season||1);
+    const info=v65ArenaFor(team,year);
+    text('deskCityName',info.city||'CAREER CITY');
+    text('deskCityVenue',`HOME COURT • ${info.arena||'HOME ARENA'}`);
+    text('deskCityTagline',v72CityTagline(info.city));
+    v69LoadCitySkyline(info);
+  }
   function v65RenderArenaGuide(){const root=q('arenaReferenceGrid');if(!root)return;root.innerHTML=Object.entries(V65_ARENAS_2004).map(([team,a])=>{const logo=teamLogoUrl(team),abbr=(V68_TEAM_LOGOS[team]||'NBA').toUpperCase();return `<div class="arenaRef"><img loading="lazy" alt="${esc(a.arena)}" src="${esc(v66CommonsPhoto(a.photo))}" onerror="this.style.display='none'"><div class="arenaRefShade"></div><div class="arenaRefLogoWrap"><i>${esc(abbr)}</i>${logo?`<img alt="${esc(team)} logo" src="${esc(logo)}" onerror="this.style.display='none'">`:''}</div><div class="arenaRefPhotoYear">${esc(a.photoYear||'ARCHIVE')}</div><div class="arenaRefCopy"><b>${esc(team.replace(/\b\w/g,c=>c.toUpperCase()))}</b><span>${esc(a.arena)}</span><em>${esc(a.city)}</em></div></div>`}).join('')}
 
   function renderDesktopCareer(){
@@ -6457,7 +6498,7 @@ function jumpCareerSection(id){
     let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
     text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • YEAR ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);const dateLabel=careerDateText();text('deskCareerDate',dateLabel);text('deskTopYear',`YEAR ${season}`);text('deskTopVC',Number(state.sp||0).toLocaleString()+' VC');text('deskHeaderYear',`YEAR ${season}`);text('deskHeaderDate',dateLabel);text('deskHeaderVC',Number(state.sp||0).toLocaleString()+' VC');setTeamLogo('deskTeamLogo','deskTeamLogoFallback',p.team||q('pTeam')?.value||'');const oi=q('deskOvrInput');if(oi&&document.activeElement!==oi)oi.value=playerOvr()==='—'?'':playerOvr();
     const trust=clamp(m.coach),fans=clamp(m.fans),sp=Number(state.sp||0);text('deskTrust',Math.round(trust)+'/100');text('deskFans',Math.round(fans)+'/100');text('deskSP',sp.toLocaleString());if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
-    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;v65RenderArena(next);v73RenderTeamCity();text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');const nd=next?.date?eraDate(next.date,next.season||season):null;const ndText=nd&&typeof formatCareerDate==='function'?formatCareerDate(nd):'UPCOMING';text('deskGameMeta',next?`${ndText}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
     let story='Keep building your career. The next major story will appear here.';if(next){const ht=safe(p.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase(),opp=safe(next.opponent).toLowerCase();story=ht&&opp&&ht===opp?'HOMETOWN GAME: this matchup can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`)}text('deskStoryline',story);
     const ro=state.rotationOpportunity||{},rp=state.rotationProgress||{};text('deskStoryline2',ro.active?`${safe(ro.assignment||'Rotation opportunity')} • ${safe(ro.leash||'Normal')} leash`:`Current role: ${safe(rp.role||status)}${rp.minutes?' • '+rp.minutes+' MPG':''}`);const htName=safe(p.hometown||q('pHometown')?.value);text('deskStoryline3',htName?`Hometown: ${htName}. Local and homecoming context is active.`:'Set your hometown in Career Setup to unlock hometown story context.');
     const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
