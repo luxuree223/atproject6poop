@@ -649,61 +649,53 @@ body:not(.career-home) #k11Hub{display:none!important}
 
 
 
-<style id="v62DesktopPresentation">
-/* V62 desktop presentation shell. Mobile layout remains untouched. */
+<style id="v63DesktopPresentation">
+/* V63 — full desktop/tablet presentation pass. The existing career engine and mobile UI stay intact. */
 .desktopBrand,.desktopCommandCenter{display:none}
 body:not(.career-home) #desktopCommandCenter{display:none!important}
-@media (min-width:1100px){
-  :root{--desk-side:238px;--desk-top:78px;--desk-gold:#e3b33b;--desk-blue:#19a9ef;--desk-panel:#09131b;--desk-line:#314452}
-  html{background:#040a0f}
-  body{min-height:100vh;background:
-    radial-gradient(circle at 76% 0%,rgba(26,79,111,.20),transparent 28%),
-    linear-gradient(180deg,#050b10 0%,#08121a 48%,#050a0e 100%);padding-left:var(--desk-side)}
-  body:before{content:"";position:fixed;inset:0 0 0 var(--desk-side);pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:34px 34px;z-index:-1}
-  header{position:fixed;left:var(--desk-side);right:0;top:0;height:var(--desk-top);padding:0 28px;background:rgba(5,11,16,.96);border-bottom:1px solid #263945;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:100}
-  header h1{font-size:18px;letter-spacing:1.1px;text-transform:uppercase} header .small{letter-spacing:.45px}
-  header .balance{font-size:22px;color:var(--desk-gold)}
+@media (min-width:980px){
+  :root{--desk-side:244px;--desk-top:64px;--desk-gold:#e9bd42;--desk-gold2:#ffd86e;--desk-blue:#29b6f6;--desk-green:#42db82;--desk-panel:#09131b;--desk-panel2:#0d1a24;--desk-line:#2b4252;--desk-muted:#8299a8}
+  html{background:#02070b}
+  body{min-height:100vh;padding-left:var(--desk-side);background:radial-gradient(circle at 70% -10%,rgba(36,122,170,.18),transparent 34%),linear-gradient(180deg,#061019 0,#07141d 44%,#040a0f 100%);font-family:Segoe UI,Arial,sans-serif}
+  body:before{content:"";position:fixed;inset:0 0 0 var(--desk-side);pointer-events:none;z-index:-1;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.026) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:38px 38px}
+  header{position:fixed;left:var(--desk-side);right:0;top:0;height:var(--desk-top);padding:0 22px;display:flex;align-items:center;background:rgba(3,9,14,.97);border-bottom:1px solid #284050;box-shadow:0 8px 28px rgba(0,0,0,.34);z-index:100}
+  header h1{font-size:15px;letter-spacing:1.05px;text-transform:uppercase;margin:0} header .small{font-size:9px;letter-spacing:.45px;color:#7f94a1} header .balance{font-size:18px;color:var(--desk-gold2)}
   #mobileNavToggle{display:none!important}
-  nav#nav{position:fixed!important;z-index:110;left:0;top:0;bottom:0;width:var(--desk-side);height:100vh;display:flex!important;flex-direction:column;flex-wrap:nowrap;gap:0;padding:0 0 22px;background:linear-gradient(180deg,#09131b,#081019 66%,#050a0f);border:0;border-right:1px solid #273844;overflow-y:auto;box-shadow:16px 0 45px rgba(0,0,0,.24)}
-  .desktopBrand{display:flex;min-height:112px;padding:22px 18px 16px;flex-direction:column;justify-content:center;border-bottom:1px solid #273844;background:radial-gradient(circle at 25% 10%,rgba(227,179,59,.11),transparent 48%)}
-  .desktopBrand .db2k{font-size:36px;line-height:.9;font-weight:1000;font-style:italic;letter-spacing:-2px;color:#fff}.desktopBrand .db2k::first-letter{color:#e11f35}
-  .desktopBrand strong{font-size:14px;letter-spacing:1.2px;margin-top:8px}.desktopBrand small{font-size:8px;letter-spacing:2.3px;color:#7f929e;margin-top:6px}
-  nav#nav button{position:relative;flex:0 0 auto;width:100%;height:50px;border:0;border-bottom:1px solid rgba(66,84,96,.34);border-radius:0;background:transparent;color:#c8d1d6;text-align:left;padding:0 18px 0 28px;font-size:13px;font-weight:800;letter-spacing:.35px;transition:.18s ease}
-  nav#nav button:hover{background:#101f2a;color:#fff;padding-left:32px}
-  nav#nav button.active{background:linear-gradient(90deg,#d7a82d,#f0c95b);color:#111;border:0;box-shadow:inset 4px 0 0 #fff,0 0 22px rgba(227,179,59,.18)}
-  nav#nav button.active:after{content:"›";position:absolute;right:16px;font-size:22px;top:12px}
-  main{max-width:none!important;margin:0!important;padding:calc(var(--desk-top) + 18px) 22px 42px!important}
-  .k11Hub{min-height:450px;grid-template-columns:minmax(560px,1.5fr) minmax(360px,.8fr);border-radius:2px;border-color:#3b4b55;box-shadow:0 18px 40px rgba(0,0,0,.28)}
-  .k11Left{min-height:450px}.k11PlayerTop{padding:28px 28px 20px;background:linear-gradient(115deg,#0b151e,#111a1e 58%,#181711)}
-  .k11Name{font-size:40px;letter-spacing:.2px}.k11Ovr{min-width:92px;padding:10px 16px}.k11Ovr strong{font-size:48px}
-  .k11Meta{gap:24px}.k11Meta .val{font-size:18px}.k11Summary{padding:20px 28px;grid-template-columns:150px 1fr}.k11Summary .v{font-size:16px}
-  .k11PanelTitle{padding:8px 28px}.k11Next{padding:20px 28px}.k11Next .opponent{font-size:28px}
-  .k11Right{min-height:450px}.k11PlayerPhoto{height:100%;max-height:450px;object-fit:cover;object-position:center top;filter:saturate(.92) contrast(1.04)}
-  .k11TeamStrip{left:18px;right:18px;bottom:16px;padding:12px 14px;background:rgba(5,11,16,.9);backdrop-filter:blur(6px)}
-  .k11Quick{display:none}.k11CoachDestination{left:18px;right:18px;bottom:76px}
-  #webAppBanner{display:none}
-  .desktopCommandCenter{display:block;margin-top:16px}
-  .desktopTopline{display:flex;justify-content:space-between;align-items:end;padding:0 3px 10px;border-bottom:1px solid #243744;margin-bottom:12px}
-  .desktopTopline span{display:block;font-size:9px;letter-spacing:2px;color:#7f949f;font-weight:900}.desktopTopline strong{display:block;font-size:16px;letter-spacing:.7px;margin-top:3px}.desktopDate{font-size:11px;letter-spacing:1px;color:#98aab4}
-  .desktopGrid{display:grid;grid-template-columns:1.05fr 1fr 1.05fr;gap:12px;align-items:stretch}
-  .desktopPanel{margin:0;background:linear-gradient(180deg,rgba(12,25,34,.98),rgba(7,15,21,.98));border:1px solid var(--desk-line);box-shadow:0 12px 28px rgba(0,0,0,.18);padding:14px;min-width:0}
-  .desktopPanelHead{height:32px;margin:-14px -14px 14px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;background:#081018;border-bottom:1px solid #314553}
-  .desktopPanelHead>span:first-child{font-size:11px;letter-spacing:1.3px;font-weight:1000;color:#fff}.desktopPanelHead button{border:0;background:transparent;color:#53c7ff;font-size:9px;font-weight:900;letter-spacing:.7px;padding:8px;cursor:pointer}.desktopPanelHead button:hover{color:#fff}.desktopLive{font-size:8px;color:#7ef3ad!important;letter-spacing:1.2px!important}
-  .desktopMetricHero{display:grid;grid-template-columns:86px 1fr;gap:14px;align-items:center;padding-bottom:13px;border-bottom:1px solid #273943;margin-bottom:12px}.desktopOvr{height:78px;display:grid;place-items:center;background:#0b1015;border:1px solid var(--desk-gold);box-shadow:inset 0 0 22px rgba(227,179,59,.06)}.desktopOvr span{font-size:8px;letter-spacing:1.4px;color:#9caab2}.desktopOvr b{font-size:36px;line-height:.8;color:#fff}.desktopMetricHero h2{font-size:21px;margin:0 0 3px}.desktopSub{font-size:11px;color:#95a7b1}.desktopRole{display:inline-block;margin-top:7px;border-left:3px solid var(--desk-gold);padding-left:7px;font-size:10px;font-weight:900;color:#dfe8ec;letter-spacing:.6px}
-  .desktopMeterRow{display:grid;grid-template-columns:86px 1fr 48px;gap:9px;align-items:center;margin:10px 0}.desktopMeterRow>span{font-size:10px;color:#b2bec5}.desktopMeterRow>b{font-size:11px;text-align:right}.desktopMeter{height:10px;background:#26333b;overflow:hidden}.desktopMeter i{display:block;height:100%;width:0;background:#34d17b;transition:width .3s}.desktopMeter.blue i{background:#24aef2}.desktopMeter.gold i{background:#e3b33b}
-  .desktopActions{display:flex;gap:8px;margin-top:14px}.desktopActions button{flex:1;border-radius:2px!important;padding:10px 12px!important;font-size:9px!important;letter-spacing:.7px!important;font-weight:1000!important}
-  .desktopNextGame{grid-column:2}.desktopVs{display:grid;grid-template-columns:1.2fr 36px .9fr;gap:10px;align-items:center;min-height:100px;padding:6px 0 12px}.desktopVs span{display:block;color:#8fa1ab;font-size:8px;letter-spacing:1.2px}.desktopVs strong{display:block;font-size:22px;line-height:1.05;margin-top:5px}.desktopVs em{font-style:normal;color:var(--desk-gold);font-weight:1000;text-align:center}.desktopGameMeta{font-size:10px;color:#abb8bf;line-height:1.45}.desktopStoryline{border-top:1px solid #273943;padding-top:11px}.desktopStoryline span{font-size:8px;letter-spacing:1.2px;color:var(--desk-gold);font-weight:1000}.desktopStoryline p{font-size:12px;line-height:1.45;color:#d4dde1;margin:5px 0 0}
-  .desktopInsiderLead{display:grid;grid-template-columns:112px 1fr;gap:13px}.desktopInsiderLead img{width:112px;height:112px;object-fit:cover;border:1px solid #3c4e59}.desktopInsiderLead small,.desktopCoachBody small{font-size:8px;letter-spacing:1.2px;color:var(--desk-gold);font-weight:1000}.desktopInsiderLead h3{font-size:18px;line-height:1.05;margin:5px 0}.desktopInsiderLead p{font-size:10px;line-height:1.45;color:#9fafb7;margin:0}
-  .desktopRecent{grid-column:1/3}.desktopRecentGames{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.desktopRecentGame{padding:10px;border:1px solid #2b3c46;background:#09141b}.desktopRecentGame small{font-size:8px;color:#8398a3}.desktopRecentGame b{display:block;font-size:15px;margin:3px 0}.desktopRecentGame span{font-size:9px;color:#bcc8ce}.desktopRecentGame.win{border-left:3px solid #42d681}.desktopRecentGame.loss{border-left:3px solid #f35d73}.desktopEmpty{color:#7f919b;font-size:11px;padding:20px 2px}
-  .desktopCoachBody{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;min-height:88px}.desktopCoachBadge{width:52px;height:52px;border-radius:50%;border:2px solid var(--desk-gold);display:grid;place-items:center;color:var(--desk-gold);font-weight:1000}.desktopCoachBody h3{font-size:16px;margin:4px 0}.desktopCoachBody p{font-size:10px;color:#94a6af;margin:0;line-height:1.35}
-  .desktopQuick{grid-column:1/4}.desktopQuickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.desktopQuickGrid button{min-height:66px;text-align:left;background:#0a151c;border:1px solid #30424e;color:#fff;padding:12px;cursor:pointer}.desktopQuickGrid button:hover{border-color:var(--desk-gold);background:#101b21}.desktopQuickGrid b{display:block;font-size:11px;letter-spacing:.6px}.desktopQuickGrid small{display:block;color:#8396a0;font-size:9px;margin-top:4px}
-  .tab.active{animation:deskFade .18s ease-out}@keyframes deskFade{from{opacity:.72;transform:translateY(4px)}to{opacity:1;transform:none}}
-  .card{border-radius:3px}.careerPageLayout{grid-template-columns:235px 1fr}.careerSideNav{position:sticky;top:calc(var(--desk-top) + 16px);border-radius:2px}.careerContent>.card{box-shadow:0 12px 26px rgba(0,0,0,.14)}
-  .coachOfficeBackdrop{min-height:calc(100vh - var(--desk-top) - 36px)}
+  nav#nav{position:fixed!important;left:0;top:0;bottom:0;width:var(--desk-side);height:100vh;z-index:120;display:flex!important;flex-direction:column;flex-wrap:nowrap;gap:0;padding:0 0 18px;overflow-y:auto;background:linear-gradient(180deg,#08131c 0%,#071019 66%,#03080c 100%);border:0;border-right:1px solid #263b49;box-shadow:18px 0 50px rgba(0,0,0,.30)}
+  .desktopBrand{display:flex;min-height:118px;padding:21px 18px 16px;flex-direction:column;justify-content:center;border-bottom:1px solid #263b49;background:radial-gradient(circle at 28% 8%,rgba(233,189,66,.14),transparent 52%)}
+  .desktopBrand .db2k{font-size:42px;line-height:.84;font-weight:1000;font-style:italic;letter-spacing:-3px;color:#f5f6f8;text-shadow:0 6px 20px rgba(0,0,0,.35)}.desktopBrand .db2k::first-letter{color:#e1243c}
+  .desktopBrand strong{font-size:13px;letter-spacing:1.4px;margin-top:10px}.desktopBrand small{font-size:8px;letter-spacing:2.5px;color:#718895;margin-top:6px}
+  nav#nav button{position:relative;flex:0 0 auto;width:100%;height:48px;border:0;border-bottom:1px solid rgba(67,88,102,.30);border-radius:0;background:transparent;color:#c7d1d7;text-align:left;padding:0 16px 0 47px;font-size:12px;font-weight:800;letter-spacing:.35px;transition:.16s ease}
+  nav#nav button:before{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.78}
+  nav#nav button[data-tab="career"]:before{content:"⌂"}nav#nav button[data-tab="game"]:before{content:"▣"}nav#nav button[data-tab="insider"]:before{content:"▤"}nav#nav button[data-tab="schedule"]:before{content:"◫"}nav#nav button[data-tab="stats"]:before{content:"▥"}nav#nav button[data-tab="upgrades"]:before{content:"↗"}nav#nav button[data-tab="media"]:before{content:"◉"}nav#nav button[data-tab="milestones"]:before{content:"★"}nav#nav button[data-tab="rewards"]:before{content:"◇"}nav#nav button[data-tab="contracts"]:before{content:"▧"}nav#nav button[data-tab="history"]:before{content:"↺"}nav#nav button[data-tab="cloud"]:before{content:"☁"}
+  nav#nav button:hover{background:#10202b;color:#fff;padding-left:51px}nav#nav button.active{background:linear-gradient(90deg,#c89626,#f0c95a);color:#071018;box-shadow:inset 4px 0 0 #fff,0 0 24px rgba(233,189,66,.18)}nav#nav button.active:after{content:"›";position:absolute;right:15px;top:10px;font-size:22px}
+  main{max-width:none!important;margin:0!important;padding:calc(var(--desk-top) + 12px) 14px 34px!important}
+  /* The old 2K11 mobile hub stays available below desktop width, but desktop gets a true program dashboard. */
+  body.career-home .k11Hub{display:none!important}
+  #webAppBanner{display:none!important}
+  .desktopCommandCenter{display:block;margin:0;max-width:1600px}
+  .deskTopStrip{height:28px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:0 5px;color:#8399a7;font-size:8px;letter-spacing:2px;text-transform:uppercase}.deskTopStrip b{color:#dce6eb;font-size:9px;letter-spacing:1.2px}.deskTopStrip .deskBuild{display:flex;gap:16px;align-items:center}
+  .deskHero{display:grid;grid-template-columns:minmax(300px,.92fr) minmax(360px,1.08fr) minmax(310px,.78fr);min-height:416px;border:1px solid #355062;background:#07121a;box-shadow:0 18px 46px rgba(0,0,0,.34);overflow:hidden}
+  .deskHeroVisual{position:relative;min-height:416px;background:radial-gradient(circle at 55% 20%,rgba(255,255,255,.14),transparent 23%),linear-gradient(150deg,#14212a,#08121a 62%,#050a0e);overflow:hidden}
+  .deskHeroVisual:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,13,18,.18),transparent 50%),linear-gradient(0deg,rgba(3,7,10,.84),transparent 45%);z-index:1;pointer-events:none}
+  .deskHeroVisual:after{content:"MY PLAYER";position:absolute;left:19px;top:20px;z-index:3;color:rgba(255,255,255,.16);font-size:10px;font-weight:900;letter-spacing:3px}
+  .deskPlayerImage{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%;display:none;filter:saturate(.94) contrast(1.04)}.deskHeroVisual.hasPhoto .deskPlayerImage{display:block}.deskHeroFallback{position:absolute;left:50%;bottom:-12px;transform:translateX(-50%);width:210px;height:340px;background:linear-gradient(180deg,rgba(233,189,66,.65),rgba(77,92,34,.16));clip-path:polygon(38% 0,62% 0,69% 9%,65% 25%,78% 42%,71% 58%,68% 100%,32% 100%,29% 58%,22% 42%,35% 25%,31% 9%);opacity:.6}.deskHeroVisual.hasPhoto .deskHeroFallback{display:none}
+  .deskHeroIdentity{position:absolute;z-index:4;left:22px;right:20px;bottom:18px}.deskHeroIdentity .eyebrow{font-size:9px;letter-spacing:1.8px;color:var(--desk-gold2);font-weight:900}.deskHeroIdentity h2{font-size:31px;line-height:.94;margin:5px 0 8px;text-transform:uppercase}.deskHeroIdentity p{margin:0;color:#b9c6cd;font-size:11px;font-weight:700;letter-spacing:.45px}.deskUploadBtn{position:absolute;z-index:5;right:14px;top:14px;border:1px solid #637984;background:rgba(6,12,16,.72);color:#eef4f6;font-size:8px;padding:7px 9px;cursor:pointer;font-weight:900;letter-spacing:.6px;text-transform:uppercase}
+  .deskHeroCore{padding:23px 23px 18px;border-left:1px solid #294250;border-right:1px solid #294250;background:linear-gradient(180deg,#0a1620,#08121a)}
+  .deskCoreTop{display:grid;grid-template-columns:94px 1fr;gap:18px;align-items:start;padding-bottom:18px;border-bottom:1px solid #29414f}.deskOvrBox{height:94px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#060d12;border:1px solid var(--desk-gold);box-shadow:inset 0 0 26px rgba(233,189,66,.07)}.deskOvrBox span{font-size:8px;color:#8fa0aa;letter-spacing:1.5px}.deskOvrBox b{font-size:48px;line-height:.9;margin-top:5px}.deskIdentityMeta .deskTeam{font-size:10px;color:var(--desk-gold2);letter-spacing:1.5px;font-weight:900}.deskIdentityMeta h1{font-size:25px;line-height:1;margin:6px 0 6px}.deskIdentityMeta .sub{font-size:11px;color:#9dafb8}.deskRoleBadge{display:inline-block;margin-top:10px;padding:5px 8px;border-left:3px solid var(--desk-gold);background:#0d1c25;color:#e6eef1;font-size:9px;letter-spacing:.8px;font-weight:900;text-transform:uppercase}
+  .deskMeters{padding:14px 0 2px}.deskMeterRow{display:grid;grid-template-columns:86px 1fr 54px;gap:10px;align-items:center;margin:11px 0}.deskMeterRow>span{font-size:10px;color:#bec9ce}.deskMeterRow>b{font-size:11px;text-align:right}.deskMeter{height:11px;background:#263641;overflow:hidden;border:1px solid #314955}.deskMeter i{display:block;height:100%;width:0;background:var(--desk-green);transition:width .25s}.deskMeter.blue i{background:var(--desk-blue)}.deskMeter.gold i{background:var(--desk-gold)}
+  .deskQuote{margin-top:13px;padding:12px 13px;border-left:2px solid #3c5360;background:#071018;color:#bec9cf;font-size:11px;line-height:1.45;font-style:italic}.deskQuote strong{display:block;color:#fff;margin-top:5px;font-size:9px;font-style:normal;letter-spacing:.6px}
+  .deskHeroNext{padding:0;background:linear-gradient(180deg,#0b1922,#071018)}.deskPanelBar{height:38px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;background:#071018;border-bottom:1px solid #315061;color:#fff;font-size:11px;font-weight:1000;letter-spacing:1px}.deskPanelBar button{border:0;background:transparent;color:#4dc8ff;font-size:8px;font-weight:900;letter-spacing:.8px;cursor:pointer}.deskNextBody{padding:17px 16px}.deskNextLabel{font-size:8px;color:#7f95a2;letter-spacing:1.5px;font-weight:900}.deskNextOpponent{font-size:26px;line-height:1.02;margin:6px 0 4px}.deskNextMeta{color:#b6c3ca;font-size:10px;line-height:1.45}.deskPrimaryAction{display:block;width:100%;margin:14px 0 12px;border:0;background:linear-gradient(90deg,#d5a62f,#f2ca5c);color:#101315;padding:11px 12px;font-weight:1000;font-size:10px;letter-spacing:.8px;text-transform:uppercase;cursor:pointer}.deskStoryList{margin-top:12px;padding-top:10px;border-top:1px solid #273f4d}.deskStoryList .label{font-size:8px;color:var(--desk-gold2);font-weight:900;letter-spacing:1.4px}.deskStoryItem{position:relative;padding:7px 0 7px 13px;color:#c4cfd4;font-size:10px;line-height:1.35}.deskStoryItem:before{content:"›";position:absolute;left:0;color:var(--desk-gold2);font-weight:1000}
+  .deskLower{display:grid;grid-template-columns:1.02fr 1.02fr 1.12fr;gap:10px;margin-top:10px}.deskCard{min-width:0;background:linear-gradient(180deg,#0b1922,#071018);border:1px solid #304b5a;box-shadow:0 10px 25px rgba(0,0,0,.18)}.deskCardBody{padding:13px}.deskAverages{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.deskAvg{text-align:center;padding:10px 4px;border-right:1px solid #263d4a}.deskAvg:last-child{border-right:0}.deskAvg b{display:block;font-size:18px}.deskAvg span{font-size:8px;color:#8398a5;letter-spacing:.8px}.deskRecentTable{width:100%;font-size:9px}.deskRecentTable th{font-size:7px;color:#7f95a2;letter-spacing:.7px;padding:6px 5px}.deskRecentTable td{padding:7px 5px;border-bottom:1px solid #223642}.deskRecentTable tr:last-child td{border-bottom:0}.deskWin{color:#55dc8b;font-weight:900}.deskLoss{color:#ff7184;font-weight:900}
+  .deskInsiderLead{display:grid;grid-template-columns:118px 1fr;gap:12px}.deskInsiderLead img{width:118px;height:112px;object-fit:cover;border:1px solid #49606d}.deskInsiderLead small{color:var(--desk-gold2);font-size:8px;letter-spacing:1.2px;font-weight:900}.deskInsiderLead h3{font-size:18px;line-height:1.03;margin:5px 0}.deskInsiderLead p{font-size:10px;line-height:1.42;color:#96a9b3;margin:0}.deskHeadlineList{margin-top:10px;border-top:1px solid #29414e}.deskHeadlineRow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #233743;color:#c3cfd4;font-size:9px}.deskHeadlineRow:last-child{border-bottom:0}.deskHeadlineRow span:last-child{color:#718793;font-size:8px;white-space:nowrap}
+  .deskBottom{display:grid;grid-template-columns:1.08fr 1.08fr .9fr .9fr;gap:10px;margin-top:10px}.deskObjectiveRow,.deskEndorseRow,.deskMilestoneRow{display:flex;gap:9px;align-items:center;padding:8px 0;border-bottom:1px solid #233743}.deskObjectiveRow:last-child,.deskEndorseRow:last-child,.deskMilestoneRow:last-child{border-bottom:0}.deskCheck{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border:1px solid #526975;background:#08131a;color:#60df91;font-size:12px}.deskRowText{min-width:0;flex:1}.deskRowText b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.deskRowText span{display:block;font-size:8px;color:#8296a1;margin-top:2px}.deskRowReward{font-size:8px;color:#62e295;font-weight:900;white-space:nowrap}.deskEndorseLogo{width:42px;height:42px;display:grid;place-items:center;border:1px solid #3c5360;background:#0e1a21;color:var(--desk-gold2);font-weight:1000;font-size:12px}.deskMilestoneIcon{font-size:18px;width:24px;text-align:center;color:var(--desk-gold2)}
+  .deskCoachSummary{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:center}.deskCoachIcon{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--desk-gold);color:var(--desk-gold2);font-weight:1000}.deskCoachSummary small{font-size:8px;color:#7f94a0;letter-spacing:1.1px}.deskCoachSummary h3{font-size:14px;margin:4px 0}.deskCoachSummary p{font-size:9px;color:#95a8b2;line-height:1.35;margin:0}.deskMiniButton{width:100%;margin-top:10px;padding:9px;border:1px solid #3d5563;background:#0a151d;color:#e8eef1;font-size:9px;font-weight:900;cursor:pointer}.deskMiniButton:hover{border-color:var(--desk-gold)}
+  /* Existing pages become program-like panels without changing their forms, ids, or handlers. */
+  .tab:not(#career){padding-top:2px}.tabPageLayout,.careerPageLayout{grid-template-columns:218px minmax(0,1fr)!important;gap:12px!important}.careerSideNav{position:sticky!important;top:calc(var(--desk-top) + 12px)!important;border-radius:0!important;border:1px solid #304956!important;background:#08131b!important}.careerSideToggle{background:#071018!important;border-radius:0!important}.careerSideMenu button{border-radius:0!important}.careerContent>.card,.tabPageContent>.card,.tab>.card{border-radius:0!important;background:linear-gradient(180deg,#0b1720,#081119)!important;border:1px solid #2d4655!important;box-shadow:0 10px 24px rgba(0,0,0,.15)!important}.card h2,.card h3{letter-spacing:.4px}.coachOfficeBackdrop{min-height:calc(100vh - var(--desk-top) - 30px)}
+  .tab.active{animation:v63Fade .18s ease-out}@keyframes v63Fade{from{opacity:.72;transform:translateY(3px)}to{opacity:1;transform:none}}
 }
-@media (min-width:1450px){
-  .desktopGrid{grid-template-columns:1.05fr .9fr 1.15fr}.k11Hub{grid-template-columns:1.6fr .72fr}.desktopPanel{padding:16px}.desktopPanelHead{margin:-16px -16px 16px}.desktopInsiderLead{grid-template-columns:132px 1fr}.desktopInsiderLead img{width:132px;height:120px}
-}
+@media (min-width:1350px){.deskHero{grid-template-columns:minmax(340px,.95fr) minmax(410px,1.08fr) minmax(340px,.8fr)}.deskHeroIdentity h2{font-size:36px}.deskLower{grid-template-columns:1fr 1fr 1.18fr}.deskBottom{grid-template-columns:1.12fr 1.12fr .92fr .92fr}}
+@media (min-width:980px) and (max-width:1180px){:root{--desk-side:214px}.deskHero{grid-template-columns:.82fr 1.08fr .9fr}.deskHeroVisual{min-height:390px}.deskHero{min-height:390px}.deskHeroIdentity h2{font-size:26px}.deskLower{grid-template-columns:1fr 1fr}.deskInsiderCard{grid-column:1/3}.deskBottom{grid-template-columns:1fr 1fr}.deskAverages{grid-template-columns:repeat(3,1fr)}.deskAvg:nth-child(3){border-right:0}.deskHeroCore{padding:18px}.deskNextOpponent{font-size:22px}}
 </style>
 
 </head>
@@ -784,61 +776,96 @@ body:not(.career-home) #desktopCommandCenter{display:none!important}
 </div>
 
 <section id="desktopCommandCenter" class="desktopCommandCenter" aria-label="Desktop career dashboard">
-  <div class="desktopTopline">
-    <div><span>CAREER COMMAND CENTER</span><strong id="deskCareerLine">ROOKIE SEASON • NBA</strong></div>
-    <div class="desktopDate" id="deskCareerDate">CAREER DATE</div>
+  <div class="deskTopStrip">
+    <div><b>BUILD YOUR LEGACY. YOUR CAREER. YOUR STORY.</b></div>
+    <div class="deskBuild"><span id="deskCareerDate">CAREER DATE</span><span>V63 DESKTOP</span></div>
   </div>
-  <div class="desktopGrid">
-    <article class="desktopPanel desktopMetrics">
-      <div class="desktopPanelHead"><span>PLAYER STATUS</span><button type="button" onclick="openTab('career')">EDIT PLAYER</button></div>
-      <div class="desktopMetricHero">
-        <div class="desktopOvr"><span>OVR</span><b id="deskOvr">—</b></div>
-        <div><h2 id="deskName">ANTONIO TAYLOR</h2><div class="desktopSub" id="deskPlayerMeta">SF • FREE AGENT</div><div class="desktopRole" id="deskRole">PROSPECT</div></div>
+
+  <div class="deskHero">
+    <section class="deskHeroVisual" id="deskHeroVisual">
+      <img id="deskPlayerPhoto" class="deskPlayerImage" alt="My Player photo">
+      <div class="deskHeroFallback" aria-hidden="true"></div>
+      <button class="deskUploadBtn" type="button" onclick="chooseK11PlayerPhoto()">UPLOAD PLAYER PHOTO</button>
+      <div class="deskHeroIdentity">
+        <div class="eyebrow" id="deskTeamEyebrow">MY PLAYER</div>
+        <h2 id="deskVisualName">ANTONIO TAYLOR</h2>
+        <p id="deskVisualMeta">SF • ROOKIE • OLD SCHOOL</p>
       </div>
-      <div class="desktopMeterRow"><span>Coach Trust</span><div class="desktopMeter"><i id="deskTrustBar"></i></div><b id="deskTrust">0</b></div>
-      <div class="desktopMeterRow"><span>Fans</span><div class="desktopMeter blue"><i id="deskFansBar"></i></div><b id="deskFans">0</b></div>
-      <div class="desktopMeterRow"><span>Skill Points</span><div class="desktopMeter gold"><i id="deskSpBar"></i></div><b id="deskSP">0</b></div>
-      <div class="desktopActions"><button class="primary" onclick="openPostgameTab()">OPEN POSTGAME</button><button class="secondary" onclick="openTab('upgrades')">UPGRADES</button></div>
-    </article>
+    </section>
 
-    <article class="desktopPanel desktopNextGame">
-      <div class="desktopPanelHead"><span>NEXT CAREER MOMENT</span><button type="button" onclick="openTab('schedule')">KEY GAMES</button></div>
-      <div class="desktopVs">
-        <div><span>NEXT OPPONENT</span><strong id="deskOpponent">TBD</strong></div>
-        <em>VS</em>
-        <div class="desktopGameMeta" id="deskGameMeta">No key game scheduled</div>
+    <section class="deskHeroCore">
+      <div class="deskCoreTop">
+        <div class="deskOvrBox"><span>OVR</span><b id="deskOvr">—</b></div>
+        <div class="deskIdentityMeta">
+          <div class="deskTeam" id="deskTeamName">FREE AGENT</div>
+          <h1 id="deskName">ANTONIO TAYLOR</h1>
+          <div class="sub" id="deskPlayerMeta">SF • SEASON 1</div>
+          <div class="deskRoleBadge" id="deskRole">PROSPECT</div>
+        </div>
       </div>
-      <div class="desktopStoryline"><span>STORYLINE</span><p id="deskStoryline">Keep building your career. The next major story will appear here.</p></div>
-      <div class="desktopActions"><button class="primary" onclick="openTab('schedule')">VIEW GAME</button><button class="secondary" onclick="openPregameObjectivesFromHub()">OBJECTIVES</button></div>
+      <div class="deskMeters">
+        <div class="deskMeterRow"><span>Coach Trust</span><div class="deskMeter"><i id="deskTrustBar"></i></div><b id="deskTrust">0</b></div>
+        <div class="deskMeterRow"><span>Fans</span><div class="deskMeter blue"><i id="deskFansBar"></i></div><b id="deskFans">0</b></div>
+        <div class="deskMeterRow"><span>Skill Points</span><div class="deskMeter gold"><i id="deskSpBar"></i></div><b id="deskSP">0</b></div>
+      </div>
+      <div class="deskQuote" id="deskQuote">Keep stacking good games and let the career tell its own story.<strong>— MYCAREER</strong></div>
+    </section>
+
+    <section class="deskHeroNext">
+      <div class="deskPanelBar"><span>NEXT GAME</span><button type="button" onclick="openTab('schedule')">KEY GAMES</button></div>
+      <div class="deskNextBody">
+        <div class="deskNextLabel">NEXT CAREER MOMENT</div>
+        <div class="deskNextOpponent" id="deskOpponent">NO KEY GAME</div>
+        <div class="deskNextMeta" id="deskGameMeta">Add a Key Game when a matchup matters to your career story.</div>
+        <button class="deskPrimaryAction" type="button" onclick="openPostgameTab()">OPEN POSTGAME</button>
+        <div class="deskStoryList">
+          <div class="label">KEY STORYLINES</div>
+          <div class="deskStoryItem" id="deskStoryline">Keep building your career. The next major story will appear here.</div>
+          <div class="deskStoryItem" id="deskStoryline2">Coach expectations and role changes will appear here.</div>
+          <div class="deskStoryItem" id="deskStoryline3">Hometown and media moments are tracked by the career engine.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="deskLower">
+    <article class="deskCard">
+      <div class="deskPanelBar"><span>SEASON AVERAGES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
+      <div class="deskCardBody"><div class="deskAverages">
+        <div class="deskAvg"><b id="deskAvgPts">0.0</b><span>PPG</span></div><div class="deskAvg"><b id="deskAvgReb">0.0</b><span>RPG</span></div><div class="deskAvg"><b id="deskAvgAst">0.0</b><span>APG</span></div><div class="deskAvg"><b id="deskAvgStl">0.0</b><span>SPG</span></div><div class="deskAvg"><b id="deskAvgBlk">0.0</b><span>BPG</span></div><div class="deskAvg"><b id="deskAvgFG">—</b><span>FG%</span></div>
+      </div></div>
     </article>
 
-    <article class="desktopPanel desktopInsiderPanel">
-      <div class="desktopPanelHead"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
-      <div class="desktopInsiderLead">
-        <img src="2k-insider.png" alt="2K Insider">
-        <div><small>LATEST HEADLINE</small><h3 id="deskInsiderHeadline">THE STORY IS JUST BEGINNING</h3><p id="deskInsiderDeck">Career news, milestones and role changes will surface here.</p></div>
+    <article class="deskCard">
+      <div class="deskPanelBar"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">GAME LOG</button></div>
+      <div class="deskCardBody"><div id="deskRecentGames">No NBA games logged yet.</div></div>
+    </article>
+
+    <article class="deskCard deskInsiderCard">
+      <div class="deskPanelBar"><span>2K INSIDER</span><button type="button" onclick="openTab('insider')">OPEN FEED</button></div>
+      <div class="deskCardBody">
+        <div class="deskInsiderLead"><img src="2k-insider.png" alt="2K Insider"><div><small>LATEST HEADLINE</small><h3 id="deskInsiderHeadline">THE STORY IS JUST BEGINNING</h3><p id="deskInsiderDeck">Career news, milestones and role changes will surface here.</p></div></div>
+        <div class="deskHeadlineList" id="deskHeadlineList"></div>
       </div>
     </article>
+  </div>
 
-    <article class="desktopPanel desktopRecent">
-      <div class="desktopPanelHead"><span>RECENT GAMES</span><button type="button" onclick="openTab('stats')">FULL STATS</button></div>
-      <div id="deskRecentGames" class="desktopRecentGames"><div class="desktopEmpty">No NBA games logged yet.</div></div>
+  <div class="deskBottom">
+    <article class="deskCard">
+      <div class="deskPanelBar"><span>CURRENT OBJECTIVES</span><button type="button" onclick="openPregameObjectivesFromHub()">VIEW ALL</button></div>
+      <div class="deskCardBody" id="deskObjectives"></div>
     </article>
-
-    <article class="desktopPanel desktopCoach">
-      <div class="desktopPanelHead"><span>COACH'S OFFICE</span><button type="button" onclick="openCoachOffice()">ENTER</button></div>
-      <div class="desktopCoachBody"><div class="desktopCoachBadge">HC</div><div><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div></div>
-      <div class="desktopActions"><button class="primary" onclick="openCoachOffice()">MEET WITH COACH</button></div>
+    <article class="deskCard">
+      <div class="deskPanelBar"><span>ENDORSEMENTS</span><button type="button" onclick="openTab('rewards')">VIEW ALL</button></div>
+      <div class="deskCardBody" id="deskEndorsements"></div>
     </article>
-
-    <article class="desktopPanel desktopQuick">
-      <div class="desktopPanelHead"><span>CAREER DESK</span><span class="desktopLive">LIVE</span></div>
-      <div class="desktopQuickGrid">
-        <button onclick="openTab('rewards')"><b>ENDORSEMENTS</b><small>Deals & opportunities</small></button>
-        <button onclick="openTab('milestones')"><b>MILESTONES</b><small>Awards & achievements</small></button>
-        <button onclick="openTab('media')"><b>MEDIA</b><small>Interviews & events</small></button>
-        <button onclick="openTab('history')"><b>HISTORY</b><small>Your career archive</small></button>
-      </div>
+    <article class="deskCard">
+      <div class="deskPanelBar"><span>COACH'S OFFICE</span><button type="button" onclick="openCoachOffice()">ENTER</button></div>
+      <div class="deskCardBody"><div class="deskCoachSummary"><div class="deskCoachIcon">HC</div><div><small>CURRENT ASSIGNMENT</small><h3 id="deskCoachGoal">No active Coach Goal</h3><p id="deskCoachMeta">Build trust and earn your role.</p></div></div><button class="deskMiniButton" type="button" onclick="openCoachOffice()">MEET WITH COACH</button></div>
+    </article>
+    <article class="deskCard">
+      <div class="deskPanelBar"><span>UPCOMING MILESTONES</span><button type="button" onclick="openTab('milestones')">VIEW ALL</button></div>
+      <div class="deskCardBody" id="deskMilestones"></div>
     </article>
   </div>
 </section>
@@ -6220,82 +6247,47 @@ function jumpCareerSection(id){
 </script>
 
 
-<script id="v62DesktopPresentationJS">
+<script id="v63DesktopPresentationJS">
 (function(){
-  function q(id){return document.getElementById(id)}
-  function text(id,v){const e=q(id);if(e)e.textContent=(v??'')}
-  function clamp01(v){v=Number(v||0);return Math.max(0,Math.min(100,v))}
-  function safe(s){return String(s??'')}
-  function playerOvr(){
-    try{
-      const vals=Object.values((window.state&&state.ratings)||{}).map(Number).filter(Number.isFinite);
-      if(!vals.length)return '—';
-      return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
-    }catch(e){return '—'}
-  }
-  function latestInsider(){
-    const pool=(window.state&&Array.isArray(state.insiderFeed))?state.insiderFeed:[];
-    const x=pool&&pool[0];
-    if(!x)return null;
-    return {title:x.headline||x.title||x.name||'LATEST CAREER UPDATE',deck:x.deck||x.body||x.summary||x.text||''};
-  }
-  function careerDateText(){
-    try{
-      const d=state.careerDate||{};
-      if(!d.month||!d.year)return `SEASON ${state.player?.season||1}`;
-      const names=['','JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-      return `${names[+d.month]||d.month} ${d.day?d.day+', ':''}${d.year}`;
-    }catch(e){return 'CAREER DATE'}
-  }
+  const q=id=>document.getElementById(id);
+  const text=(id,v)=>{const e=q(id);if(e)e.textContent=(v??'')};
+  const safe=s=>String(s??'');
+  const clamp=v=>Math.max(0,Math.min(100,Number(v||0)));
+  const esc=s=>safe(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function playerOvr(){try{const vals=Object.values((typeof state!=='undefined'&&state.ratings)||{}).map(Number).filter(Number.isFinite);return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):'—'}catch(e){return '—'}}
+  function careerDateText(){try{const d=state.careerDate||{};if(!d.month||!d.year)return `SEASON ${state.player?.season||1}`;const n=['','JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];return `${n[+d.month]||d.month}${d.day?' '+d.day:''}${d.year?', '+d.year:''}`}catch(e){return 'CAREER DATE'}}
+  function getStage(){try{return typeof getCareerStage==='function'?getCareerStage():'nba'}catch(e){return 'nba'}}
+  function latestInsider(){const pool=(typeof state!=='undefined'&&Array.isArray(state.insiderFeed))?state.insiderFeed:[];return pool[0]||null}
+  function seasonGames(){const s=Number(state.player?.season||1);return (state.games||[]).filter(g=>!g.season||Number(g.season)===s)}
+  function totals(gs){const out={pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0};gs.forEach(g=>{const x=g.stats||{};for(const k in out)out[k]+=Number(x[k]||0)});return out}
+  function fmt1(v){return Number(v||0).toFixed(1)}
+  function renderRecent(){const root=q('deskRecentGames');if(!root)return;const gs=(state.games||[]).slice(0,5);if(!gs.length){root.innerHTML='<div class="desktopEmpty">No NBA games logged yet.</div>';return}root.innerHTML=`<table class="deskRecentTable"><thead><tr><th>GAME</th><th>OPP</th><th>PTS</th><th>REB</th><th>AST</th><th>FG%</th></tr></thead><tbody>${gs.map(g=>{const x=g.stats||{},r=safe(x.result||'').toUpperCase();const fg=Number(x.fga)>0?Math.round(Number(x.fgm||0)/Number(x.fga)*100)+'%':'—';return `<tr><td class="${r==='W'?'deskWin':r==='L'?'deskLoss':''}">${esc(r||'—')}</td><td>${esc(g.opponent||'Opponent')}</td><td>${Number(x.pts||0)}</td><td>${Number(x.reb||0)}</td><td>${Number(x.ast||0)}</td><td>${fg}</td></tr>`}).join('')}</tbody></table>`}
+  function renderAverages(){const gs=seasonGames(),t=totals(gs),n=gs.length||1;text('deskAvgPts',fmt1(t.pts/n));text('deskAvgReb',fmt1(t.reb/n));text('deskAvgAst',fmt1(t.ast/n));text('deskAvgStl',fmt1(t.stl/n));text('deskAvgBlk',fmt1(t.blk/n));text('deskAvgFG',t.fga?Math.round(t.fgm/t.fga*100)+'%':'—')}
+  function renderObjectives(){const root=q('deskObjectives');if(!root)return;const objs=Array.isArray(state.objectives)?state.objectives:[];if(!objs.length){root.innerHTML='<div class="desktopEmpty">No active pre-game objectives. Open Objectives before your next game.</div>';return}root.innerHTML=objs.slice(0,4).map((o,i)=>`<div class="deskObjectiveRow"><div class="deskCheck">${o.completed?'✓':'□'}</div><div class="deskRowText"><b>${esc(o.text||o.name||('Objective '+(i+1)))}</b><span>${esc(o.theme||'Pregame target')}</span></div><div class="deskRowReward">+100 SP</div></div>`).join('')}
+  function renderEndorsements(){const root=q('deskEndorsements');if(!root)return;const es=(state.endorsements||[]).filter(e=>e.status!=='Completed').slice(0,4);if(!es.length){root.innerHTML='<div class="desktopEmpty">No active endorsement events yet. Fans and basketball credibility unlock opportunities.</div>';return}root.innerHTML=es.map(e=>`<div class="deskEndorseRow"><div class="deskEndorseLogo">AD</div><div class="deskRowText"><b>${esc(e.name||'Endorsement')}</b><span>${esc(e.status||'Scheduled')}${e.date?' • '+esc(e.date):''}</span></div><div class="deskRowReward">${Number(e.sp||0)?'+'+Number(e.sp).toLocaleString()+' SP':'ACTIVE'}</div></div>`).join('')}
+  function renderMilestones(){const root=q('deskMilestones');if(!root)return;const completed=state.completedMilestones||{},manual=state.manualAccomplishmentLog||[];const season=Number(state.player?.season||1);const items=[['★','NBA Milestones',Object.keys(completed).length+' completed'],['🏆','Career Honors',manual.length+' claimed'],['◈','Season '+season,(state.games||[]).filter(g=>!g.season||Number(g.season)===season).length+' games logged'],['🔒','Franchise Influence',clamp(state.meters?.coach)>=95?'ELITE TRUST':'KEEP BUILDING']];root.innerHTML=items.map(x=>`<div class="deskMilestoneRow"><div class="deskMilestoneIcon">${x[0]}</div><div class="deskRowText"><b>${esc(x[1])}</b><span>${esc(x[2])}</span></div></div>`).join('')}
+  function renderHeadlines(){const root=q('deskHeadlineList');if(!root)return;const pool=(state.insiderFeed||[]).slice(1,5);root.innerHTML=pool.map(x=>`<div class="deskHeadlineRow"><span>${esc(x.headline||x.title||'Career update')}</span><span>${esc(x.stage||('S'+(x.season||state.player?.season||1)))}</span></div>`).join('')}
   function renderDesktopCareer(){
-    if(!window.state)return;
-    const p=state.player||{}, meters=state.meters||{};
-    const name=(p.name||q('pName')?.value||'Antonio Taylor').toUpperCase();
-    const team=(p.team||q('pTeam')?.value||'Free Agent').toUpperCase();
-    const pos=p.position||q('pPos')?.value||'SF';
-    const season=Number(p.season||q('pSeason')?.value||1);
-    const stage=(typeof getCareerStage==='function'?getCareerStage():'nba');
-    const status=(typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT'));
-    text('deskName',name); text('deskPlayerMeta',`${pos} • ${team}`); text('deskRole',status);
-    text('deskCareerLine',`SEASON ${season} • ${stage==='nba'?'NBA':'ROAD TO THE NBA'}`); text('deskCareerDate',careerDateText());
-    const ovr=playerOvr(); text('deskOvr',ovr);
-    const trust=clamp01(meters.coach), fans=clamp01(meters.fans), sp=Number(state.sp||0);
-    text('deskTrust',Math.round(trust));text('deskFans',Math.round(fans));text('deskSP',sp.toLocaleString());
-    if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
-    const next=(typeof getNextKeyGame==='function'?getNextKeyGame():null);
-    text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');
-    text('deskGameMeta',next?`${next.date&&typeof formatCareerDate==='function'?formatCareerDate(next.date):'Upcoming'}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
-    let story='Keep building your career. The next major story will appear here.';
-    if(next){
-      const ht=safe(state.player?.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase();
-      const opp=safe(next.opponent).toLowerCase();
-      story=ht&&opp&&ht===opp?'Homecoming pressure: your hometown team is on the schedule. This one can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`);
-    }
-    text('deskStoryline',story);
-    const ins=latestInsider(); if(ins){text('deskInsiderHeadline',safe(ins.title).toUpperCase());text('deskInsiderDeck',safe(ins.deck).slice(0,190));}
-    const recent=q('deskRecentGames'); if(recent){
-      const gs=(state.games||[]).slice(0,3);
-      recent.innerHTML=gs.length?gs.map(g=>{const st=g.stats||{};const r=safe(st.result||'').toUpperCase();return `<div class="desktopRecentGame ${r==='W'?'win':r==='L'?'loss':''}"><small>${g.date&&typeof formatCareerDate==='function'?formatCareerDate(g.date):'GAME '+safe(g.gameNo||'')}</small><b>${r||'—'} ${safe(g.opponent||'Opponent')}</b><span>${Number(st.pts||0)} PTS • ${Number(st.reb||0)} REB • ${Number(st.ast||0)} AST</span></div>`}).join(''):'<div class="desktopEmpty">No NBA games logged yet.</div>';
-    }
-    try{
-      const goal=state.coachGoals&&state.coachGoals.active;
-      text('deskCoachGoal',goal?(goal.title||goal.name||goal.objective||'Active Coach Goal'):'No active Coach Goal');
-      const mins=state.rotationOpportunity?.active?state.rotationOpportunity.currentMinutes:state.rotationProgress?.minutes;
-      text('deskCoachMeta',goal?(goal.objective||goal.description||`${mins||0} MPG • ${Math.round(trust)} Coach Trust`):`${mins||0} MPG • ${Math.round(trust)} Coach Trust • Keep earning your role.`);
-    }catch(e){}
-    const src=q('k11PlayerPhoto')?.getAttribute('src');
-    document.body.classList.toggle('desktop-has-player-photo',!!src);
+    if(typeof state==='undefined')return;
+    const p=state.player||{},m=state.meters||{},stage=getStage();
+    const name=(p.name||q('pName')?.value||'Antonio Taylor').toUpperCase(),team=(p.team||q('pTeam')?.value||'Free Agent').toUpperCase(),pos=p.position||q('pPos')?.value||'SF',season=Number(p.season||q('pSeason')?.value||1);
+    let status='PROSPECT';try{status=typeof careerStageHubLabel==='function'?careerStageHubLabel():(stage==='nba'?'NBA PLAYER':'PROSPECT')}catch(e){}
+    text('deskVisualName',name);text('deskName',name);text('deskTeamEyebrow',team);text('deskTeamName',team);text('deskPlayerMeta',`${pos} • SEASON ${season}`);text('deskVisualMeta',`${pos} • ${stage==='nba'?'NBA':'ROAD TO NBA'} • OLD SCHOOL`);text('deskRole',status);text('deskCareerDate',careerDateText());text('deskOvr',playerOvr());
+    const trust=clamp(m.coach),fans=clamp(m.fans),sp=Number(state.sp||0);text('deskTrust',Math.round(trust)+'/100');text('deskFans',Math.round(fans)+'/100');text('deskSP',sp.toLocaleString());if(q('deskTrustBar'))q('deskTrustBar').style.width=trust+'%';if(q('deskFansBar'))q('deskFansBar').style.width=fans+'%';if(q('deskSpBar'))q('deskSpBar').style.width=Math.min(100,Math.log10(sp+10)*27)+'%';
+    const next=typeof getNextKeyGame==='function'?getNextKeyGame():null;text('deskOpponent',next?`${next.site==='Away'?'@ ':'VS '}${safe(next.opponent).toUpperCase()}`:'NO KEY GAME');text('deskGameMeta',next?`${next.date&&typeof formatCareerDate==='function'?formatCareerDate(next.date):'UPCOMING'}${next.reason?' • '+next.reason:''}`:'Add a Key Game when a matchup matters to your career story.');
+    let story='Keep building your career. The next major story will appear here.';if(next){const ht=safe(p.hometownTeam||state.hometownTeam||q('pHometownTeam')?.value).toLowerCase(),opp=safe(next.opponent).toLowerCase();story=ht&&opp&&ht===opp?'HOMETOWN GAME: this matchup can become part of your career lore.':(next.reason?`${next.reason}: this matchup carries extra weight.`:`${next.opponent} is your next marked career game.`)}text('deskStoryline',story);
+    const ro=state.rotationOpportunity||{},rp=state.rotationProgress||{};text('deskStoryline2',ro.active?`${safe(ro.assignment||'Rotation opportunity')} • ${safe(ro.leash||'Normal')} leash`:`Current role: ${safe(rp.role||status)}${rp.minutes?' • '+rp.minutes+' MPG':''}`);const htName=safe(p.hometown||q('pHometown')?.value);text('deskStoryline3',htName?`Hometown: ${htName}. Local and homecoming context is active.`:'Set your hometown in Career Setup to unlock hometown story context.');
+    const ins=latestInsider();if(ins){text('deskInsiderHeadline',safe(ins.headline||ins.title||'LATEST CAREER UPDATE').toUpperCase());text('deskInsiderDeck',safe(ins.deck||ins.body||ins.summary||'').slice(0,185))}else{text('deskInsiderHeadline','THE STORY IS JUST BEGINNING');text('deskInsiderDeck','Career news, milestones and role changes will surface here.')}
+    try{const goal=state.coachGoals?.active;const mins=ro.active?ro.currentMinutes:rp.minutes;text('deskCoachGoal',goal?(goal.title||goal.name||goal.objective||'Active Coach Goal'):'No active Coach Goal');text('deskCoachMeta',goal?(goal.objective||goal.description||`${mins||0} MPG • ${Math.round(trust)} Coach Trust`):`${mins||0} MPG • ${Math.round(trust)} Coach Trust • Keep earning your role.`)}catch(e){}
+    const src=q('k11PlayerPhoto')?.getAttribute('src')||'';const img=q('deskPlayerPhoto'),visual=q('deskHeroVisual');if(img){if(src){img.src=src;visual?.classList.add('hasPhoto')}else{img.removeAttribute('src');visual?.classList.remove('hasPhoto')}}
+    renderAverages();renderRecent();renderObjectives();renderEndorsements();renderMilestones();renderHeadlines();
   }
   window.renderDesktopCareer=renderDesktopCareer;
-  document.addEventListener('DOMContentLoaded',()=>{renderDesktopCareer();setTimeout(renderDesktopCareer,350);setTimeout(renderDesktopCareer,1200)});
-  document.addEventListener('input',e=>{if(e.target&&['pName','pTeam','pHometown','pHometownTeam','pPos','pSeason','pGameNo'].includes(e.target.id))renderDesktopCareer()});
-  document.addEventListener('change',()=>setTimeout(renderDesktopCareer,0));
-  const obs=new MutationObserver(()=>renderDesktopCareer());
-  document.addEventListener('DOMContentLoaded',()=>{const sp=q('spHeader');if(sp)obs.observe(sp,{childList:true,subtree:true,characterData:true})});
-  const oldUpdate=window.updateK11Hub;
-  if(typeof oldUpdate==='function')window.updateK11Hub=function(){oldUpdate.apply(this,arguments);renderDesktopCareer()};
-  const oldOpen=window.openTab;
-  if(typeof oldOpen==='function')window.openTab=function(){const r=oldOpen.apply(this,arguments);setTimeout(renderDesktopCareer,0);return r};
+  document.addEventListener('DOMContentLoaded',()=>{renderDesktopCareer();setTimeout(renderDesktopCareer,300);setTimeout(renderDesktopCareer,1100)});
+  document.addEventListener('input',e=>{if(e.target&&['pName','pTeam','pHometown','pHometownTeam','pPos','pSeason','pGameNo'].includes(e.target.id))renderDesktopCareer()});document.addEventListener('change',()=>setTimeout(renderDesktopCareer,0));
+  const obs=new MutationObserver(()=>renderDesktopCareer());document.addEventListener('DOMContentLoaded',()=>{const sp=q('spHeader');if(sp)obs.observe(sp,{childList:true,subtree:true,characterData:true})});
+  const oldUpdate=window.updateK11Hub;if(typeof oldUpdate==='function')window.updateK11Hub=function(){const r=oldUpdate.apply(this,arguments);renderDesktopCareer();return r};
+  const oldOpen=window.openTab;if(typeof oldOpen==='function')window.openTab=function(){const r=oldOpen.apply(this,arguments);setTimeout(renderDesktopCareer,0);return r};
 })();
 </script>
 
